@@ -19,26 +19,25 @@
                     <a href="{{ $user->getProfileLink() }}" class="creator-storefront-avatar">
                         <img src="{{ $user->getAvatar() }}" alt="{{ $user->username }}">
                     </a>
-                    @if ($user->isAuthor())
-                        <span class="creator-storefront-status">
-                            <span></span>
-                            {{ translate('Available for work') }}
-                        </span>
-                    @endif
+                    <div class="creator-storefront-follow">
+                        <livewire:follow-button :user="$user" />
+                    </div>
                 </div>
 
                 <div class="creator-storefront-identity">
                     <div class="d-flex align-items-center gap-2">
-                        <h1>{{ $user->username }}</h1>
+                        <h1>{{ $user->getName() }}</h1>
                         @if ($user->isAuthor())
                             <i class="fa-solid fa-circle-check"></i>
                         @endif
                     </div>
+                    <a href="{{ $user->getProfileLink() }}" class="creator-storefront-username">
+                        @{{ $user->username }}
+                    </a>
                     <p>{{ $profileHeading }}</p>
                 </div>
 
                 <div class="creator-storefront-actions">
-                    <livewire:follow-button :user="$user" />
                     @if ($user->profile_contact_email)
                         <a href="#storefrontContact" class="btn btn-outline-secondary btn-md">
                             <i class="fa-regular fa-message me-1"></i>
