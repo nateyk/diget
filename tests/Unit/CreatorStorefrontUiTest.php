@@ -38,5 +38,10 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('.creator-storefront', $css);
         $this->assertStringContainsString('.creator-storefront-card', $css);
         $this->assertStringContainsString('.storefront-item-card', $css);
+        $this->assertStringContainsString('Creator storefront proportion refinement', $css);
+        $this->assertStringContainsString('grid-template-columns: minmax(260px, 330px) minmax(0, 1fr)', $css);
+        $this->assertStringContainsString('max-width: 1360px', $css);
+        $this->assertStringContainsString('.creator-storefront-empty', $css);
+        $this->assertStringContainsString('min-height: 190px', $css);
     }
 }
