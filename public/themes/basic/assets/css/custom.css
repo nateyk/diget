@@ -2901,6 +2901,23 @@
     font-size: 13px;
 }
 
+.creator-storefront-socials.socials {
+    display: flex;
+    gap: 7px;
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.creator-storefront-socials.socials .social-btn {
+    width: 34px;
+    height: 34px;
+    min-height: 34px;
+    margin: 0;
+    border: 0;
+    border-radius: var(--ui-control-radius);
+    color: #fff;
+}
+
 .creator-storefront-stats {
     margin-top: 16px;
     padding-top: 14px;

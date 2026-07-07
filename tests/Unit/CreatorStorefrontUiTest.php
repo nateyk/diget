@@ -33,6 +33,17 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('creator-storefront-items', $indexView);
         $this->assertStringContainsString('storefront-item-card', $indexView);
         $this->assertStringContainsString('Storefront', $indexView);
+        $this->assertStringContainsString('$socialHandle = fn($value) => ltrim(trim($value), \'@\')', $indexView);
+        $this->assertStringContainsString('creator-storefront-socials socials', $indexView);
+        $this->assertStringContainsString('social-btn social-facebook', $indexView);
+        $this->assertStringContainsString('social-btn social-x', $indexView);
+        $this->assertStringContainsString('social-btn social-linkedin', $indexView);
+        $this->assertStringContainsString('social-btn social-youtube', $indexView);
+        $this->assertStringContainsString('social-btn social-instagram', $indexView);
+        $this->assertStringContainsString('social-btn social-pinterest', $indexView);
+        $this->assertStringContainsString('fab fa-linkedin', $indexView);
+        $this->assertStringContainsString('fab fa-pinterest', $indexView);
+        $this->assertStringContainsString('youtube.com/@{{ $socialHandle($socialLinks->youtube) }}', $indexView);
 
         $this->assertStringContainsString('Creator storefront profile polish', $css);
         $this->assertStringContainsString('.creator-storefront', $css);
@@ -43,5 +54,7 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('max-width: 1360px', $css);
         $this->assertStringContainsString('.creator-storefront-empty', $css);
         $this->assertStringContainsString('min-height: 190px', $css);
+        $this->assertStringContainsString('.creator-storefront-socials.socials .social-btn', $css);
+        $this->assertStringContainsString('border: 0', $css);
     }
 }

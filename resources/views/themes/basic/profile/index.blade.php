@@ -5,6 +5,7 @@
         $profileDescription = trim(strip_tags($user->profile_description));
         $profileHeading = $user->profile_heading ?: translate('Digital creator');
         $socialLinks = $user->profile_social_links;
+        $socialHandle = fn($value) => ltrim(trim($value), '@');
         $publishedItemsCount = $items->total();
     @endphp
 
@@ -55,35 +56,41 @@
                 @endif
 
                 @if ($socialLinks)
-                    <div class="creator-storefront-socials">
+                    <div class="creator-storefront-socials socials">
                         @if ($socialLinks->facebook)
-                            <a href="https://facebook.com/{{ $socialLinks->facebook }}" target="_blank" aria-label="Facebook">
+                            <a href="https://facebook.com/{{ $socialHandle($socialLinks->facebook) }}" target="_blank"
+                                class="social-btn social-facebook" aria-label="Facebook">
                                 <i class="fab fa-facebook-f"></i>
                             </a>
                         @endif
                         @if ($socialLinks->x)
-                            <a href="https://x.com/{{ $socialLinks->x }}" target="_blank" aria-label="X">
+                            <a href="https://x.com/{{ $socialHandle($socialLinks->x) }}" target="_blank"
+                                class="social-btn social-x" aria-label="X">
                                 <i class="fab fa-x-twitter"></i>
                             </a>
                         @endif
                         @if ($socialLinks->instagram)
-                            <a href="https://instagram.com/{{ $socialLinks->instagram }}" target="_blank" aria-label="Instagram">
+                            <a href="https://instagram.com/{{ $socialHandle($socialLinks->instagram) }}" target="_blank"
+                                class="social-btn social-instagram" aria-label="Instagram">
                                 <i class="fab fa-instagram"></i>
                             </a>
                         @endif
                         @if ($socialLinks->linkedin)
-                            <a href="https://linkedin.com/in/{{ $socialLinks->linkedin }}" target="_blank" aria-label="LinkedIn">
-                                <i class="fab fa-linkedin-in"></i>
+                            <a href="https://linkedin.com/in/{{ $socialHandle($socialLinks->linkedin) }}" target="_blank"
+                                class="social-btn social-linkedin" aria-label="LinkedIn">
+                                <i class="fab fa-linkedin"></i>
                             </a>
                         @endif
                         @if ($socialLinks->youtube)
-                            <a href="https://youtube.com/{{ '@' . $socialLinks->youtube }}" target="_blank" aria-label="YouTube">
+                            <a href="https://youtube.com/@{{ $socialHandle($socialLinks->youtube) }}" target="_blank"
+                                class="social-btn social-youtube" aria-label="YouTube">
                                 <i class="fab fa-youtube"></i>
                             </a>
                         @endif
                         @if ($socialLinks->pinterest)
-                            <a href="https://pinterest.com/{{ $socialLinks->pinterest }}" target="_blank" aria-label="Pinterest">
-                                <i class="fab fa-pinterest-p"></i>
+                            <a href="https://pinterest.com/{{ $socialHandle($socialLinks->pinterest) }}" target="_blank"
+                                class="social-btn social-pinterest" aria-label="Pinterest">
+                                <i class="fab fa-pinterest"></i>
                             </a>
                         @endif
                     </div>
