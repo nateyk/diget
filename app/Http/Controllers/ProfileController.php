@@ -17,6 +17,12 @@ class ProfileController extends Controller
     {
         $user = $this->getUserByUsername($username);
 
+        $items = Item::where('author_id', $user->id)
+            ->approved()
+            ->with(['author', 'category'])
+            ->orderByDesc('id')
+            ->paginate(12);
+
         $followers = Follower::where('following_id', $user->id)
             ->with('follower')
             ->orderbyDesc('id')
@@ -24,6 +30,7 @@ class ProfileController extends Controller
 
         return theme_view('profile.index', [
             'user' => $user,
+            'items' => $items,
             'followers' => $followers,
         ]);
     }
