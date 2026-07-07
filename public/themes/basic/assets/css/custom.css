@@ -3234,9 +3234,10 @@
 
 /* Creator storefront identity row placement */
 .creator-storefront-card-top {
+    position: relative;
     display: grid;
-    grid-template-columns: 72px minmax(0, 1fr) auto;
-    align-items: end;
+    grid-template-columns: 72px minmax(0, 1fr);
+    align-items: start;
     column-gap: 12px;
     margin-top: -36px;
 }
@@ -3244,7 +3245,8 @@
 .creator-storefront-card-top .creator-storefront-identity {
     min-width: 0;
     margin-top: 0;
-    padding-bottom: 2px;
+    padding-top: 42px;
+    padding-bottom: 0;
 }
 
 .creator-storefront-card-top .creator-storefront-identity .d-flex {
@@ -3272,9 +3274,12 @@
 }
 
 .creator-storefront-follow {
-    align-self: start;
-    min-width: 96px;
-    padding-top: 10px;
+    position: absolute;
+    top: 10px;
+    right: 0;
+    z-index: 2;
+    min-width: 0;
+    padding-top: 0;
 }
 
 .creator-storefront-follow .btn,
@@ -3295,9 +3300,13 @@
 
 @media (max-width: 575.98px) {
     .creator-storefront-card-top {
-        grid-template-columns: 68px minmax(0, 1fr) auto;
+        grid-template-columns: 68px minmax(0, 1fr);
         column-gap: 10px;
         margin-top: -34px;
+    }
+
+    .creator-storefront-card-top .creator-storefront-identity {
+        padding-top: 40px;
     }
 
     .creator-storefront-card-top .creator-storefront-identity h1 {
@@ -3305,8 +3314,7 @@
     }
 
     .creator-storefront-follow {
-        min-width: 92px;
-        padding-top: 9px;
+        top: 9px;
     }
 
     .creator-storefront-follow .btn,

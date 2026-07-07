@@ -83,7 +83,7 @@
                             </a>
                         @endif
                         @if ($socialLinks->youtube)
-                            <a href="https://youtube.com/@{{ $socialHandle($socialLinks->youtube) }}" target="_blank"
+                            <a href="{{ 'https://youtube.com/@' . $socialHandle($socialLinks->youtube) }}" target="_blank"
                                 class="social-btn social-youtube" aria-label="YouTube">
                                 <i class="fab fa-youtube"></i>
                             </a>

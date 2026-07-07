@@ -58,7 +58,8 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('social-btn social-pinterest', $indexView);
         $this->assertStringContainsString('fab fa-linkedin', $indexView);
         $this->assertStringContainsString('fab fa-pinterest', $indexView);
-        $this->assertStringContainsString('youtube.com/@{{ $socialHandle($socialLinks->youtube) }}', $indexView);
+        $this->assertStringContainsString('{{ \'https://youtube.com/@\' . $socialHandle($socialLinks->youtube) }}', $indexView);
+        $this->assertStringNotContainsString('youtube.com/@{{ $socialHandle($socialLinks->youtube) }}', $indexView);
 
         $this->assertStringContainsString('Creator storefront profile polish', $css);
         $this->assertStringContainsString('.creator-storefront', $css);
@@ -84,7 +85,9 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('max-width: 340px', $css);
         $this->assertStringContainsString('justify-self: center', $css);
         $this->assertStringContainsString('Creator storefront identity row placement', $css);
-        $this->assertStringContainsString('grid-template-columns: 72px minmax(0, 1fr) auto', $css);
+        $this->assertStringContainsString('grid-template-columns: 72px minmax(0, 1fr)', $css);
+        $this->assertStringContainsString('padding-top: 42px', $css);
+        $this->assertStringContainsString('position: absolute', $css);
         $this->assertStringContainsString('.creator-storefront-heading', $css);
     }
 }
