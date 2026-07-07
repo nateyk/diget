@@ -2191,3 +2191,138 @@
         font-size: 12px;
     }
 }
+
+/* Workspace mobile sidebar compact polish */
+@media (max-width: 1199.98px) {
+    .dashboard-sidebar {
+        width: 100%;
+    }
+
+    .dashboard-sidebar .overlay {
+        background-color: rgba(0, 0, 0, .18);
+    }
+
+    .dashboard-sidebar .dashboard-sidebar-header {
+        width: 236px;
+        height: 52px;
+        padding-inline: 14px;
+    }
+
+    .dashboard-sidebar .logo {
+        height: 24px;
+    }
+
+    .dashboard-sidebar .dashboard-sidebar-body {
+        top: 52px;
+        left: -236px;
+        width: 236px;
+        height: calc(100% - 52px);
+    }
+
+    .dashboard.toggle .dashboard-sidebar .dashboard-sidebar-body {
+        left: 0;
+    }
+
+    .dashboard-sidebar .dashboard-sidebar-content {
+        height: calc(100vh - 52px);
+    }
+
+    .dashboard-sidebar-inner {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .dashboard-balance {
+        margin: 0 10px 10px;
+        padding: 11px 12px;
+        border-radius: 6px;
+    }
+
+    .dashboard-balance .dashboard-balance-title {
+        margin-bottom: 3px;
+        font-size: 12px;
+    }
+
+    .dashboard-balance .dashboard-balance-number {
+        font-size: 16px;
+        line-height: 1.2;
+    }
+
+    .dashboard-balance .dashboard-balance-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 13px;
+    }
+
+    .dashboard-sidebar-links:not(:last-child) {
+        margin-bottom: 14px;
+    }
+
+    .dashboard-sidebar-link:not(:last-child) {
+        margin-bottom: 2px;
+    }
+
+    .dashboard-sidebar-link .dashboard-sidebar-link-title {
+        min-height: 38px;
+        padding: 9px 14px;
+        font-size: 13px;
+        line-height: 1.25;
+    }
+
+    .dashboard-sidebar-link .dashboard-sidebar-link-title i {
+        width: 16px;
+        font-size: 13px;
+    }
+
+    .dashboard-sidebar-link i {
+        margin-inline-end: 9px;
+    }
+
+    .dashboard-sidebar-link .dashboard-sidebar-link-title span {
+        margin-right: 8px;
+    }
+
+    .dashboard-sidebar-link .dashboard-sidebar-link-title .counter {
+        padding: 1px 7px;
+        font-size: 11px;
+    }
+
+    .dashboard-sidebar-link .dashboard-sidebar-link-menu {
+        margin-bottom: 10px;
+        padding-left: 24px;
+    }
+
+    .dashboard-sidebar-link .dashboard-sidebar-link {
+        margin-top: 10px;
+    }
+
+    .dashboard-sidebar-link .dashboard-sidebar-link:not(:last-child) {
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .dashboard-sidebar .dashboard-sidebar-header,
+    .dashboard-sidebar .dashboard-sidebar-body {
+        width: 218px;
+    }
+
+    .dashboard-sidebar .dashboard-sidebar-body {
+        left: -218px;
+    }
+
+    .dashboard.toggle .dashboard-sidebar .dashboard-sidebar-body {
+        left: 0;
+    }
+
+    .dashboard-sidebar-link .dashboard-sidebar-link-title {
+        min-height: 36px;
+        padding: 8px 12px;
+        font-size: 12.5px;
+    }
+
+    .dashboard-balance {
+        margin-inline: 8px;
+        padding: 10px;
+    }
+}

@@ -158,6 +158,20 @@ class PublicMarketplaceCompactCssTest extends TestCase
             $this->assertStringContainsString($snippet, $css);
         }
 
+        $workspaceMobileSidebarSnippets = [
+            'Workspace mobile sidebar compact polish',
+            '.dashboard-sidebar .dashboard-sidebar-body',
+            '.dashboard.toggle .dashboard-sidebar .dashboard-sidebar-body',
+            'width: 236px',
+            'width: 218px',
+            '.dashboard-sidebar-link .dashboard-sidebar-link-title',
+            '.dashboard-balance',
+        ];
+
+        foreach ($workspaceMobileSidebarSnippets as $snippet) {
+            $this->assertStringContainsString($snippet, $css);
+        }
+
         $dashboardMarker = '/* Workspace dashboard compact pass */';
         $this->assertStringContainsString($dashboardMarker, $css);
 
