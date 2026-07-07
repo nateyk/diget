@@ -3078,3 +3078,49 @@
         min-height: 150px;
     }
 }
+
+/* Creator storefront media framing */
+.creator-storefront-cover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgba(22, 28, 45, .055);
+    background-image: none;
+}
+
+.creator-storefront-cover img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+.creator-storefront-avatar {
+    width: 76px;
+    height: 58px;
+    border-radius: 10px;
+}
+
+.creator-storefront-avatar img {
+    border-radius: 7px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.creator-storefront-card-top {
+    margin-top: -28px;
+}
+
+@media (max-width: 575.98px) {
+    .creator-storefront-avatar {
+        width: 68px;
+        height: 52px;
+    }
+
+    .creator-storefront-card-top {
+        margin-top: -26px;
+    }
+}

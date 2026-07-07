@@ -11,7 +11,9 @@
 
     <div class="creator-storefront">
         <aside class="creator-storefront-card">
-            <div class="creator-storefront-cover" style="background-image: url('{{ $user->getProfileCover() }}')"></div>
+            <div class="creator-storefront-cover">
+                <img src="{{ $user->getProfileCover() }}" alt="{{ $user->getName() }}">
+            </div>
             <div class="creator-storefront-card-body">
                 <div class="creator-storefront-card-top">
                     <a href="{{ $user->getProfileLink() }}" class="creator-storefront-avatar">

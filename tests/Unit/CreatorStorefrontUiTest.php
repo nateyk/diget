@@ -32,6 +32,9 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('creator-storefront-main', $indexView);
         $this->assertStringContainsString('creator-storefront-items', $indexView);
         $this->assertStringContainsString('storefront-item-card', $indexView);
+        $this->assertStringContainsString('<div class="creator-storefront-cover">', $indexView);
+        $this->assertStringContainsString('<img src="{{ $user->getProfileCover() }}" alt="{{ $user->getName() }}">', $indexView);
+        $this->assertStringNotContainsString('style="background-image', $indexView);
         $this->assertStringContainsString('Storefront', $indexView);
         $this->assertStringContainsString('$socialHandle = fn($value) => ltrim(trim($value), \'@\')', $indexView);
         $this->assertStringContainsString('creator-storefront-socials socials', $indexView);
@@ -56,5 +59,9 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('min-height: 190px', $css);
         $this->assertStringContainsString('.creator-storefront-socials.socials .social-btn', $css);
         $this->assertStringContainsString('border: 0', $css);
+        $this->assertStringContainsString('Creator storefront media framing', $css);
+        $this->assertStringContainsString('.creator-storefront-cover img', $css);
+        $this->assertStringContainsString('object-fit: contain', $css);
+        $this->assertStringContainsString('border-radius: 10px', $css);
     }
 }
