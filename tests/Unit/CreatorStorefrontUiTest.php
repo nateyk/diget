@@ -38,9 +38,14 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringNotContainsString('Available for work', $indexView);
         $this->assertStringNotContainsString('creator-storefront-status', $indexView);
         $this->assertStringContainsString('creator-storefront-follow', $indexView);
+        $this->assertMatchesRegularExpression(
+            '/creator-storefront-avatar.*creator-storefront-identity.*creator-storefront-follow/s',
+            $indexView
+        );
         $this->assertStringContainsString('<h1>{{ $user->getName() }}</h1>', $indexView);
         $this->assertStringContainsString('creator-storefront-username', $indexView);
         $this->assertStringContainsString('{{ \'@\' . $user->username }}', $indexView);
+        $this->assertStringContainsString('creator-storefront-heading', $indexView);
         $this->assertStringNotContainsString('@{{ $user->username }}', $indexView);
         $this->assertStringContainsString('Storefront', $indexView);
         $this->assertStringContainsString('$socialHandle = fn($value) => ltrim(trim($value), \'@\')', $indexView);
@@ -78,5 +83,8 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('Creator storefront compact stack fix', $css);
         $this->assertStringContainsString('max-width: 340px', $css);
         $this->assertStringContainsString('justify-self: center', $css);
+        $this->assertStringContainsString('Creator storefront identity row placement', $css);
+        $this->assertStringContainsString('grid-template-columns: 72px minmax(0, 1fr) auto', $css);
+        $this->assertStringContainsString('.creator-storefront-heading', $css);
     }
 }

@@ -19,23 +19,23 @@
                     <a href="{{ $user->getProfileLink() }}" class="creator-storefront-avatar">
                         <img src="{{ $user->getAvatar() }}" alt="{{ $user->username }}">
                     </a>
+                    <div class="creator-storefront-identity">
+                        <div class="d-flex align-items-center gap-2">
+                            <h1>{{ $user->getName() }}</h1>
+                            @if ($user->isAuthor())
+                                <i class="fa-solid fa-circle-check"></i>
+                            @endif
+                        </div>
+                        <a href="{{ $user->getProfileLink() }}" class="creator-storefront-username">
+                            {{ '@' . $user->username }}
+                        </a>
+                    </div>
                     <div class="creator-storefront-follow">
                         <livewire:follow-button :user="$user" />
                     </div>
                 </div>
 
-                <div class="creator-storefront-identity">
-                    <div class="d-flex align-items-center gap-2">
-                        <h1>{{ $user->getName() }}</h1>
-                        @if ($user->isAuthor())
-                            <i class="fa-solid fa-circle-check"></i>
-                        @endif
-                    </div>
-                    <a href="{{ $user->getProfileLink() }}" class="creator-storefront-username">
-                        {{ '@' . $user->username }}
-                    </a>
-                    <p>{{ $profileHeading }}</p>
-                </div>
+                <p class="creator-storefront-heading">{{ $profileHeading }}</p>
 
                 <div class="creator-storefront-actions">
                     @if ($user->profile_contact_email)
