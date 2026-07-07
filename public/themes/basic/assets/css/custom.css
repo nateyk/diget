@@ -3215,3 +3215,19 @@
         min-width: 104px;
     }
 }
+
+/* Creator storefront compact stack fix */
+.creator-storefront-card {
+    width: 100%;
+    max-width: 340px;
+}
+
+@media (max-width: 991.98px) {
+    .creator-storefront-card {
+        justify-self: center;
+    }
+
+    .creator-storefront-main {
+        width: 100%;
+    }
+}

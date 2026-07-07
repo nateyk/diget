@@ -40,7 +40,8 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('creator-storefront-follow', $indexView);
         $this->assertStringContainsString('<h1>{{ $user->getName() }}</h1>', $indexView);
         $this->assertStringContainsString('creator-storefront-username', $indexView);
-        $this->assertStringContainsString('@{{ $user->username }}', $indexView);
+        $this->assertStringContainsString('{{ \'@\' . $user->username }}', $indexView);
+        $this->assertStringNotContainsString('@{{ $user->username }}', $indexView);
         $this->assertStringContainsString('Storefront', $indexView);
         $this->assertStringContainsString('$socialHandle = fn($value) => ltrim(trim($value), \'@\')', $indexView);
         $this->assertStringContainsString('creator-storefront-socials socials', $indexView);
@@ -74,5 +75,8 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('object-fit: cover', $css);
         $this->assertStringContainsString('width: 72px', $css);
         $this->assertStringContainsString('height: 72px', $css);
+        $this->assertStringContainsString('Creator storefront compact stack fix', $css);
+        $this->assertStringContainsString('max-width: 340px', $css);
+        $this->assertStringContainsString('justify-self: center', $css);
     }
 }

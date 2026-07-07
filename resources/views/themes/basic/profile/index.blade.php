@@ -32,7 +32,7 @@
                         @endif
                     </div>
                     <a href="{{ $user->getProfileLink() }}" class="creator-storefront-username">
-                        @{{ $user->username }}
+                        {{ '@' . $user->username }}
                     </a>
                     <p>{{ $profileHeading }}</p>
                 </div>
