@@ -19,6 +19,14 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('->approved()', $controller);
 
         $this->assertStringContainsString('profile-storefront-page', $layoutView);
+        $this->assertMatchesRegularExpression(
+            "/@unless \(request\(\)->routeIs\('profile\.index'\)\)\s*@include\('themes\.basic\.includes\.navbar'\)\s*@endunless/s",
+            $layoutView
+        );
+        $this->assertMatchesRegularExpression(
+            "/@unless \(request\(\)->routeIs\('profile\.index'\)\)\s*@include\('themes\.basic\.includes\.footer'\)\s*@endunless/s",
+            $layoutView
+        );
         $this->assertStringContainsString('creator-storefront', $indexView);
         $this->assertStringContainsString('creator-storefront-card', $indexView);
         $this->assertStringContainsString('creator-storefront-main', $indexView);

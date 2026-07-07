@@ -6,7 +6,9 @@
 </head>
 
 <body class="bg-white {{ request()->routeIs('profile.index') ? 'profile-storefront-page' : '' }}">
-    @include('themes.basic.includes.navbar')
+    @unless (request()->routeIs('profile.index'))
+        @include('themes.basic.includes.navbar')
+    @endunless
     @unless (request()->routeIs('profile.index'))
         @include('themes.basic.profile.includes.header')
     @endunless
@@ -57,7 +59,9 @@
             </div>
         </div>
     </section>
-    @include('themes.basic.includes.footer')
+    @unless (request()->routeIs('profile.index'))
+        @include('themes.basic.includes.footer')
+    @endunless
     @include('themes.basic.includes.config')
     @include('themes.basic.includes.scripts')
 </body>
