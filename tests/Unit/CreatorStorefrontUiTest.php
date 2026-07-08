@@ -137,5 +137,9 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('box-shadow: none !important', $css);
         $this->assertStringContainsString('filter: grayscale(1)', $css);
         $this->assertStringContainsString('align-self: start', $css);
+        $this->assertStringContainsString('Creator storefront card top alignment polish', $css);
+        $this->assertStringContainsString('top: 30px', $css);
+        $this->assertStringContainsString('margin-top: 0', $css);
+        $this->assertStringContainsString('min-height: 38px', $css);
     }
 }

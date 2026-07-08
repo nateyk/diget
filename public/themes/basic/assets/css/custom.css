@@ -4070,3 +4070,26 @@
         width: min(100% - 24px, 520px);
     }
 }
+
+/* Creator storefront card top alignment polish */
+.creator-storefront-card {
+    top: 30px;
+    margin-top: 0;
+}
+
+.creator-storefront-tabs {
+    min-height: 38px;
+    align-items: flex-end;
+}
+
+@media (max-width: 1199.98px) {
+    .creator-storefront-card {
+        top: 22px;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .creator-storefront-card {
+        top: auto;
+    }
+}
