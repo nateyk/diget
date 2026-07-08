@@ -63,6 +63,7 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('data-storefront-panel="about"', $indexView);
         $this->assertStringContainsString('storefrontTabs.forEach', $indexView);
         $this->assertStringContainsString('storefrontPanels.forEach', $indexView);
+        $this->assertStringContainsString('event.preventDefault()', $indexView);
         $this->assertStringContainsString('$socialHandle = fn($value) => ltrim(trim($value), \'@\')', $indexView);
         $this->assertStringContainsString('creator-storefront-socials socials', $indexView);
         $this->assertStringContainsString('social-btn social-facebook', $indexView);
@@ -131,5 +132,10 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('border-bottom: 1px solid rgba(22, 28, 45, .1)', $css);
         $this->assertStringContainsString('border-bottom: 2px solid transparent', $css);
         $this->assertStringContainsString('border-bottom-color: var(--primary_color)', $css);
+        $this->assertStringContainsString('Creator storefront layout balance polish', $css);
+        $this->assertStringContainsString('width: min(1440px, calc(100% - 56px))', $css);
+        $this->assertStringContainsString('box-shadow: none !important', $css);
+        $this->assertStringContainsString('filter: grayscale(1)', $css);
+        $this->assertStringContainsString('align-self: start', $css);
     }
 }

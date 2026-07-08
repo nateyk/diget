@@ -230,7 +230,8 @@
         };
 
         storefrontTabs.forEach((tab) => {
-            tab.addEventListener('click', () => {
+            tab.addEventListener('click', (event) => {
+                event.preventDefault();
                 showStorefrontPanel(tab.dataset.storefrontTab);
             });
         });

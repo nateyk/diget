@@ -3961,3 +3961,112 @@
         text-align: start;
     }
 }
+
+/* Creator storefront layout balance polish */
+.profile-storefront-page {
+    background-color: #fff;
+}
+
+.profile-storefront-page .container {
+    width: min(1440px, calc(100% - 56px));
+    max-width: none;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.creator-storefront-section {
+    padding-top: 30px;
+    padding-bottom: 54px;
+}
+
+.creator-storefront {
+    grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
+    gap: 34px;
+    align-items: start;
+}
+
+.creator-storefront-card {
+    align-self: start;
+    border-color: rgba(22, 28, 45, .12);
+    background-color: #fff;
+    box-shadow: none !important;
+}
+
+.creator-storefront-card,
+.storefront-item-card,
+.creator-storefront-about,
+.creator-storefront-contact,
+.creator-storefront-empty {
+    box-shadow: none !important;
+}
+
+.creator-storefront-cover {
+    background-color: #e7e7e7;
+}
+
+.creator-storefront-cover img {
+    filter: grayscale(1);
+}
+
+.creator-storefront-avatar {
+    box-shadow: none;
+}
+
+.creator-storefront-avatar img {
+    filter: grayscale(1);
+}
+
+.creator-storefront-follow .btn,
+.creator-storefront-follow button,
+.creator-storefront-actions .btn,
+.creator-storefront-actions button {
+    box-shadow: none;
+}
+
+.creator-storefront-panel {
+    min-height: 520px;
+}
+
+.creator-storefront-about,
+.creator-storefront-contact {
+    margin-top: 0;
+    border-color: rgba(22, 28, 45, .1);
+}
+
+.creator-storefront-contact {
+    margin-top: 16px;
+}
+
+.storefront-item-card {
+    border-color: rgba(22, 28, 45, .1);
+}
+
+.storefront-item-card:hover {
+    border-color: rgba(76, 175, 80, .42);
+}
+
+@media (max-width: 1199.98px) {
+    .profile-storefront-page .container {
+        width: min(100% - 36px, 1040px);
+    }
+
+    .creator-storefront {
+        gap: 24px;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .profile-storefront-page .container {
+        width: min(100% - 28px, 720px);
+    }
+
+    .creator-storefront-panel {
+        min-height: 0;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .profile-storefront-page .container {
+        width: min(100% - 24px, 520px);
+    }
+}
