@@ -167,6 +167,10 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('.creator-storefront-mobile-nav', $css);
         $this->assertStringContainsString('bottom: calc(14px + env(safe-area-inset-bottom))', $css);
         $this->assertStringContainsString('grid-template-columns: 1fr', $css);
-        $this->assertStringContainsString('min-width: 96px', $css);
+        $this->assertStringContainsString('Creator storefront mobile nav app-style polish', $css);
+        $this->assertStringContainsString('min-width: 94px', $css);
+        $this->assertStringContainsString('background-color: var(--primary_color)', $css);
+        $this->assertStringContainsString('border-radius: 10px', $css);
+        $this->assertStringNotContainsString('background-color: #202124', $css);
     }
 }
