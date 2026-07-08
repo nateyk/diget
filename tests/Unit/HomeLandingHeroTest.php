@@ -21,8 +21,9 @@ class HomeLandingHeroTest extends TestCase
         $this->assertStringContainsString('Launch your storefront, sell digital products, and grow a polished creator brand from one workspace.', $homeView);
         $this->assertStringContainsString('Start selling', $homeView);
         $this->assertStringContainsString('Browse products', $homeView);
-        $this->assertStringContainsString('home-landing-search', $homeView);
-        $this->assertStringContainsString('Search storefront products', $homeView);
+        $this->assertStringNotContainsString('home-landing-search', $homeView);
+        $this->assertStringNotContainsString('Search storefront products', $homeView);
+        $this->assertStringNotContainsString("partials.search-form", $homeView);
 
         $this->assertStringNotContainsString('class="header header-image"', $homeView);
         $this->assertStringNotContainsString('style=\'background-image', $homeView);
@@ -33,6 +34,6 @@ class HomeLandingHeroTest extends TestCase
         $this->assertStringContainsString('.home-landing-visual img', $css);
         $this->assertStringContainsString('object-fit: contain', $css);
         $this->assertStringContainsString('.home-landing-actions', $css);
-        $this->assertStringContainsString('.home-landing-search', $css);
+        $this->assertStringNotContainsString('.home-landing-search', $css);
     }
 }

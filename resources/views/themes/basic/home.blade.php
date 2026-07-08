@@ -21,16 +21,6 @@
                             {{ translate('Browse products') }}
                         </a>
                     </div>
-
-                    <div class="home-landing-search">
-                        <span>{{ translate('Search storefront products') }}</span>
-                        <div class="search">
-                            @include('themes.basic.partials.search-form', [
-                                'url' => route('items.index'),
-                                'placeholder' => translate('Search storefront products'),
-                            ])
-                        </div>
-                    </div>
                 </div>
 
                 <div class="home-landing-visual" data-aos="fade-up" data-aos-delay="100" data-aos-duration="900">
