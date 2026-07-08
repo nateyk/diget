@@ -151,5 +151,10 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('background-color: #dedfe1', $css);
         $this->assertStringContainsString('filter: grayscale(1) contrast(.96)', $css);
         $this->assertStringContainsString('background-color: rgba(255, 255, 255, .72)', $css);
+        $this->assertStringContainsString('Creator storefront cover avatar placement polish', $css);
+        $this->assertStringContainsString('height: 92px', $css);
+        $this->assertStringContainsString('margin-top: -31px', $css);
+        $this->assertStringContainsString('padding-top: 37px', $css);
+        $this->assertStringContainsString('object-position: center 42%', $css);
     }
 }

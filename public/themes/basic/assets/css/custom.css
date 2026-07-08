@@ -4215,3 +4215,77 @@
 .creator-storefront-stats strong {
     color: #1c2128;
 }
+
+/* Creator storefront cover avatar placement polish */
+.creator-storefront-cover {
+    height: 92px;
+}
+
+.creator-storefront-cover img {
+    object-fit: cover;
+    object-position: center 42%;
+}
+
+.creator-storefront-card-body {
+    padding: 0 18px 18px;
+}
+
+.creator-storefront-card-top {
+    grid-template-columns: 72px minmax(0, 1fr);
+    column-gap: 14px;
+    margin-top: -31px;
+}
+
+.creator-storefront-avatar {
+    width: 72px;
+    height: 72px;
+    padding: 0;
+    border: 5px solid #f6f7f8;
+    border-radius: 12px;
+}
+
+.creator-storefront-avatar img {
+    border-radius: 8px;
+}
+
+.creator-storefront-card-top .creator-storefront-identity {
+    padding-top: 37px;
+}
+
+.creator-storefront-card-top .creator-storefront-identity h1 {
+    font-size: 20px;
+    line-height: 1.15;
+}
+
+.creator-storefront-identity i {
+    font-size: 15px;
+}
+
+.creator-storefront-heading {
+    margin-top: 14px;
+}
+
+@media (max-width: 575.98px) {
+    .creator-storefront-cover {
+        height: 86px;
+    }
+
+    .creator-storefront-card-top {
+        grid-template-columns: 68px minmax(0, 1fr);
+        column-gap: 12px;
+        margin-top: -29px;
+    }
+
+    .creator-storefront-avatar {
+        width: 68px;
+        height: 68px;
+    }
+
+    .creator-storefront-card-top .creator-storefront-identity {
+        padding-top: 35px;
+    }
+
+    .creator-storefront-card-top .creator-storefront-identity h1 {
+        font-size: 19px;
+    }
+}
