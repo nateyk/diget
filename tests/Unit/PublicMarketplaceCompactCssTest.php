@@ -64,6 +64,33 @@ class PublicMarketplaceCompactCssTest extends TestCase
             $this->assertStringContainsString($snippet, $css);
         }
 
+        $itemLayoutPath = dirname(__DIR__, 2) . '/resources/views/themes/basic/items/layout.blade.php';
+
+        $this->assertFileExists($itemLayoutPath);
+
+        $itemLayout = file_get_contents($itemLayoutPath);
+
+        $this->assertStringContainsString('item-detail-page', $itemLayout);
+
+        $itemDetailSnippets = [
+            'Product detail clean professional polish',
+            '.item-detail-page.section',
+            '.item-detail-page .section-header',
+            '.item-detail-page .item-single-title',
+            '.item-detail-page .item-detail-card',
+            'box-shadow: none',
+            '.item-detail-page .item-single-img img',
+            '.item-detail-page .item-slide-img',
+            '.item-detail-page .card-v-header',
+            '.item-detail-page .item-detail-sidebar .card-v',
+            '.item-detail-page .item-detail-meta-row',
+            '.item-detail-page .socials .social-btn',
+        ];
+
+        foreach ($itemDetailSnippets as $snippet) {
+            $this->assertStringContainsString($snippet, $css);
+        }
+
         $dashboardSnippets = [
             'Workspace dashboard compact pass',
             '.dashboard-sidebar',

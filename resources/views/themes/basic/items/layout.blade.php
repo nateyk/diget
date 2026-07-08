@@ -12,7 +12,7 @@
 <body>
     @include('themes.basic.includes.navbar')
     <x-ad alias="item_page_top" @class('container mt-5') />
-    <section class="section forced-start pt-5 pb-3">
+    <section class="section forced-start item-detail-page pt-4 pb-3">
         <div class="container">
             <div class="section-header mb-4">
                 @yield('breadcrumbs')
@@ -129,9 +129,9 @@
                 </div>
             </div>
             <div class="section-body">
-                <div class="row g-4">
+                <div class="row g-3 g-xl-4">
                     <div class="col-12 col-lg-7 col-xl-7 col-xxl-8">
-                        <div class="card-v border p-4 mb-4">
+                        <div class="card-v border item-detail-card item-detail-preview-card p-4 mb-3">
                             <div class="item-single-preview">
                                 @if ($item->isPreviewFileTypeImage())
                                     <div class="item-single-img">
@@ -216,7 +216,7 @@
                             </div>
                         </div>
                         <div class="tabs-custom">
-                            <div class="card-v border p-4">
+                            <div class="card-v border item-detail-card p-4">
                                 @php
                                     $itemSettings = $settings->item;
                                 @endphp
@@ -273,10 +273,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-5 col-xl-5 col-xxl-4">
+                    <div class="col-12 col-lg-5 col-xl-5 col-xxl-4 item-detail-sidebar">
                         @if (licenseType(2) && @$settings->premium->status && $item->isPremium())
                             @if (authUser() && authUser()->isSubscribed())
-                                <div class="card-v border border-2 border-primary p-3 mb-4">
+                                <div class="card-v border border-2 border-primary item-detail-card p-3 mb-4">
                                     <div class="card-v-body text-center p-3">
                                         <div class="mb-4">
                                             <div class="mb-3">
@@ -317,7 +317,7 @@
                                     </div>
                                 </div>
                             @else
-                                <div class="card-v border border-2 border-premium p-3 mb-4">
+                                <div class="card-v border border-2 border-premium item-detail-card p-3 mb-4">
                                     <div class="card-v-body p-4">
                                         <div class="mb-4">
                                             <div class="mb-3">
@@ -343,7 +343,7 @@
                             @endif
                         @endif
                         @if ($item->isFree())
-                            <div class="card-v border p-0 mb-4">
+                            <div class="card-v border item-detail-card item-detail-license-card p-0 mb-4">
                                 <div class="card-v-header border-bottom py-3 px-4">
                                     <div class="row row-cols-auto align-items-center justify-content-between g-2">
                                         <div class="col">
@@ -399,7 +399,7 @@
                             </div>
                         @endif
                         @if ($item->isPurchasingEnabled())
-                            <div class="card-v border p-0">
+                            <div class="card-v border item-detail-card item-detail-license-card p-0">
                                 <div class="card-v-header border-bottom py-3 px-4">
                                     <div class="row row-cols-auto align-items-center justify-content-between g-2">
                                         <div class="col">
@@ -561,7 +561,7 @@
                             $featuredItemBadge = featuredItemBadge();
                         @endphp
                         @if ($featuredItemBadge && $item->wasFeatured())
-                            <div class="card-v border p-4 mt-4">
+                            <div class="card-v border item-detail-card p-4 mt-3">
                                 <div class="row alig-items-center g-3">
                                     <div class="col-auto">
                                         <img src="{{ $featuredItemBadge->getImageLink() }}"
@@ -579,7 +579,7 @@
                                 </div>
                             </div>
                         @endif
-                        <div class="card-v border p-4 mt-4">
+                        <div class="card-v border item-detail-card item-detail-author-card p-4 mt-3">
                             <div class="row align-items-center g-2 mb-3">
                                 @php
                                     $author = $item->author;
@@ -637,7 +637,7 @@
                             </a>
                         </div>
                         @if ($item->isPurchasingEnabled() && $item->hasSales())
-                            <div class="card-v border p-4 mt-4">
+                            <div class="card-v border item-detail-card p-4 mt-3">
                                 <h5 class="mb-0">
                                     <i class="fa fa-cart-shopping me-2"></i>
                                     {{ translate($item->total_sales > 1 ? ':count Sales' : ':count Sale', [
@@ -647,27 +647,27 @@
                             </div>
                         @endif
                         @if (@$itemSettings->free_item_total_downloads && $item->isFree() && $item->free_downloads > 0)
-                            <div class="card-v border p-4 mt-4">
+                            <div class="card-v border item-detail-card p-4 mt-3">
                                 <h5 class="mb-0">
                                     <i class="fa fa-download me-2"></i>
                                     {{ translate($item->free_downloads > 1 ? ':count Downloads' : ':count Download', ['count' => numberFormat($item->free_downloads)]) }}
                                 </h5>
                             </div>
                         @endif
-                        <div class="card-v border p-4 mt-4">
+                        <div class="card-v border item-detail-card item-detail-meta-card p-4 mt-3">
                             <div class="small">
                                 @if ($item->last_update_at)
-                                    <div class="d-flex justify-content-between border-bottom pb-3 mb-3"">
+                                    <div class="d-flex justify-content-between border-bottom item-detail-meta-row">
                                         <p class="mb-0">{{ translate('Last Update') }}:</p>
                                         <p class="mb-0 ms-2">{{ dateFormat($item->last_update_at) }}</p>
                                     </div>
                                 @endif
-                                <div class="d-flex justify-content-between border-bottom pb-3 mb-3"">
+                                <div class="d-flex justify-content-between border-bottom item-detail-meta-row">
                                     <p class="mb-0">{{ translate('Published') }}:</p>
                                     <p class="mb-0 ms-2">{{ dateFormat($item->created_at) }}</p>
                                 </div>
                                 @if ($item->version)
-                                    <div class="d-flex justify-content-between border-bottom pb-3 mb-3"">
+                                    <div class="d-flex justify-content-between border-bottom item-detail-meta-row">
                                         <p class="mb-0">{{ translate('Version') }}:</p>
                                         <p class="mb-0 ms-2">
                                             @if (@$settings->item->changelogs_status && $item->hasChangelogs())
@@ -680,7 +680,7 @@
                                         </p>
                                     </div>
                                 @endif
-                                <div class="d-flex justify-content-between border-bottom pb-3 mb-3"">
+                                <div class="d-flex justify-content-between border-bottom item-detail-meta-row">
                                     <p class="mb-0">{{ translate('Category') }}:</p>
                                     <nav aria-label="breadcrumb">
                                         <ol class="breadcrumb justify-content-center m-0">
@@ -699,7 +699,7 @@
                                 </div>
                                 @if ($item->options && count($item->options) > 0)
                                     @foreach ($item->options as $key => $value)
-                                        <div class="d-flex justify-content-between border-bottom pb-3 mb-3">
+                                        <div class="d-flex justify-content-between border-bottom item-detail-meta-row">
                                             <p class="mb-0">{{ $key }}:</p>
                                             @if (is_array($value))
                                                 <div class="col-7 text-end ms-2">
@@ -716,7 +716,7 @@
                                         </div>
                                     @endforeach
                                 @endif
-                                <div class="d-flex justify-content-between">
+                                <div class="d-flex justify-content-between item-detail-meta-row">
                                     <p class="mb-0">{{ translate('Tags') }}:</p>
                                     <div class="col-7 text-end ms-2">
                                         @foreach ($item->getTags() as $tag)
@@ -727,7 +727,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-v border p-4 mt-4">
+                        <div class="card-v border item-detail-card item-detail-share-card p-4 mt-3">
                             <div class="d-flex align-items-center gap-3">
                                 <span class="fs-5">{{ translate('Share') }}:</span>
                                 @include('themes.basic.partials.share-buttons', [
