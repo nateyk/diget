@@ -46,6 +46,14 @@
                     value="{{ $user->profile_heading }}">
             </div>
             <div class="mb-3">
+                <label class="form-label">{{ translate('Creator Card Description') }}</label>
+                <textarea name="profile_card_description" class="form-control form-control-md" rows="3"
+                    placeholder="{{ translate('Short creator intro for your storefront card') }}">{{ old('profile_card_description', $user->profile_card_description) }}</textarea>
+                <div class="form-text">
+                    {{ translate('Shown on the creator card. Keep it simple, up to 100 words.') }}
+                </div>
+            </div>
+            <div class="mb-3">
                 <label class="form-label">{{ translate('Profile Description') }}</label>
                 <textarea name="profile_description" class="ckeditor">{{ $user->profile_description }}</textarea>
             </div>

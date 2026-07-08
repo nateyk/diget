@@ -88,6 +88,11 @@ class SettingsController extends Controller
             'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
             'profile_cover' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
             'profile_heading' => ['nullable', 'string', 'block_patterns', 'max:255'],
+            'profile_card_description' => ['nullable', 'string', 'block_patterns', 'max:700', function ($attribute, $value, $fail) {
+                if (str_word_count(strip_tags((string) $value)) > 100) {
+                    $fail(translate('Creator card description must be 100 words or fewer.'));
+                }
+            }],
             'profile_description' => ['nullable', 'string'],
             'profile_contact_email' => ['nullable', 'email', 'block_patterns', 'max:255'],
             'profile_social_links.*' => ['nullable', 'string', 'block_patterns', 'max:50'],
@@ -136,10 +141,12 @@ class SettingsController extends Controller
             }
 
             $profileDescription = purifierClean($request->profile_description);
+            $profileCardDescription = trim(strip_tags((string) $request->profile_card_description));
 
             $user->avatar = $avatar;
             $user->profile_cover = $profileCover;
             $user->profile_heading = $request->profile_heading;
+            $user->profile_card_description = $profileCardDescription;
             $user->profile_description = $profileDescription;
             $user->profile_contact_email = $request->profile_contact_email;
             $user->profile_social_links = count($socialLinks) > 0 ? $request->profile_social_links : null;

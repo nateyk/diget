@@ -3,6 +3,10 @@
 @section('content')
     @php
         $profileDescription = trim(strip_tags($user->profile_description));
+        $cardDescription = trim($user->profile_card_description ?? '');
+        if (!$cardDescription && $profileDescription) {
+            $cardDescription = \Illuminate\Support\Str::words($profileDescription, 100, '');
+        }
         $profileHeading = $user->profile_heading ?: translate('Digital creator');
         $socialLinks = $user->profile_social_links;
         $socialHandle = fn($value) => ltrim(trim($value), '@');
@@ -52,8 +56,8 @@
                     @endif
                 </div>
 
-                @if ($profileDescription)
-                    <p class="creator-storefront-bio">{{ $profileDescription }}</p>
+                @if ($cardDescription)
+                    <p class="creator-storefront-bio">{{ $cardDescription }}</p>
                 @endif
 
                 @if ($socialLinks)
@@ -125,12 +129,12 @@
                     ]) }}</p>
                 </div>
                 <div class="creator-storefront-tabs">
-                    <a href="#storefrontItems" class="active">{{ translate('Items') }}</a>
+                    <a href="#storefrontPortfolio" class="active">{{ translate('Portfolio') }}</a>
                     <a href="#storefrontAbout">{{ translate('About') }}</a>
                 </div>
             </div>
 
-            <div id="storefrontItems" class="creator-storefront-items">
+            <div id="storefrontPortfolio" class="creator-storefront-items">
                 @forelse ($items as $item)
                     <a href="{{ $item->getLink() }}" class="storefront-item-card">
                         <span class="storefront-item-preview">

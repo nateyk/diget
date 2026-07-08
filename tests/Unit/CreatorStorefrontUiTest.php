@@ -10,9 +10,13 @@ class CreatorStorefrontUiTest extends TestCase
     {
         $root = dirname(__DIR__, 2);
         $controller = file_get_contents($root . '/app/Http/Controllers/ProfileController.php');
+        $settingsController = file_get_contents($root . '/app/Http/Controllers/Workspace/SettingsController.php');
+        $userModel = file_get_contents($root . '/app/Models/User.php');
         $indexView = file_get_contents($root . '/resources/views/themes/basic/profile/index.blade.php');
         $layoutView = file_get_contents($root . '/resources/views/themes/basic/profile/layout.blade.php');
+        $settingsProfileView = file_get_contents($root . '/resources/views/themes/basic/workspace/settings/profile.blade.php');
         $css = file_get_contents($root . '/public/themes/basic/assets/css/custom.css');
+        $profileCardDescriptionMigrations = glob($root . '/database/migrations/*_add_profile_card_description_to_users_table.php');
 
         $this->assertStringContainsString('\'items\' => $items', $controller);
         $this->assertStringContainsString('Item::where(\'author_id\', $user->id)', $controller);
@@ -48,6 +52,9 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('creator-storefront-heading', $indexView);
         $this->assertStringNotContainsString('@{{ $user->username }}', $indexView);
         $this->assertStringContainsString('Storefront', $indexView);
+        $this->assertStringContainsString('storefrontPortfolio', $indexView);
+        $this->assertStringContainsString("{{ translate('Portfolio') }}", $indexView);
+        $this->assertStringNotContainsString("{{ translate('Items') }}</a>", $indexView);
         $this->assertStringContainsString('$socialHandle = fn($value) => ltrim(trim($value), \'@\')', $indexView);
         $this->assertStringContainsString('creator-storefront-socials socials', $indexView);
         $this->assertStringContainsString('social-btn social-facebook', $indexView);
@@ -60,6 +67,23 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('fab fa-pinterest', $indexView);
         $this->assertStringContainsString('{{ \'https://youtube.com/@\' . $socialHandle($socialLinks->youtube) }}', $indexView);
         $this->assertStringNotContainsString('youtube.com/@{{ $socialHandle($socialLinks->youtube) }}', $indexView);
+        $this->assertStringContainsString('$cardDescription = trim($user->profile_card_description ?? \'\')', $indexView);
+        $this->assertStringContainsString('Str::words($profileDescription, 100', $indexView);
+        $this->assertStringContainsString('creator-storefront-bio', $indexView);
+        $this->assertMatchesRegularExpression('/creator-storefront-bio.*\\$cardDescription/s', $indexView);
+        $this->assertMatchesRegularExpression('/creator-storefront-about-text.*\\$user->profile_description/s', $indexView);
+
+        $this->assertNotEmpty($profileCardDescriptionMigrations);
+        $migration = file_get_contents($profileCardDescriptionMigrations[0]);
+        $this->assertStringContainsString('profile_card_description', $migration);
+        $this->assertStringContainsString('after(\'profile_heading\')', $migration);
+
+        $this->assertStringContainsString('profile_card_description', $userModel);
+        $this->assertStringContainsString('profile_card_description', $settingsController);
+        $this->assertStringContainsString('str_word_count(strip_tags', $settingsController);
+        $this->assertStringContainsString('profile_card_description', $settingsProfileView);
+        $this->assertStringContainsString('Creator Card Description', $settingsProfileView);
+        $this->assertStringContainsString('100 words', $settingsProfileView);
 
         $this->assertStringContainsString('Creator storefront profile polish', $css);
         $this->assertStringContainsString('.creator-storefront', $css);
