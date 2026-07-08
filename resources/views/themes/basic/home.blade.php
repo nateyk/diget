@@ -1,24 +1,46 @@
 @extends('themes.basic.layouts.app')
 @section('title', @$settings->seo->title)
 @section('content')
-    <header class="header header-image"
-        style='background-image:url("{{ asset($themeSettings->home_page->header_background) }}")'>
+    <header class="home-landing-hero">
         <div class="container container-custom">
-            <div class="header-inner">
-                <div class="header-container">
-                    <h1 class="header-title" data-aos="fade-down" data-aos-duration="1000">
-                        {{ translate('WordPress Templates, Plugins, PHP Scripts, and Graphics Digital Marketplace') }}
+            <div class="home-landing-hero-grid">
+                <div class="home-landing-copy" data-aos="fade-up" data-aos-duration="900">
+                    <span class="home-landing-eyebrow">{{ translate('Premium creator storefronts') }}</span>
+                    <h1 class="home-landing-title">
+                        {{ translate('Launch a storefront that makes your digital products look premium') }}
                     </h1>
-                    <p class="header-text" data-aos="fade-up" data-aos-duration="1000">
-                        {{ translate('JavaScript, PHP Scripts, CSS, HTML5, Site Templates, WordPress Themes, Plugins, Mobile Apps, Graphics, Prints, Brochures, Flyers, Resumes, and More...') }}
+                    <p class="home-landing-text">
+                        {{ translate('Launch your storefront, sell digital products, and grow a polished creator brand from one workspace.') }}
                     </p>
-                    <div class="header-search" data-aos="fade-up" data-aos-duration="1000">
+
+                    <div class="home-landing-actions">
+                        <a href="{{ route('register') }}" class="btn btn-primary btn-md">
+                            {{ translate('Start selling') }}
+                        </a>
+                        <a href="{{ route('items.index') }}" class="btn btn-outline-secondary btn-md">
+                            {{ translate('Browse products') }}
+                        </a>
+                    </div>
+
+                    <div class="home-landing-search">
+                        <span>{{ translate('Search storefront products') }}</span>
                         <div class="search">
                             @include('themes.basic.partials.search-form', [
                                 'url' => route('items.index'),
-                                'placeholder' => translate('e.g. Wordpress landing page'),
+                                'placeholder' => translate('Search storefront products'),
                             ])
                         </div>
+                    </div>
+                </div>
+
+                <div class="home-landing-visual" data-aos="fade-up" data-aos-delay="100" data-aos-duration="900">
+                    <div class="home-landing-image-card">
+                        <img src="{{ asset($themeSettings->home_page->header_background) }}"
+                            alt="{{ translate('Creator storefront preview') }}">
+                    </div>
+                    <div class="home-landing-proof">
+                        <strong>{{ translate('Storefront-ready') }}</strong>
+                        <span>{{ translate('Profiles, products, checkout, and creator tools in one place.') }}</span>
                     </div>
                 </div>
             </div>
