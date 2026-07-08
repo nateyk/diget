@@ -11,6 +11,7 @@ class HomeLandingHeroTest extends TestCase
         $root = dirname(__DIR__, 2);
         $homeView = file_get_contents($root . '/resources/views/themes/basic/home.blade.php');
         $layoutView = file_get_contents($root . '/resources/views/themes/basic/layouts/app.blade.php');
+        $navbarView = file_get_contents($root . '/resources/views/themes/basic/includes/navbar.blade.php');
         $css = file_get_contents($root . '/public/themes/basic/assets/css/custom.css');
 
         $this->assertStringContainsString('home-landing-hero', $homeView);
@@ -32,6 +33,12 @@ class HomeLandingHeroTest extends TestCase
 
         $this->assertStringContainsString("@include('themes.basic.includes.navbar')", $layoutView);
         $this->assertStringNotContainsString("routeIs('home')", $layoutView);
+        $this->assertStringContainsString('<div class="nav-bar">', $navbarView);
+        $this->assertStringContainsString('<div class="nav-bar nav-bar-sm nav-bar-bg">', $navbarView);
+        $this->assertMatchesRegularExpression(
+            '/@unless\\s*\\(request\\(\\)->routeIs\\(\'home\'\\)\\)\\s*<div class="nav-bar nav-bar-sm nav-bar-bg">.*@endunless/s',
+            $navbarView
+        );
 
         $this->assertStringContainsString('Creator storefront landing hero', $css);
         $this->assertStringContainsString('.home-landing-hero', $css);
