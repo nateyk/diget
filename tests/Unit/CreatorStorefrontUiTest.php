@@ -146,5 +146,10 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('.creator-storefront-action-follow', $css);
         $this->assertStringContainsString('display: inline-flex', $css);
         $this->assertStringContainsString('justify-content: center', $css);
+        $this->assertStringContainsString('Creator storefront neutral card surface polish', $css);
+        $this->assertStringContainsString('background-color: #f6f7f8', $css);
+        $this->assertStringContainsString('background-color: #dedfe1', $css);
+        $this->assertStringContainsString('filter: grayscale(1) contrast(.96)', $css);
+        $this->assertStringContainsString('background-color: rgba(255, 255, 255, .72)', $css);
     }
 }

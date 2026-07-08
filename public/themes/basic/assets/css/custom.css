@@ -4139,3 +4139,79 @@
     border-color: rgba(76, 175, 80, .5);
     color: var(--primary_color);
 }
+
+/* Creator storefront neutral card surface polish */
+.creator-storefront-card {
+    border-color: rgba(22, 28, 45, .14);
+    background-color: #f6f7f8;
+    box-shadow: none !important;
+}
+
+.creator-storefront-cover {
+    border-bottom: 1px solid rgba(22, 28, 45, .08);
+    background-color: #dedfe1;
+}
+
+.creator-storefront-cover img {
+    opacity: .72;
+    filter: grayscale(1) contrast(.96);
+}
+
+.creator-storefront-card-body {
+    background-color: #f6f7f8;
+}
+
+.creator-storefront-avatar {
+    border: 4px solid #f6f7f8;
+    background-color: #f6f7f8;
+    box-shadow: none !important;
+}
+
+.creator-storefront-avatar img {
+    filter: grayscale(1) contrast(.96);
+}
+
+.creator-storefront-card-top .creator-storefront-identity h1 {
+    color: #1c2128;
+}
+
+.creator-storefront-heading,
+.creator-storefront-bio,
+.creator-storefront-stats span {
+    color: rgba(37, 46, 64, .64);
+}
+
+.creator-storefront-actions .btn,
+.creator-storefront-actions button {
+    border-color: rgba(22, 28, 45, .16);
+    background-color: #fff;
+    color: #1c2128;
+    box-shadow: none !important;
+}
+
+.creator-storefront-actions .btn.disabled,
+.creator-storefront-actions button.disabled {
+    opacity: 1;
+}
+
+.creator-storefront-action-follow .btn,
+.creator-storefront-action-follow button {
+    border-color: rgba(76, 175, 80, .48);
+    background-color: rgba(255, 255, 255, .82);
+    color: var(--primary_color);
+}
+
+.creator-storefront-socials.socials {
+    padding-bottom: 2px;
+}
+
+.creator-storefront-stats {
+    padding: 12px 0;
+    border: 1px solid rgba(22, 28, 45, .08);
+    border-radius: var(--ui-control-radius);
+    background-color: rgba(255, 255, 255, .72);
+}
+
+.creator-storefront-stats strong {
+    color: #1c2128;
+}
