@@ -110,6 +110,29 @@ class PublicMarketplaceCompactCssTest extends TestCase
             $this->assertStringContainsString($snippet, $css);
         }
 
+        $dashboardTableCardSnippets = [
+            'Workspace dashboard table card density polish',
+            '.dashboard .dashboard-card .table-search.p-4',
+            'padding: 14px !important',
+            '.dashboard .dashboard-card .table-search .row.g-3',
+            'row-gap: 10px !important',
+            '.dashboard .dashboard-card .table-search .form-control.form-control-md',
+            'min-height: 36px',
+            '.dashboard .dashboard-card .table-container .dashboard-table',
+            '.dashboard .dashboard-card .dashboard-table tbody td',
+            'padding: 8px 10px',
+            '.dashboard .dashboard-card .item-img.item-img-sm',
+            'width: 58px',
+            '.dashboard .dashboard-card .btn.btn-padding',
+            'min-width: 32px',
+            '.dashboard .dashboard-card .badge',
+            'padding: 5px 9px !important',
+        ];
+
+        foreach ($dashboardTableCardSnippets as $snippet) {
+            $this->assertStringContainsString($snippet, $css);
+        }
+
         $sharedConsistencySnippets = [
             'Shared UI consistency polish',
             ':root',
