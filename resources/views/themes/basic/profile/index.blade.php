@@ -26,12 +26,6 @@
                                 <i class="fa-solid fa-circle-check"></i>
                             @endif
                         </div>
-                        <a href="{{ $user->getProfileLink() }}" class="creator-storefront-username">
-                            {{ '@' . $user->username }}
-                        </a>
-                    </div>
-                    <div class="creator-storefront-follow">
-                        <livewire:follow-button :user="$user" />
                     </div>
                 </div>
 
@@ -45,12 +39,9 @@
                             {{ translate('Message') }}
                         </a>
                     @endif
-                    @if ($user->isAuthor())
-                        <a href="{{ $user->getPortfolioLink() }}" class="btn btn-outline-secondary btn-md">
-                            <i class="fa-regular fa-eye me-1"></i>
-                            {{ translate('Portfolio') }}
-                        </a>
-                    @endif
+                    <div class="creator-storefront-action-follow">
+                        <livewire:follow-button :user="$user" />
+                    </div>
                 </div>
 
                 @if ($cardDescription)

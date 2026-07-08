@@ -42,16 +42,17 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringNotContainsString('style="background-image', $indexView);
         $this->assertStringNotContainsString('Available for work', $indexView);
         $this->assertStringNotContainsString('creator-storefront-status', $indexView);
-        $this->assertStringContainsString('creator-storefront-follow', $indexView);
+        $this->assertStringContainsString('creator-storefront-action-follow', $indexView);
         $this->assertMatchesRegularExpression(
-            '/creator-storefront-avatar.*creator-storefront-identity.*creator-storefront-follow/s',
+            '/creator-storefront-avatar.*creator-storefront-identity/s',
             $indexView
         );
         $this->assertStringContainsString('<h1>{{ $user->getName() }}</h1>', $indexView);
-        $this->assertStringContainsString('creator-storefront-username', $indexView);
-        $this->assertStringContainsString('{{ \'@\' . $user->username }}', $indexView);
+        $this->assertStringNotContainsString('creator-storefront-username', $indexView);
+        $this->assertStringNotContainsString('{{ \'@\' . $user->username }}', $indexView);
         $this->assertStringContainsString('creator-storefront-heading', $indexView);
         $this->assertStringNotContainsString('@{{ $user->username }}', $indexView);
+        $this->assertStringNotContainsString('$user->getPortfolioLink()', $indexView);
         $this->assertStringNotContainsString('<h2>{{ translate(\'Storefront\') }}</h2>', $indexView);
         $this->assertStringNotContainsString(':count published items', $indexView);
         $this->assertStringContainsString('storefrontPortfolio', $indexView);
@@ -141,5 +142,9 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('top: 30px', $css);
         $this->assertStringContainsString('margin-top: 0', $css);
         $this->assertStringContainsString('min-height: 38px', $css);
+        $this->assertStringContainsString('Creator storefront action button alignment polish', $css);
+        $this->assertStringContainsString('.creator-storefront-action-follow', $css);
+        $this->assertStringContainsString('display: inline-flex', $css);
+        $this->assertStringContainsString('justify-content: center', $css);
     }
 }
