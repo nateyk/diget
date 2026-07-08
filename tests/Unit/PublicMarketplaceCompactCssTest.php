@@ -71,6 +71,10 @@ class PublicMarketplaceCompactCssTest extends TestCase
         $itemLayout = file_get_contents($itemLayoutPath);
 
         $this->assertStringContainsString('item-detail-page', $itemLayout);
+        $this->assertStringNotContainsString("@include('themes.basic.includes.navbar')", $itemLayout);
+        $this->assertStringNotContainsString("@include('themes.basic.includes.footer')", $itemLayout);
+        $this->assertStringNotContainsString('item_page_top', $itemLayout);
+        $this->assertStringNotContainsString('item_page_bottom', $itemLayout);
 
         $itemDetailSnippets = [
             'Product detail clean professional polish',

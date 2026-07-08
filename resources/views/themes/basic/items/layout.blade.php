@@ -10,8 +10,6 @@
 </head>
 
 <body>
-    @include('themes.basic.includes.navbar')
-    <x-ad alias="item_page_top" @class('container mt-5') />
     <section class="section forced-start item-detail-page pt-4 pb-3">
         <div class="container">
             <div class="section-header mb-4">
@@ -827,8 +825,6 @@
             </div>
         </div>
     @endif
-    <x-ad alias="item_page_bottom" @class('container mb-5') />
-    @include('themes.basic.includes.footer')
     @include('themes.basic.includes.config')
     @push('scripts_libs')
         <script src="{{ asset('vendor/libs/swiper/swiper-bundle.min.js') }}"></script>
