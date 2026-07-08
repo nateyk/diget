@@ -119,12 +119,6 @@
 
         <main class="creator-storefront-main">
             <div class="creator-storefront-main-header">
-                <div>
-                    <h2>{{ translate('Storefront') }}</h2>
-                    <p>{{ translate($publishedItemsCount == 1 ? '1 published item' : ':count published items', [
-                        'count' => numberFormat($publishedItemsCount),
-                    ]) }}</p>
-                </div>
                 <div class="creator-storefront-tabs">
                     <a href="#storefrontPortfolio" class="active"
                         data-storefront-tab="portfolio">{{ translate('Portfolio') }}</a>

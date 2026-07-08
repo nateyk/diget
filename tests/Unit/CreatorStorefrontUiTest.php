@@ -52,7 +52,8 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('{{ \'@\' . $user->username }}', $indexView);
         $this->assertStringContainsString('creator-storefront-heading', $indexView);
         $this->assertStringNotContainsString('@{{ $user->username }}', $indexView);
-        $this->assertStringContainsString('Storefront', $indexView);
+        $this->assertStringNotContainsString('<h2>{{ translate(\'Storefront\') }}</h2>', $indexView);
+        $this->assertStringNotContainsString(':count published items', $indexView);
         $this->assertStringContainsString('storefrontPortfolio', $indexView);
         $this->assertStringContainsString("{{ translate('Portfolio') }}", $indexView);
         $this->assertStringNotContainsString("{{ translate('Items') }}</a>", $indexView);
@@ -126,5 +127,9 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('position: absolute', $css);
         $this->assertStringContainsString('.creator-storefront-heading', $css);
         $this->assertStringContainsString('.creator-storefront-panel[hidden]', $css);
+        $this->assertStringContainsString('Creator storefront underline tabs refinement', $css);
+        $this->assertStringContainsString('border-bottom: 1px solid rgba(22, 28, 45, .1)', $css);
+        $this->assertStringContainsString('border-bottom: 2px solid transparent', $css);
+        $this->assertStringContainsString('border-bottom-color: var(--primary_color)', $css);
     }
 }
