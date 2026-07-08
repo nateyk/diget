@@ -38,6 +38,7 @@
     </header>
     <x-ad alias="home_page_top" @class('container container-custom mt-5') />
     @foreach ($homeSections as $key => $homeSection)
+        @continue($homeSection->alias === 'categories')
         @include('themes.basic.sections.' . str($homeSection->alias)->replace('_', '-'))
     @endforeach
     <x-ad alias="home_page_bottom" @class('container container-custom my-5') />

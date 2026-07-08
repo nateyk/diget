@@ -10,6 +10,7 @@ class HomeLandingHeroTest extends TestCase
     {
         $root = dirname(__DIR__, 2);
         $homeView = file_get_contents($root . '/resources/views/themes/basic/home.blade.php');
+        $layoutView = file_get_contents($root . '/resources/views/themes/basic/layouts/app.blade.php');
         $css = file_get_contents($root . '/public/themes/basic/assets/css/custom.css');
 
         $this->assertStringContainsString('home-landing-hero', $homeView);
@@ -24,9 +25,15 @@ class HomeLandingHeroTest extends TestCase
         $this->assertStringNotContainsString('home-landing-search', $homeView);
         $this->assertStringNotContainsString('Search storefront products', $homeView);
         $this->assertStringNotContainsString("partials.search-form", $homeView);
+        $this->assertStringContainsString("@continue(\$homeSection->alias === 'categories')", $homeView);
 
         $this->assertStringNotContainsString('class="header header-image"', $homeView);
         $this->assertStringNotContainsString('style=\'background-image', $homeView);
+
+        $this->assertMatchesRegularExpression(
+            "/@unless\\s*\\(request\\(\\)->routeIs\\('home'\\)\\)\\s*@include\\('themes\\.basic\\.includes\\.navbar'\\)\\s*@endunless/s",
+            $layoutView
+        );
 
         $this->assertStringContainsString('Creator storefront landing hero', $css);
         $this->assertStringContainsString('.home-landing-hero', $css);
