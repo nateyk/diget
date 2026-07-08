@@ -607,7 +607,7 @@ class ItemController extends Controller
             if (!in_array($thumbnail->mime_type, $this->imageMimeTypes)) {
                 throw new Exception(translate('Thumbnail must be the type of JPG or PNG'));
             }
-            $image = Image::make($thumbnail->getFileLink());
+            $image = Image::make($thumbnail->getFileSource());
             $thumbnailMaxWidth = $category->thumbnail_width;
             $thumbnailMaxHeight = $category->thumbnail_height;
             if ($image->width() != $thumbnailMaxWidth || $image->height() != $thumbnailMaxHeight) {
@@ -635,7 +635,7 @@ class ItemController extends Controller
                 if ($previewImage->size > $category->max_preview_file_size) {
                     throw new Exception(translate('Preview image max file size is :size', ['size' => formatBytes($category->max_preview_file_size)]));
                 }
-                $image = Image::make($previewImage->getFileLink());
+                $image = Image::make($previewImage->getFileSource());
                 $previewImageMaxWidth = $category->preview_image_width;
                 $previewImageMaxHeight = $category->preview_image_height;
                 if ($image->width() != $previewImageMaxWidth || $image->height() != $previewImageMaxHeight) {

@@ -60,6 +60,21 @@ class UploadedFile extends Model
         return getLinkFromStorageProvider($this->path);
     }
 
+    public function getFileSource()
+    {
+        $publicPath = public_path($this->path);
+        if (is_file($publicPath)) {
+            return $publicPath;
+        }
+
+        $storagePath = storage_path("app/{$this->path}");
+        if (is_file($storagePath)) {
+            return $storagePath;
+        }
+
+        return $this->getFileLink();
+    }
+
     public function deleteFile()
     {
         $storageProvider = storageProvider();
