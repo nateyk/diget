@@ -34,6 +34,7 @@ class CreatorStorefrontUiTest extends TestCase
         );
         $this->assertStringContainsString('creator-storefront', $indexView);
         $this->assertStringContainsString('creator-storefront-card', $indexView);
+        $this->assertStringContainsString('data-storefront-mobile-panel="profile"', $indexView);
         $this->assertStringContainsString('creator-storefront-main', $indexView);
         $this->assertStringContainsString('creator-storefront-items', $indexView);
         $this->assertStringContainsString('storefront-item-card', $indexView);
@@ -62,6 +63,12 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('data-storefront-tab="about"', $indexView);
         $this->assertStringContainsString('data-storefront-panel="portfolio"', $indexView);
         $this->assertStringContainsString('data-storefront-panel="about"', $indexView);
+        $this->assertStringContainsString('creator-storefront-mobile-nav', $indexView);
+        $this->assertStringContainsString('data-storefront-mobile-tab="profile"', $indexView);
+        $this->assertStringContainsString('data-storefront-mobile-tab="portfolio"', $indexView);
+        $this->assertStringContainsString('data-storefront-mobile-tab="about"', $indexView);
+        $this->assertStringContainsString('storefrontMobileQuery', $indexView);
+        $this->assertStringContainsString('showStorefrontMobilePanel', $indexView);
         $this->assertStringContainsString('storefrontTabs.forEach', $indexView);
         $this->assertStringContainsString('storefrontPanels.forEach', $indexView);
         $this->assertStringContainsString('event.preventDefault()', $indexView);
@@ -156,5 +163,10 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('margin-top: -31px', $css);
         $this->assertStringContainsString('padding-top: 37px', $css);
         $this->assertStringContainsString('object-position: center 42%', $css);
+        $this->assertStringContainsString('Creator storefront mobile tab navigation', $css);
+        $this->assertStringContainsString('.creator-storefront-mobile-nav', $css);
+        $this->assertStringContainsString('bottom: calc(14px + env(safe-area-inset-bottom))', $css);
+        $this->assertStringContainsString('grid-template-columns: 1fr', $css);
+        $this->assertStringContainsString('min-width: 96px', $css);
     }
 }

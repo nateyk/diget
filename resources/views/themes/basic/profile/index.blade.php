@@ -10,7 +10,7 @@
     @endphp
 
     <div class="creator-storefront">
-        <aside class="creator-storefront-card">
+        <aside class="creator-storefront-card" data-storefront-mobile-panel="profile">
             <div class="creator-storefront-cover">
                 <img src="{{ $user->getProfileCover() }}" alt="{{ $user->getName() }}">
             </div>
@@ -200,6 +200,24 @@
                 @endif
             </div>
         </main>
+
+        <nav class="creator-storefront-mobile-nav" aria-label="{{ translate('Storefront mobile navigation') }}">
+            <button type="button" class="active" data-storefront-mobile-tab="profile"
+                aria-label="{{ translate('Mobile Profile') }}">
+                <i class="fa-regular fa-user"></i>
+                <span>{{ translate('Profile') }}</span>
+            </button>
+            <button type="button" data-storefront-mobile-tab="portfolio"
+                aria-label="{{ translate('Mobile Items') }}">
+                <i class="fa-solid fa-cube"></i>
+                <span>{{ translate('Items') }}</span>
+            </button>
+            <button type="button" data-storefront-mobile-tab="about"
+                aria-label="{{ translate('Mobile About') }}">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>{{ translate('About') }}</span>
+            </button>
+        </nav>
     </div>
 @endsection
 
@@ -209,8 +227,12 @@
 
         const storefrontTabs = document.querySelectorAll('[data-storefront-tab]');
         const storefrontPanels = document.querySelectorAll('[data-storefront-panel]');
+        const storefrontMobileTabs = document.querySelectorAll('[data-storefront-mobile-tab]');
+        const storefrontMobilePanels = document.querySelectorAll('[data-storefront-mobile-panel]');
+        const storefrontMobileQuery = window.matchMedia('(max-width: 991.98px)');
+        let storefrontMobilePanel = 'profile';
 
-        const showStorefrontPanel = (panelName) => {
+        const showStorefrontPanel = (panelName, updateMobile = true) => {
             storefrontTabs.forEach((tab) => {
                 tab.classList.toggle('active', tab.dataset.storefrontTab === panelName);
             });
@@ -218,6 +240,33 @@
             storefrontPanels.forEach((panel) => {
                 panel.hidden = panel.dataset.storefrontPanel !== panelName;
             });
+
+            if (updateMobile && panelName !== 'profile') {
+                showStorefrontMobilePanel(panelName, false);
+            }
+        };
+
+        const showStorefrontMobilePanel = (panelName, updateDesktop = true) => {
+            storefrontMobilePanel = panelName;
+
+            storefrontMobileTabs.forEach((tab) => {
+                tab.classList.toggle('active', tab.dataset.storefrontMobileTab === panelName);
+            });
+
+            storefrontMobilePanels.forEach((panel) => {
+                panel.hidden = storefrontMobileQuery.matches && panel.dataset.storefrontMobilePanel !== panelName;
+            });
+
+            if (storefrontMobileQuery.matches) {
+                document.querySelector('.creator-storefront-main')?.toggleAttribute('hidden', panelName === 'profile');
+            } else {
+                document.querySelector('.creator-storefront-main')?.removeAttribute('hidden');
+                storefrontMobilePanels.forEach((panel) => panel.hidden = false);
+            }
+
+            if (updateDesktop && panelName !== 'profile') {
+                showStorefrontPanel(panelName, false);
+            }
         };
 
         storefrontTabs.forEach((tab) => {
@@ -227,8 +276,20 @@
             });
         });
 
+        storefrontMobileTabs.forEach((tab) => {
+            tab.addEventListener('click', () => {
+                showStorefrontMobilePanel(tab.dataset.storefrontMobileTab);
+            });
+        });
+
+        storefrontMobileQuery.addEventListener('change', () => {
+            showStorefrontMobilePanel(storefrontMobilePanel, false);
+        });
+
         if (window.location.hash === '#storefrontAbout' || window.location.hash === '#storefrontContact') {
             showStorefrontPanel('about');
+        } else {
+            showStorefrontMobilePanel('profile', false);
         }
     </script>
 @endpush
