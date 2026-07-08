@@ -30,10 +30,8 @@ class HomeLandingHeroTest extends TestCase
         $this->assertStringNotContainsString('class="header header-image"', $homeView);
         $this->assertStringNotContainsString('style=\'background-image', $homeView);
 
-        $this->assertMatchesRegularExpression(
-            "/@unless\\s*\\(request\\(\\)->routeIs\\('home'\\)\\)\\s*@include\\('themes\\.basic\\.includes\\.navbar'\\)\\s*@endunless/s",
-            $layoutView
-        );
+        $this->assertStringContainsString("@include('themes.basic.includes.navbar')", $layoutView);
+        $this->assertStringNotContainsString("routeIs('home')", $layoutView);
 
         $this->assertStringContainsString('Creator storefront landing hero', $css);
         $this->assertStringContainsString('.home-landing-hero', $css);

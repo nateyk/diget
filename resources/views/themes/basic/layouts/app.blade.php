@@ -7,9 +7,7 @@
 </head>
 
 <body>
-    @unless (request()->routeIs('home'))
-        @include('themes.basic.includes.navbar')
-    @endunless
+    @include('themes.basic.includes.navbar')
     @yield('content')
     @include('themes.basic.includes.footer')
     @include('themes.basic.includes.config')
