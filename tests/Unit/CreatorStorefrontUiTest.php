@@ -56,6 +56,12 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('storefrontPortfolio', $indexView);
         $this->assertStringContainsString("{{ translate('Portfolio') }}", $indexView);
         $this->assertStringNotContainsString("{{ translate('Items') }}</a>", $indexView);
+        $this->assertStringContainsString('data-storefront-tab="portfolio"', $indexView);
+        $this->assertStringContainsString('data-storefront-tab="about"', $indexView);
+        $this->assertStringContainsString('data-storefront-panel="portfolio"', $indexView);
+        $this->assertStringContainsString('data-storefront-panel="about"', $indexView);
+        $this->assertStringContainsString('storefrontTabs.forEach', $indexView);
+        $this->assertStringContainsString('storefrontPanels.forEach', $indexView);
         $this->assertStringContainsString('$socialHandle = fn($value) => ltrim(trim($value), \'@\')', $indexView);
         $this->assertStringContainsString('creator-storefront-socials socials', $indexView);
         $this->assertStringContainsString('social-btn social-facebook', $indexView);
@@ -119,5 +125,6 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('padding-top: 42px', $css);
         $this->assertStringContainsString('position: absolute', $css);
         $this->assertStringContainsString('.creator-storefront-heading', $css);
+        $this->assertStringContainsString('.creator-storefront-panel[hidden]', $css);
     }
 }

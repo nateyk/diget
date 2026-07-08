@@ -39,7 +39,8 @@
 
                 <div class="creator-storefront-actions">
                     @if ($user->profile_contact_email)
-                        <a href="#storefrontContact" class="btn btn-outline-secondary btn-md">
+                        <a href="#storefrontContact" class="btn btn-outline-secondary btn-md"
+                            data-storefront-tab="about">
                             <i class="fa-regular fa-message me-1"></i>
                             {{ translate('Message') }}
                         </a>
@@ -125,89 +126,123 @@
                     ]) }}</p>
                 </div>
                 <div class="creator-storefront-tabs">
-                    <a href="#storefrontPortfolio" class="active">{{ translate('Portfolio') }}</a>
-                    <a href="#storefrontAbout">{{ translate('About') }}</a>
+                    <a href="#storefrontPortfolio" class="active"
+                        data-storefront-tab="portfolio">{{ translate('Portfolio') }}</a>
+                    <a href="#storefrontAbout" data-storefront-tab="about">{{ translate('About') }}</a>
                 </div>
             </div>
 
-            <div id="storefrontPortfolio" class="creator-storefront-items">
-                @forelse ($items as $item)
-                    <a href="{{ $item->getLink() }}" class="storefront-item-card">
-                        <span class="storefront-item-preview">
-                            @if ($item->isPreviewFileTypeImage() || $item->isPreviewFileTypeVideo() || $item->isPreviewFileTypeAudio())
-                                <img src="{{ $item->getPreviewImageLink() }}" alt="{{ $item->name }}">
-                            @else
-                                <span class="storefront-item-placeholder">
-                                    <i class="fa-regular fa-file"></i>
-                                </span>
-                            @endif
-                            <span class="storefront-item-price">
-                                @if ($item->isFree())
-                                    {{ translate('Free') }}
+            <div id="storefrontPortfolio" class="creator-storefront-panel" data-storefront-panel="portfolio">
+                <div class="creator-storefront-items">
+                    @forelse ($items as $item)
+                        <a href="{{ $item->getLink() }}" class="storefront-item-card">
+                            <span class="storefront-item-preview">
+                                @if ($item->isPreviewFileTypeImage() || $item->isPreviewFileTypeVideo() || $item->isPreviewFileTypeAudio())
+                                    <img src="{{ $item->getPreviewImageLink() }}" alt="{{ $item->name }}">
                                 @else
-                                    {{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}
-                                @endif
-                            </span>
-                        </span>
-                        <span class="storefront-item-body">
-                            <strong>{{ $item->name }}</strong>
-                            <span class="storefront-item-meta">
-                                @if (@$settings->item->reviews_status && $item->hasReviews())
-                                    <span>
-                                        <i class="fa-solid fa-star"></i>
-                                        {{ number_format($item->avg_reviews, 1) }}
-                                        ({{ numberFormat($item->total_reviews) }})
+                                    <span class="storefront-item-placeholder">
+                                        <i class="fa-regular fa-file"></i>
                                     </span>
                                 @endif
-                                @if ($item->hasSales())
-                                    <span>{{ translate($item->total_sales == 1 ? '1 sale' : ':count sales', [
-                                        'count' => numberFormat($item->total_sales),
-                                    ]) }}</span>
-                                @endif
+                                <span class="storefront-item-price">
+                                    @if ($item->isFree())
+                                        {{ translate('Free') }}
+                                    @else
+                                        {{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}
+                                    @endif
+                                </span>
                             </span>
-                        </span>
-                    </a>
-                @empty
-                    <div class="creator-storefront-empty">
-                        <i class="fa-regular fa-file-lines"></i>
-                        <p>{{ translate('No published items yet') }}</p>
-                    </div>
-                @endforelse
-            </div>
-
-            {{ $items->links() }}
-
-            <div id="storefrontAbout" class="creator-storefront-about">
-                <h3>{{ translate('About') }}</h3>
-                @if ($user->profile_heading)
-                    <h4>{{ $user->profile_heading }}</h4>
-                @endif
-                @if ($user->profile_description)
-                    <div class="creator-storefront-about-text">
-                        {!! $user->profile_description !!}
-                    </div>
-                @else
-                    <p>{{ translate('This creator has not added an about section yet.') }}</p>
-                @endif
-            </div>
-
-            @if ($user->profile_contact_email)
-                <div id="storefrontContact" class="creator-storefront-contact">
-                    <h3>{{ translate('Contact :username', ['username' => $user->username]) }}</h3>
-                    @if (authUser())
-                        <form action="{{ route('profile.sendmail', $user->username) }}" method="POST">
-                            @csrf
-                            <textarea name="message" class="form-control form-control-md"
-                                placeholder="{{ translate('Enter Your Message') }}" rows="4" required>{{ old('message') }}</textarea>
-                            <button class="btn btn-primary btn-md mt-2">{{ translate('Send message') }}</button>
-                        </form>
-                    @else
-                        <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-md">
-                            {{ translate('Sign in to message') }}
+                            <span class="storefront-item-body">
+                                <strong>{{ $item->name }}</strong>
+                                <span class="storefront-item-meta">
+                                    @if (@$settings->item->reviews_status && $item->hasReviews())
+                                        <span>
+                                            <i class="fa-solid fa-star"></i>
+                                            {{ number_format($item->avg_reviews, 1) }}
+                                            ({{ numberFormat($item->total_reviews) }})
+                                        </span>
+                                    @endif
+                                    @if ($item->hasSales())
+                                        <span>{{ translate($item->total_sales == 1 ? '1 sale' : ':count sales', [
+                                            'count' => numberFormat($item->total_sales),
+                                        ]) }}</span>
+                                    @endif
+                                </span>
+                            </span>
                         </a>
+                    @empty
+                        <div class="creator-storefront-empty">
+                            <i class="fa-regular fa-file-lines"></i>
+                            <p>{{ translate('No published items yet') }}</p>
+                        </div>
+                    @endforelse
+                </div>
+
+                {{ $items->links() }}
+            </div>
+
+            <div id="storefrontAbout" class="creator-storefront-panel" data-storefront-panel="about" hidden>
+                <div class="creator-storefront-about">
+                    <h3>{{ translate('About') }}</h3>
+                    @if ($user->profile_heading)
+                        <h4>{{ $user->profile_heading }}</h4>
+                    @endif
+                    @if ($user->profile_description)
+                        <div class="creator-storefront-about-text">
+                            {!! $user->profile_description !!}
+                        </div>
+                    @else
+                        <p>{{ translate('This creator has not added an about section yet.') }}</p>
                     @endif
                 </div>
-            @endif
+
+                @if ($user->profile_contact_email)
+                    <div id="storefrontContact" class="creator-storefront-contact">
+                        <h3>{{ translate('Contact :username', ['username' => $user->username]) }}</h3>
+                        @if (authUser())
+                            <form action="{{ route('profile.sendmail', $user->username) }}" method="POST">
+                                @csrf
+                                <textarea name="message" class="form-control form-control-md"
+                                    placeholder="{{ translate('Enter Your Message') }}" rows="4" required>{{ old('message') }}</textarea>
+                                <button class="btn btn-primary btn-md mt-2">{{ translate('Send message') }}</button>
+                            </form>
+                        @else
+                            <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-md">
+                                {{ translate('Sign in to message') }}
+                            </a>
+                        @endif
+                    </div>
+                @endif
+            </div>
         </main>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        "use strict";
+
+        const storefrontTabs = document.querySelectorAll('[data-storefront-tab]');
+        const storefrontPanels = document.querySelectorAll('[data-storefront-panel]');
+
+        const showStorefrontPanel = (panelName) => {
+            storefrontTabs.forEach((tab) => {
+                tab.classList.toggle('active', tab.dataset.storefrontTab === panelName);
+            });
+
+            storefrontPanels.forEach((panel) => {
+                panel.hidden = panel.dataset.storefrontPanel !== panelName;
+            });
+        };
+
+        storefrontTabs.forEach((tab) => {
+            tab.addEventListener('click', () => {
+                showStorefrontPanel(tab.dataset.storefrontTab);
+            });
+        });
+
+        if (window.location.hash === '#storefrontAbout' || window.location.hash === '#storefrontContact') {
+            showStorefrontPanel('about');
+        }
+    </script>
+@endpush
