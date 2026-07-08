@@ -2,11 +2,7 @@
 @section('title', $user->username)
 @section('content')
     @php
-        $profileDescription = trim(strip_tags($user->profile_description));
         $cardDescription = trim($user->profile_card_description ?? '');
-        if (!$cardDescription && $profileDescription) {
-            $cardDescription = \Illuminate\Support\Str::words($profileDescription, 100, '');
-        }
         $profileHeading = $user->profile_heading ?: translate('Digital creator');
         $socialLinks = $user->profile_social_links;
         $socialHandle = fn($value) => ltrim(trim($value), '@');

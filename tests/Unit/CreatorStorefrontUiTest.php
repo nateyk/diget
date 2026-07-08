@@ -17,6 +17,7 @@ class CreatorStorefrontUiTest extends TestCase
         $settingsProfileView = file_get_contents($root . '/resources/views/themes/basic/workspace/settings/profile.blade.php');
         $css = file_get_contents($root . '/public/themes/basic/assets/css/custom.css');
         $profileCardDescriptionMigrations = glob($root . '/database/migrations/*_add_profile_card_description_to_users_table.php');
+        $profileCardDescriptionBackfillMigrations = glob($root . '/database/migrations/*_backfill_profile_card_description_from_profile_description.php');
 
         $this->assertStringContainsString('\'items\' => $items', $controller);
         $this->assertStringContainsString('Item::where(\'author_id\', $user->id)', $controller);
@@ -68,7 +69,7 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('{{ \'https://youtube.com/@\' . $socialHandle($socialLinks->youtube) }}', $indexView);
         $this->assertStringNotContainsString('youtube.com/@{{ $socialHandle($socialLinks->youtube) }}', $indexView);
         $this->assertStringContainsString('$cardDescription = trim($user->profile_card_description ?? \'\')', $indexView);
-        $this->assertStringContainsString('Str::words($profileDescription, 100', $indexView);
+        $this->assertStringNotContainsString('Str::words($profileDescription, 100', $indexView);
         $this->assertStringContainsString('creator-storefront-bio', $indexView);
         $this->assertMatchesRegularExpression('/creator-storefront-bio.*\\$cardDescription/s', $indexView);
         $this->assertMatchesRegularExpression('/creator-storefront-about-text.*\\$user->profile_description/s', $indexView);
@@ -77,6 +78,11 @@ class CreatorStorefrontUiTest extends TestCase
         $migration = file_get_contents($profileCardDescriptionMigrations[0]);
         $this->assertStringContainsString('profile_card_description', $migration);
         $this->assertStringContainsString('after(\'profile_heading\')', $migration);
+        $this->assertNotEmpty($profileCardDescriptionBackfillMigrations);
+        $backfillMigration = file_get_contents($profileCardDescriptionBackfillMigrations[0]);
+        $this->assertStringContainsString('profile_card_description', $backfillMigration);
+        $this->assertStringContainsString('profile_description', $backfillMigration);
+        $this->assertStringContainsString('Str::words', $backfillMigration);
 
         $this->assertStringContainsString('profile_card_description', $userModel);
         $this->assertStringContainsString('profile_card_description', $settingsController);

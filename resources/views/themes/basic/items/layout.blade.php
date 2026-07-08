@@ -13,7 +13,6 @@
     <section class="section forced-start item-detail-page pt-4 pb-3">
         <div class="container">
             <div class="section-header mb-4">
-                @yield('breadcrumbs')
                 <div class="row g-3 align-items-center">
                     <div class="col-12 col-lg">
                         <h1
