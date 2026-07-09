@@ -17,7 +17,7 @@
                         </div>
                         <div class="col">
                             <div class="col-lg-3">
-                                <input type="checkbox" name="smtp[status]" data-toggle="toggle"
+                                <input type="checkbox" name="smtp[status]" data-bs-toggle="toggle"
                                     {{ @$settings->smtp->status ? 'checked' : '' }}>
                             </div>
                         </div>

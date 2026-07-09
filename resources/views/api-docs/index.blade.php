@@ -11,7 +11,7 @@
     <title>{{ seoTitle($__env) }}</title>
     <link rel="shortcut icon" href="{{ asset($themeSettings->general->favicon) }}">
     <link rel="stylesheet" href="{{ asset('vendor/libs/fontawesome/fontawesome.min.css') }}" />
-    @bootstrap
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('vendor/api-docs/css/app.css') }}" />
 </head>
 

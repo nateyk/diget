@@ -20,7 +20,9 @@ class StripeController extends Controller
     public function __construct()
     {
         $this->paymentGateway = paymentGateway('stripe');
-        Stripe::setApiKey($this->paymentGateway->credentials->secret_key);
+        if ($this->paymentGateway) {
+            Stripe::setApiKey($this->paymentGateway->credentials->secret_key);
+        }
     }
 
     public function process($trx)

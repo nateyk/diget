@@ -15,7 +15,7 @@
                         <div class="row g-3">
                             <div class="col-lg-4">
                                 <label class="form-label">{{ translate('Two-Factor Authentication') }} </label>
-                                <input id="2faCheckbox" type="checkbox" name="google2fa_status" data-toggle="toggle"
+                                <input id="2faCheckbox" type="checkbox" name="google2fa_status" data-bs-toggle="toggle"
                                     data-on="{{ translate('Active') }}" data-off="{{ translate('Disabled') }}"
                                     {{ $reviewer->has2fa() ? 'checked' : '' }}>
                             </div>

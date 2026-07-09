@@ -13,11 +13,11 @@
                 <div class="row g-3">
                     <div class="col-12 col-lg">
                         <label class="form-label">{{ translate('Status') }}</label>
-                        <input type="checkbox" name="status" data-toggle="toggle" @checked($plan->isActive())>
+                        <input type="checkbox" name="status" data-bs-toggle="toggle" @checked($plan->isActive())>
                     </div>
                     <div class="col-12 col-lg">
                         <label class="form-label">{{ translate('Featured') }}</label>
-                        <input type="checkbox" name="featured" data-toggle="toggle" @checked($plan->isFeatured())>
+                        <input type="checkbox" name="featured" data-bs-toggle="toggle" @checked($plan->isFeatured())>
                     </div>
                 </div>
             </div>

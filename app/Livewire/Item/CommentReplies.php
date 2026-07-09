@@ -28,10 +28,7 @@ class CommentReplies extends Component
         'refreshItemCommentReplies' => '$refresh',
     ];
 
-    public function middleware()
-    {
-        return ['auth', 'oauth.complete', 'verified', '2fa.verify', 'item_comments.disable'];
-    }
+    protected $middleware = ['auth', 'oauth.complete', 'verified', '2fa.verify', 'item_comments.disable'];
 
     public function mount($comment)
     {
@@ -78,7 +75,7 @@ class CommentReplies extends Component
         $this->reply = '';
 
         $this->perPage = $this->comment->replies()->count();
-        $this->emit('refreshItemCommentReplies');
+        $this->dispatch('refreshItemCommentReplies');
 
         dispatch(new SendCommentReplyNotification($commentReply));
 

@@ -22,10 +22,7 @@ class CommentReport extends Component
         'reportItemComment' => 'showReportItemCommentModal',
     ];
 
-    public function middleware()
-    {
-        return ['auth', 'oauth.complete', 'verified', '2fa.verify', 'item_comments.disable'];
-    }
+    protected $middleware = ['auth', 'oauth.complete', 'verified', '2fa.verify', 'item_comments.disable'];
 
     public function mount()
     {
@@ -38,7 +35,7 @@ class CommentReport extends Component
 
         $this->itemCommentReply = $itemCommentReply;
 
-        $this->dispatchBrowserEvent('show-modal', ['id' => 'reportItemCommentModal']);
+        $this->dispatch('show-modal', ['id' => 'reportItemCommentModal']);
     }
 
     public function sendCommentReport()
@@ -74,9 +71,9 @@ class CommentReport extends Component
 
         $this->report_reason = '';
 
-        $this->emit('refreshItemCommentReplies');
+        $this->dispatch('refreshItemCommentReplies');
 
-        $this->dispatchBrowserEvent('close-modal', ['id' => 'reportItemCommentModal']);
+        $this->dispatch('close-modal', ['id' => 'reportItemCommentModal']);
 
         return $this->toastr('success', translate('Your report has been sent successfully'));
     }

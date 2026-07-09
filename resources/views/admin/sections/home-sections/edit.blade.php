@@ -11,7 +11,7 @@
             <div class="card-body">
                 <div class="mb-3 col-lg-4">
                     <label class="form-label">{{ translate('Status') }}</label>
-                    <input type="checkbox" name="status" data-toggle="toggle" data-height="40" @checked($homeSection->isActive())>
+                    <input type="checkbox" name="status" data-bs-toggle="toggle" data-height="40" @checked($homeSection->isActive())>
                 </div>
                 <div class="row g-3 row-cols-1">
                     <div class="col">

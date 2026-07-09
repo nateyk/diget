@@ -4,7 +4,8 @@ namespace App\Methods;
 
 use App\Traits\InteractWithFileStorage;
 use Exception;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class Watermark
 {
@@ -28,13 +29,15 @@ class Watermark
                 throw new Exception(translate('Watermark image does not exist'));
             }
 
+            $manager = new ImageManager(new Driver());
+
             if (is_string($image)) {
-                $image = Image::make(file_get_contents($image));
+                $image = $manager->read(file_get_contents($image));
             } else {
-                $image = Image::make($image);
+                $image = $manager->read($image);
             }
 
-            $watermark = Image::make(file_get_contents($watermarkPath));
+            $watermark = $manager->read(file_get_contents($watermarkPath));
 
             $watermark->resize($width, $height);
             $watermark->rotate($rotate);

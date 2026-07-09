@@ -1,4 +1,4 @@
-@bootstrap
+@vite(['resources/css/app.css', 'resources/js/app.js'])
 <link rel="stylesheet" href="{{ asset('vendor/libs/fontawesome/fontawesome.min.css') }}">
 <link rel="stylesheet" href="{{ asset('vendor/libs/simplebar/simplebar.min.css') }}">
 <link rel="stylesheet" href="{{ asset('vendor/libs/datatable/datatables.min.css') }}">
