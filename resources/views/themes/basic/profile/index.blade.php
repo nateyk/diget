@@ -10,38 +10,34 @@
     @endphp
 
     <div class="creator-storefront">
-        <aside class="creator-storefront-card" data-storefront-mobile-panel="profile">
-            <div class="creator-storefront-cover">
-                <img src="{{ $user->getProfileCover() }}" alt="{{ $user->getName() }}">
+        <aside class="card-v border item-detail-card item-detail-author-card creator-storefront-card" data-storefront-mobile-panel="profile">
+            <div class="creator-storefront-cover-banner">
+                <img src="{{ $user->getProfileCover() }}" alt="{{ $user->getName() }} cover">
             </div>
             <div class="creator-storefront-card-body">
-                <div class="creator-storefront-card-top">
+                <div class="creator-storefront-profile-row">
                     <a href="{{ $user->getProfileLink() }}" class="creator-storefront-avatar">
                         <img src="{{ $user->getAvatar() }}" alt="{{ $user->username }}">
                     </a>
                     <div class="creator-storefront-identity">
-                        <div class="d-flex align-items-center gap-2">
-                            <h1>{{ $user->getName() }}</h1>
+                        <div class="creator-storefront-name">
+                            {{ $user->getName() }}
                             @if ($user->isAuthor())
                                 <i class="fa-solid fa-circle-check"></i>
                             @endif
                         </div>
+                        <div class="creator-storefront-heading">{{ $profileHeading }}</div>
                     </div>
                 </div>
 
-                <p class="creator-storefront-heading">{{ $profileHeading }}</p>
-
                 <div class="creator-storefront-actions">
                     @if ($user->profile_contact_email)
-                        <a href="#storefrontContact" class="btn btn-outline-secondary btn-md"
-                            data-storefront-tab="about">
+                        <a href="#storefrontContact" class="btn btn-outline-secondary btn-md" data-storefront-open-panel="about">
                             <i class="fa-regular fa-message me-1"></i>
                             {{ translate('Message') }}
                         </a>
                     @endif
-                    <div class="creator-storefront-action-follow">
-                        <livewire:follow-button :user="$user" />
-                    </div>
+                    <livewire:follow-button :user="$user" />
                 </div>
 
                 @if ($cardDescription)
@@ -225,7 +221,7 @@
     <script>
         "use strict";
 
-        const storefrontTabs = document.querySelectorAll('[data-storefront-tab]');
+        const storefrontTabs = document.querySelectorAll('.creator-storefront-tabs [data-storefront-tab]');
         const storefrontPanels = document.querySelectorAll('[data-storefront-panel]');
         const storefrontMobileTabs = document.querySelectorAll('[data-storefront-mobile-tab]');
         const storefrontMobilePanels = document.querySelectorAll('[data-storefront-mobile-panel]');
@@ -273,6 +269,13 @@
             tab.addEventListener('click', (event) => {
                 event.preventDefault();
                 showStorefrontPanel(tab.dataset.storefrontTab);
+            });
+        });
+
+        document.querySelectorAll('[data-storefront-open-panel]').forEach((button) => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                showStorefrontPanel(button.dataset.storefrontOpenPanel);
             });
         });
 
