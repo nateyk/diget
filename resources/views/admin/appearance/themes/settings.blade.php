@@ -117,7 +117,7 @@
                                         <input type="checkbox" name="{{ $themeSetting->key }}"
                                             data-off="{{ translate($themeSetting->off) }}"
                                             data-on="{{ translate($themeSetting->on) }}" id="{{ $themeSetting->key }}"
-                                            {{ $themeSetting->required ? 'required' : '' }} data-bs-toggle="toggle"
+                                            {{ $themeSetting->required ? 'required' : '' }} data-toggle="toggle"
                                             {{ $themeSetting->value ? 'checked' : '' }}>
                                     </div>
                                 @elseif ($themeSetting->field === 'color')

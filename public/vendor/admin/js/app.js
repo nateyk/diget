@@ -742,4 +742,16 @@
         });
     });
 
+    function initBootstrapToggles() {
+        if (window.$ && $.fn.bootstrapToggle) {
+            $('[data-toggle="toggle"]').not('.toggle-initialized').each(function () {
+                $(this).bootstrapToggle();
+                $(this).addClass('toggle-initialized');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', initBootstrapToggles);
+    document.addEventListener('livewire:navigated', initBootstrapToggles);
+
 })(jQuery);

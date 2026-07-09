@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{{ asset('vendor/libs/vironeer/counter-cards.min.css') }}">
 <link rel="stylesheet" href="{{ asset('vendor/libs/simplebar/simplebar.min.css') }}" />
 @stack('styles_libs')
+<link rel="stylesheet" href="{{ asset('vendor/libs/toggle-master/bootstrap-toggle.min.css') }}">
 @reviewerColors
 <link rel="stylesheet" href="{{ asset_with_version('vendor/reviewer/css/app.css') }}" />
 @if (getDirection() == 'rtl')

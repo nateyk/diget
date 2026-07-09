@@ -37,7 +37,7 @@
             <div class="card-body p-4">
                 <div class="col-lg-5">
                     <label class="form-label">{{ translate('Status') }}</label>
-                    <input type="checkbox" id="depositStatus" name="deposit[status]" data-bs-toggle="toggle" data-height="40px"
+                    <input type="checkbox" id="depositStatus" name="deposit[status]" data-toggle="toggle" data-height="40px"
                         @checked(@$settings->deposit->status)>
                 </div>
                 <div id="depositDetails" class="row g-3 mt-2 {{ !@$settings->deposit->status ? 'd-none' : '' }}">

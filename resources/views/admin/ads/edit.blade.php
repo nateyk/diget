@@ -9,7 +9,7 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span><strong>{{ translate($ad->position) }}</strong> {!! $ad->size ? '- (' . $ad->size . ')' : '' !!}</span>
                 <span class="col-3">
-                    <input type="checkbox" name="status" data-bs-toggle="toggle" @checked($ad->isActive())>
+                    <input type="checkbox" name="status" data-toggle="toggle" @checked($ad->isActive())>
                 </span>
             </div>
             <div class="card-body">

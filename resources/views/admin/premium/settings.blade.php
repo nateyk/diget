@@ -11,7 +11,7 @@
                     <div class="col-12">
                         <div class="col-lg-4">
                             <label class="form-label">{{ translate('Status') }}</label>
-                            <input type="checkbox" name="premium[status]" data-bs-toggle="toggle" @checked(@$settings->premium->status)>
+                            <input type="checkbox" name="premium[status]" data-toggle="toggle" @checked(@$settings->premium->status)>
                         </div>
                     </div>
                     <div class="col-12">

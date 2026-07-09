@@ -12,7 +12,7 @@
                     <div class="col">
                         <div class="col-lg-6">
                             <label class="form-label">{{ translate('Status') }}</label>
-                            <input type="checkbox" name="status" data-bs-toggle="toggle" data-height="35px" checked>
+                            <input type="checkbox" name="status" data-toggle="toggle" data-height="35px" checked>
                         </div>
                     </div>
                     <div class="col">

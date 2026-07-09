@@ -16,25 +16,25 @@
                         <div class="row g-3 mb-4">
                             <div class="col-lg-6">
                                 <label class="form-label">{{ translate('Account status') }} </label>
-                                <input type="checkbox" name="status" data-bs-toggle="toggle"
+                                <input type="checkbox" name="status" data-toggle="toggle"
                                     data-on="{{ translate('Active') }}" data-off="{{ translate('Banned') }}"
                                     {{ $user->isActive() ? 'checked' : '' }}>
                             </div>
                             <div class="col-lg-6">
                                 <label class="form-label">{{ translate('KYC Status') }} </label>
-                                <input type="checkbox" name="kyc_status" data-bs-toggle="toggle"
+                                <input type="checkbox" name="kyc_status" data-toggle="toggle"
                                     data-on="{{ translate('Verified') }}" data-off="{{ translate('Unverified') }}"
                                     {{ $user->isKycVerified() ? 'checked' : '' }}>
                             </div>
                             <div class="col-lg-6">
                                 <label class="form-label">{{ translate('Email status') }} </label>
-                                <input type="checkbox" name="email_status" data-bs-toggle="toggle"
+                                <input type="checkbox" name="email_status" data-toggle="toggle"
                                     data-on="{{ translate('Verified') }}" data-off="{{ translate('Unverified') }}"
                                     {{ $user->isEmailVerified() ? 'checked' : '' }}>
                             </div>
                             <div class="col-lg-6">
                                 <label class="form-label">{{ translate('Two-Factor Authentication') }} </label>
-                                <input id="2faCheckbox" type="checkbox" name="google2fa_status" data-bs-toggle="toggle"
+                                <input id="2faCheckbox" type="checkbox" name="google2fa_status" data-toggle="toggle"
                                     data-on="{{ translate('Active') }}" data-off="{{ translate('Disabled') }}"
                                     {{ $user->has2fa() ? 'checked' : '' }}>
                             </div>

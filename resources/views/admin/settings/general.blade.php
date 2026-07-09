@@ -113,7 +113,7 @@
                     @foreach (@$settings->actions as $key => $value)
                         <div class="col-lg-3">
                             <label class="form-label"> {{ translate(ucfirst(str_replace('_', ' ', $key))) }}</label>
-                            <input type="checkbox" name="actions[{{ $key }}]" data-bs-toggle="toggle"
+                            <input type="checkbox" name="actions[{{ $key }}]" data-toggle="toggle"
                                 {{ $value ? 'checked' : '' }}>
                         </div>
                     @endforeach

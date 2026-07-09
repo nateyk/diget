@@ -20,7 +20,7 @@
                             @if (!$mailTemplate->isDefault())
                                 <div class="col-lg-4">
                                     <label class="form-label">{{ translate('Status') }} </label>
-                                    <input type="checkbox" name="status" data-bs-toggle="toggle"
+                                    <input type="checkbox" name="status" data-toggle="toggle"
                                         {{ $mailTemplate->status ? 'checked' : '' }}>
                                 </div>
                             @endif

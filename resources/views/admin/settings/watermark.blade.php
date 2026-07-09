@@ -23,7 +23,7 @@
                     <div class="col-12">
                         <div class="col-lg-3">
                             <label class="form-label">{{ translate('Status') }} :</label>
-                            <input type="checkbox" name="watermark[status]" data-bs-toggle="toggle" data-height="40px"
+                            <input type="checkbox" name="watermark[status]" data-toggle="toggle" data-height="40px"
                                 {{ @$settings->watermark->status ? 'checked' : '' }}>
                         </div>
                     </div>

@@ -12,7 +12,7 @@
                     <div class="col-lg-12">
                         <div class="col-lg-6">
                             <label class="form-label">{{ translate('Author') }} </label>
-                            <input type="checkbox" name="author" data-bs-toggle="toggle" data-on="{{ translate('Yes') }}"
+                            <input type="checkbox" name="author" data-toggle="toggle" data-on="{{ translate('Yes') }}"
                                 data-off="{{ translate('No') }}" data-height="45px">
                         </div>
                     </div>

@@ -38,67 +38,67 @@
                 <div class="row row-cols-1 row-cols-lg-3 g-3">
                     <div class="col">
                         <label class="form-label">{{ translate('Adding the items require review') }}</label>
-                        <input type="checkbox" name="item[adding_require_review]" data-bs-toggle="toggle" data-height="38px"
+                        <input type="checkbox" name="item[adding_require_review]" data-toggle="toggle" data-height="38px"
                             data-on="{{ translate('Yes') }}" data-off="{{ translate('No') }}"
                             {{ @$settings->item->adding_require_review ? 'checked' : '' }}>
                     </div>
                     <div class="col">
                         <label class="form-label">{{ translate('Updating the items require review') }}</label>
-                        <input type="checkbox" name="item[updating_require_review]" data-bs-toggle="toggle" data-height="38px"
+                        <input type="checkbox" name="item[updating_require_review]" data-toggle="toggle" data-height="38px"
                             data-on="{{ translate('Yes') }}" data-off="{{ translate('No') }}"
                             {{ @$settings->item->updating_require_review ? 'checked' : '' }}>
                     </div>
                     <div class="col">
                         <label class="form-label">{{ translate('Free item option') }}</label>
-                        <input type="checkbox" name="item[free_item_option]" data-bs-toggle="toggle" data-height="38px"
+                        <input type="checkbox" name="item[free_item_option]" data-toggle="toggle" data-height="38px"
                             data-on="{{ translate('Yes') }}" data-off="{{ translate('No') }}"
                             {{ @$settings->item->free_item_option ? 'checked' : '' }}>
                     </div>
                     <div class="col">
                         <label class="form-label">{{ translate('Show free item total downloads') }}</label>
-                        <input type="checkbox" name="item[free_item_total_downloads]" data-bs-toggle="toggle"
+                        <input type="checkbox" name="item[free_item_total_downloads]" data-toggle="toggle"
                             data-height="38px" data-on="{{ translate('Yes') }}" data-off="{{ translate('No') }}"
                             {{ @$settings->item->free_item_total_downloads ? 'checked' : '' }}>
                     </div>
                     <div class="col">
                         <label class="form-label">{{ translate('Download free items require login') }}</label>
-                        <input type="checkbox" name="item[free_items_require_login]" data-bs-toggle="toggle" data-height="38px"
+                        <input type="checkbox" name="item[free_items_require_login]" data-toggle="toggle" data-height="38px"
                             data-on="{{ translate('Yes') }}" data-off="{{ translate('No') }}"
                             {{ @$settings->item->free_items_require_login ? 'checked' : '' }}>
                     </div>
                     <div class="col">
                         <label class="form-label">{{ translate('Item Changelogs') }}</label>
-                        <input type="checkbox" name="item[changelogs_status]" data-bs-toggle="toggle" data-height="38px"
+                        <input type="checkbox" name="item[changelogs_status]" data-toggle="toggle" data-height="38px"
                             data-on="{{ translate('Enable') }}" data-off="{{ translate('Disable') }}"
                             {{ @$settings->item->changelogs_status ? 'checked' : '' }}>
                     </div>
                     <div class="col">
                         <label class="form-label">{{ translate('Item Reviews') }}</label>
-                        <input type="checkbox" name="item[reviews_status]" data-bs-toggle="toggle" data-height="38px"
+                        <input type="checkbox" name="item[reviews_status]" data-toggle="toggle" data-height="38px"
                             data-on="{{ translate('Enable') }}" data-off="{{ translate('Disable') }}"
                             {{ @$settings->item->reviews_status ? 'checked' : '' }}>
                     </div>
                     <div class="col">
                         <label class="form-label">{{ translate('Item Comments') }}</label>
-                        <input type="checkbox" name="item[comments_status]" data-bs-toggle="toggle" data-height="38px"
+                        <input type="checkbox" name="item[comments_status]" data-toggle="toggle" data-height="38px"
                             data-on="{{ translate('Enable') }}" data-off="{{ translate('Disable') }}"
                             {{ @$settings->item->comments_status ? 'checked' : '' }}>
                     </div>
                     <div class="col">
                         <label class="form-label">{{ translate('Item Support') }}</label>
-                        <input type="checkbox" name="item[support_status]" data-bs-toggle="toggle" data-height="38px"
+                        <input type="checkbox" name="item[support_status]" data-toggle="toggle" data-height="38px"
                             data-on="{{ translate('Enable') }}" data-off="{{ translate('Disable') }}"
                             {{ @$settings->item->support_status ? 'checked' : '' }}>
                     </div>
                     <div class="col">
                         <label class="form-label">{{ translate('External file link option') }}</label>
-                        <input type="checkbox" name="item[external_file_link_option]" data-bs-toggle="toggle"
+                        <input type="checkbox" name="item[external_file_link_option]" data-toggle="toggle"
                             data-height="38px" data-on="{{ translate('Yes') }}" data-off="{{ translate('No') }}"
                             {{ @$settings->item->external_file_link_option ? 'checked' : '' }}>
                     </div>
                     <div class="col">
                         <label class="form-label">{{ translate('Buy Now Button') }}</label>
-                        <input type="checkbox" name="item[buy_now_button]" data-bs-toggle="toggle" data-height="38px"
+                        <input type="checkbox" name="item[buy_now_button]" data-toggle="toggle" data-height="38px"
                             data-on="{{ translate('Enable') }}" data-off="{{ translate('Disable') }}"
                             {{ @$settings->item->buy_now_button ? 'checked' : '' }}>
                     </div>
@@ -110,7 +110,7 @@
             <div class="card-body p-4">
                 <div class="col-lg-3">
                     <label class="form-label">{{ translate('Status') }}</label>
-                    <input type="checkbox" id="discountStatus" name="item[discount_status]" data-bs-toggle="toggle"
+                    <input type="checkbox" id="discountStatus" name="item[discount_status]" data-toggle="toggle"
                         data-height="38px" @checked(@$settings->item->discount_status)>
                 </div>
                 <div id="discountDetails" class="row g-3 mt-2 {{ !@$settings->item->discount_status ? 'd-none' : '' }}">

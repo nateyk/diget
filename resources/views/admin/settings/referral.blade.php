@@ -10,7 +10,7 @@
                 <div class="row g-3">
                     <div class="col-4">
                         <label class="form-label">{{ translate('Referral Status') }}</label>
-                        <input type="checkbox" name="referral[status]" data-bs-toggle="toggle"
+                        <input type="checkbox" name="referral[status]" data-toggle="toggle"
                             {{ @$settings->referral->status ? 'checked' : '' }}>
                     </div>
                     <div class="col-12">

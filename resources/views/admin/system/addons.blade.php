@@ -39,7 +39,7 @@
                                             @if (!$addon->hasNoStatus())
                                                 <div class="col-12 col-lg-6 col-xl-12">
                                                     <input class="addon-status" type="checkbox" name="status"
-                                                        data-bs-toggle="toggle"
+                                                        data-toggle="toggle"
                                                         data-update-link="{{ route('admin.system.addons.update', $addon->id) }}"
                                                         {{ $addon->isActive() ? 'checked' : '' }}>
                                                 </div>
