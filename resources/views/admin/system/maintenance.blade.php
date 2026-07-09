@@ -16,7 +16,7 @@
                     <div class="col-12">
                         <div class="col-lg-4">
                             <label class="form-label">{{ translate('Status') }}</label>
-                            <input type="checkbox" name="maintenance[status]" data-toggle="toggle" data-height="40px"
+                            <input type="checkbox" name="maintenance[status]" data-bs-toggle="toggle" data-height="40px"
                                 {{ @$settings->maintenance->status ? 'checked' : '' }}>
                         </div>
                     </div>

@@ -9,7 +9,7 @@
             <div class="card-body p-4">
                 <div class="mb-3 col-lg-4">
                     <label class="form-label">{{ translate('Status') }}</label>
-                    <input type="checkbox" name="announcement[status]" data-toggle="toggle" data-height="40"
+                    <input type="checkbox" name="announcement[status]" data-bs-toggle="toggle" data-height="40"
                         {{ @$settings->announcement->status ? 'checked' : '' }}>
                 </div>
                 <div class="mb-3">

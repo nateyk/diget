@@ -16,17 +16,17 @@
                 <div class="row g-3">
                     <div class="col-lg-4">
                         <label class="form-label">{{ translate('Kyc Status') }}</label>
-                        <input type="checkbox" name="kyc[status]" data-toggle="toggle"
+                        <input type="checkbox" name="kyc[status]" data-bs-toggle="toggle"
                             {{ @$settings->kyc->status ? 'checked' : '' }}>
                     </div>
                     <div class="col-lg-4">
                         <label class="form-label">{{ translate('Required') }}</label>
-                        <input type="checkbox" name="kyc[required]" data-toggle="toggle" data-on="{{ translate('Yes') }}"
+                        <input type="checkbox" name="kyc[required]" data-bs-toggle="toggle" data-on="{{ translate('Yes') }}"
                             data-off="{{ translate('No') }}" {{ @$settings->kyc->required ? 'checked' : '' }}>
                     </div>
                     <div class="col-lg-4">
                         <label class="form-label">{{ translate('Selfie Verification') }}</label>
-                        <input type="checkbox" name="kyc[selfie_verification]" data-toggle="toggle"
+                        <input type="checkbox" name="kyc[selfie_verification]" data-bs-toggle="toggle"
                             {{ @$settings->kyc->selfie_verification ? 'checked' : '' }}>
                     </div>
                 </div>

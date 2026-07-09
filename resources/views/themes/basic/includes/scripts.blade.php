@@ -4,7 +4,6 @@
 <x-partials />
 @stack('top_scripts')
 <script src="{{ asset('vendor/libs/jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('vendor/libs/bootstrap/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('vendor/libs/vironeer/toastr/js/vironeer-toastr.min.js') }}"></script>
 <script src="{{ asset('vendor/libs/wavesurfer/wavesurfer.min.js') }}"></script>
 <script src="{{ asset('vendor/libs/plyr/plyr.min.js') }}"></script>

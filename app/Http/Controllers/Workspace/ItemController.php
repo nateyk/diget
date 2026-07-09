@@ -24,7 +24,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 use Jenssegers\Date\Date;
 use Mews\Purifier\Facades\Purifier;
 use Str;
@@ -607,7 +608,8 @@ class ItemController extends Controller
             if (!in_array($thumbnail->mime_type, $this->imageMimeTypes)) {
                 throw new Exception(translate('Thumbnail must be the type of JPG or PNG'));
             }
-            $image = Image::make($thumbnail->getFileSource());
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($thumbnail->getFileSource());
             $thumbnailMaxWidth = $category->thumbnail_width;
             $thumbnailMaxHeight = $category->thumbnail_height;
             if ($image->width() != $thumbnailMaxWidth || $image->height() != $thumbnailMaxHeight) {
@@ -635,7 +637,8 @@ class ItemController extends Controller
                 if ($previewImage->size > $category->max_preview_file_size) {
                     throw new Exception(translate('Preview image max file size is :size', ['size' => formatBytes($category->max_preview_file_size)]));
                 }
-                $image = Image::make($previewImage->getFileSource());
+                $manager = new ImageManager(new Driver());
+                $image = $manager->read($previewImage->getFileSource());
                 $previewImageMaxWidth = $category->preview_image_width;
                 $previewImageMaxHeight = $category->preview_image_height;
                 if ($image->width() != $previewImageMaxWidth || $image->height() != $previewImageMaxHeight) {

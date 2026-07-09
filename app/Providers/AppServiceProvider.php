@@ -49,21 +49,25 @@ class AppServiceProvider extends ServiceProvider
         $this->validationExtends();
 
         if (config('system.install.complete')) {
+            try {
+                if (@settings('actions')->force_ssl) {
+                    $this->app['request']->server->set('HTTPS', true);
+                }
 
-            if (@settings('actions')->force_ssl) {
-                $this->app['request']->server->set('HTTPS', true);
-            }
+                View::composer('*', function ($view) {
+                    $view->with(['settings' => @settings(), 'themeSettings' => themeSettings()]);
+                });
 
-            View::composer('*', function ($view) {
-                $view->with(['settings' => @settings(), 'themeSettings' => themeSettings()]);
-            });
+                $this->themeViewComposers();
+                $this->reviewerViewComposers();
+                $this->adminViewComposers();
 
-            $this->themeViewComposers();
-            $this->reviewerViewComposers();
-            $this->adminViewComposers();
-
-            if (getDirection() == 'rtl') {
-                Config::set('toastr.options.positionClass', 'vironeer-toast-top-left');
+                if (getDirection() == 'rtl') {
+                    Config::set('toastr.options.positionClass', 'vironeer-toast-top-left');
+                }
+            } catch (\Exception $e) {
+                // Database not available during package discovery or console commands
+                // Skip database-dependent operations
             }
         }
     }
@@ -395,11 +399,6 @@ class AppServiceProvider extends ServiceProvider
 
     public function registerBladeDirectives()
     {
-        Blade::directive('bootstrap', function () {
-            $file = getDirection() == 'rtl' ? 'bootstrap-rtl.min.css' : 'bootstrap.min.css';
-            return ' <link rel="stylesheet" href="{{ asset("vendor/libs/bootstrap/' . $file . '") }}">';
-        });
-
         Blade::directive('themeColors', function () {
             return '<link rel="stylesheet" href="' . theme_assets_with_version(config('theme.style.colors')) . '">';
         });

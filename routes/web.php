@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 Route::post('image/upload', 'ImageUploadController@upload');
 Route::get('cronjob', 'CronJobController@run')->name('cronjob')->middleware('demo:GET');
 Route::middleware(['maintenance'])->group(function () {
-    Auth::routes(['verify' => true]);
     Route::post('cookie/accept', 'GeneralController@cookie')->middleware('ajax.only');
     Route::group(['namespace' => 'Auth'], function () {
         Route::get('login', 'LoginController@showLoginForm')->name('login');

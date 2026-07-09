@@ -19,7 +19,7 @@
                     </div>
                     <div class="col-lg-6">
                         <label class="form-label">{{ translate('Status') }} </label>
-                        <input type="checkbox" name="status" data-toggle="toggle"
+                        <input type="checkbox" name="status" data-bs-toggle="toggle"
                             {{ $withdrawalMethod->status ? 'checked' : '' }}>
                     </div>
                 </div>

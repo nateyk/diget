@@ -12,24 +12,24 @@
                 <div class="row g-3">
                     <div class="col-lg-6">
                         <label class="form-label">{{ translate('Newsletter Status') }}</label>
-                        <input type="checkbox" name="newsletter[status]" data-toggle="toggle"
+                        <input type="checkbox" name="newsletter[status]" data-bs-toggle="toggle"
                             {{ @$settings->newsletter->status ? 'checked' : '' }}>
                     </div>
                     <div class="col-lg-6">
                         <label class="form-label">{{ translate('Show Popup') }}</label>
-                        <input type="checkbox" name="newsletter[popup_status]" data-toggle="toggle"
+                        <input type="checkbox" name="newsletter[popup_status]" data-bs-toggle="toggle"
                             data-on="{{ translate('Yes') }}" data-off="{{ translate('No') }}"
                             {{ @$settings->newsletter->popup_status ? 'checked' : '' }}>
                     </div>
                     <div class="col-lg-6">
                         <label class="form-label">{{ translate('Show Form In Footer') }}</label>
-                        <input type="checkbox" name="newsletter[footer_status]" data-toggle="toggle"
+                        <input type="checkbox" name="newsletter[footer_status]" data-bs-toggle="toggle"
                             data-on="{{ translate('Yes') }}" data-off="{{ translate('No') }}"
                             {{ @$settings->newsletter->footer_status ? 'checked' : '' }}>
                     </div>
                     <div class="col-lg-6">
                         <label class="form-label">{{ translate('Register New Users') }}</label>
-                        <input type="checkbox" name="newsletter[register_new_users]" data-toggle="toggle"
+                        <input type="checkbox" name="newsletter[register_new_users]" data-bs-toggle="toggle"
                             data-on="{{ translate('Yes') }}" data-off="{{ translate('No') }}"
                             {{ @$settings->newsletter->register_new_users ? 'checked' : '' }}>
                     </div>

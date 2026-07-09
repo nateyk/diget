@@ -13,10 +13,7 @@ class FollowButton extends Component
 
     public $follower;
 
-    public function middleware()
-    {
-        return ['auth', 'oauth.complete', 'verified', '2fa.verify'];
-    }
+    protected $middleware = ['auth', 'oauth.complete', 'verified', '2fa.verify'];
 
     public function mount($user)
     {

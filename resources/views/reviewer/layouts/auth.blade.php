@@ -3,7 +3,7 @@
 
 <head>
     @include('reviewer.includes.head')
-    @bootstrap
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('vendor/libs/fontawesome/fontawesome.min.css') }}" />
     @reviewerColors
     <link rel="stylesheet" href="{{ asset('vendor/libs/vironeer/toastr/css/vironeer-toastr.min.css') }}">

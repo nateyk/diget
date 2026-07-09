@@ -21,10 +21,7 @@ class Comments extends Component
 
     public $comment;
 
-    public function middleware()
-    {
-        return ['auth', 'oauth.complete', 'verified', '2fa.verify', 'item_comments.disable'];
-    }
+    protected $middleware = ['auth', 'oauth.complete', 'verified', '2fa.verify', 'item_comments.disable'];
 
     public function mount($item)
     {
@@ -77,7 +74,7 @@ class Comments extends Component
 
         $this->comment = '';
 
-        $this->emit('refreshCommentsCounter');
+        $this->dispatch('refreshCommentsCounter');
 
         $author = $item->author;
         if ($author->id != $user->id) {

@@ -17,8 +17,10 @@ class PaypalIpnController extends Controller
     public function __construct()
     {
         $this->paymentGateway = paymentGateway('paypal_ipn');
-        $this->endpoint = $this->paymentGateway->isSandboxMode() ?
-        'https://www.sandbox.paypal.com/webscr' : 'https://www.paypal.com/cgi-bin/webscr';
+        if ($this->paymentGateway) {
+            $this->endpoint = $this->paymentGateway->isSandboxMode() ?
+            'https://www.sandbox.paypal.com/webscr' : 'https://www.paypal.com/cgi-bin/webscr';
+        }
     }
 
     public function process($trx)

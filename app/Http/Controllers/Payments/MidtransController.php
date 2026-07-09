@@ -18,12 +18,14 @@ class MidtransController extends Controller
     public function __construct()
     {
         $this->paymentGateway = paymentGateway('midtrans');
-        $this->serverKey = $this->paymentGateway->credentials->server_key;
-        Config::$serverKey = $this->serverKey;
-        Config::$isProduction = $this->paymentGateway->isSandboxMode() ? false : true;
-        Config::$appendNotifUrl = route('payments.webhooks.midtrans');
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
+        if ($this->paymentGateway) {
+            $this->serverKey = $this->paymentGateway->credentials->server_key;
+            Config::$serverKey = $this->serverKey;
+            Config::$isProduction = $this->paymentGateway->isSandboxMode() ? false : true;
+            Config::$appendNotifUrl = route('payments.webhooks.midtrans');
+            Config::$isSanitized = true;
+            Config::$is3ds = true;
+        }
     }
 
     public function process($trx)

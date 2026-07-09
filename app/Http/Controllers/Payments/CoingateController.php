@@ -16,7 +16,9 @@ class CoingateController extends Controller
     public function __construct()
     {
         $this->paymentGateway = paymentGateway('coingate');
-        $this->client = new Client($this->paymentGateway->credentials->auth_token, true);
+        if ($this->paymentGateway) {
+            $this->client = new Client($this->paymentGateway->credentials->auth_token, true);
+        }
     }
 
     public function process($trx)

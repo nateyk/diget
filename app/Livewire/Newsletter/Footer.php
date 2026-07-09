@@ -35,7 +35,7 @@ class Footer extends Component
             Cookie::queue(Cookie::forever('nl_subscribed', true));
 
             $this->email = '';
-            $this->emit('newsletterRefresh');
+            $this->dispatch('newsletterRefresh');
 
             return $this->toastr('success', translate('You have successfully subscribed'));
         } catch (Exception $e) {

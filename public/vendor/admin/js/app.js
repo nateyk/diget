@@ -400,7 +400,8 @@
                         publishCommentBtn.removeClass('disabled');
                         publishCommentForm.attr('action', response.publish_link);
                     }
-                    viewCommentModal.modal('show');
+                    const modal = new bootstrap.Modal(viewCommentModal[0]);
+                    modal.show();
                 } else {
                     toastr.error(response.error);
                 }
