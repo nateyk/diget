@@ -2762,7 +2762,7 @@
         justify-content: center;
         margin-inline: auto;
         padding: 5px;
-        border: 1px solid rgba(22, 28, 45, .12);
+        border: 1px solid var(--border_color);
         border-radius: 10px;
         background-color: #fff;
         box-shadow: none;
@@ -2786,7 +2786,7 @@
     }
 
     .creator-storefront-mobile-nav button:hover {
-        background-color: rgba(76, 175, 80, .08);
+        background-color: color-mix(in srgb, var(--primary_color) 8%, transparent);
         color: var(--primary_color);
     }
 

@@ -5,7 +5,7 @@
     @include('themes.basic.includes.head')
 </head>
 
-<body class="bg-white {{ request()->routeIs('profile.index') ? 'profile-storefront-page' : '' }}">
+<body class="{{ request()->routeIs('profile.index') ? 'profile-storefront-page' : 'bg-white' }}">
     @unless (request()->routeIs('profile.index'))
         @include('themes.basic.includes.navbar')
     @endunless
