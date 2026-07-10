@@ -14,6 +14,7 @@ Route::name('payments.')->prefix('payments')->namespace('Payments')->group(funct
         Route::get('coinbase', 'CoinbaseController@ipn')->name('coinbase');
         Route::get('coingate', 'CoingateController@ipn')->name('coingate');
         Route::post('paystack', 'PaystackController@ipn')->name('paystack');
+        Route::get('chapa', 'ChapaController@ipn')->name('chapa');
         Route::post('razorpay', 'RazorpayController@ipn')->name('razorpay');
         Route::get('midtrans', 'MidtransController@ipn')->name('midtrans');
         Route::get('xendit', 'XenditController@ipn')->name('xendit');
@@ -47,6 +48,7 @@ Route::name('payments.')->prefix('payments')->namespace('Payments')->group(funct
         Route::post('coinbase', 'CoinbaseController@webhook')->name('coinbase');
         Route::post('coingate', 'CoingateController@webhook')->name('coingate');
         Route::post('paystack', 'PaystackController@webhook')->name('paystack');
+        Route::post('chapa', 'ChapaController@webhook')->name('chapa');
         Route::post('razorpay', 'RazorpayController@webhook')->name('razorpay');
         Route::post('midtrans', 'MidtransController@webhook')->name('midtrans');
         Route::post('xendit', 'XenditController@webhook')->name('xendit');
