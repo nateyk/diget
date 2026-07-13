@@ -20,7 +20,10 @@
                     </div>
                     <div class="col-12">
                         <label class="form-label">{{ translate('Description') }}</label>
-                        <textarea name="description" class="ckeditor">{{ old('description') }}</textarea>
+                        <div class="rich-text-editor">
+                            <textarea name="description" class="form-control ckeditor" rows="10"
+                                placeholder="{{ translate('Describe your item in detail') }}">{{ old('description') }}</textarea>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -41,56 +44,6 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-lg-12">
-                        <label class="form-label">{{ translate('SubCategory (Optional)') }}</label>
-                        <select name="sub_category" class="selectpicker-md selectpicker" title="--"
-                            data-live-search="true">
-                            @foreach ($category->subCategories as $subCayegory)
-                                <option value="{{ $subCayegory->slug }}" @selected(old('sub_category') == $subCayegory->slug)>
-                                    {{ $subCayegory->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @if ($category->categoryOptions->count() > 0)
-                        @foreach ($category->categoryOptions as $categoryOption)
-                            <div class="col-lg-12">
-                                <label class="form-label">{{ $categoryOption->name }}</label>
-                                <select
-                                    name="options[{{ $categoryOption->id }}]{{ $categoryOption->isMultiple() ? '[]' : '' }}"
-                                    class="selectpicker-md  selectpicker" title="--"
-                                    {{ $categoryOption->isMultiple() ? 'multiple' : '' }}
-                                    {{ $categoryOption->isRequired() ? 'required' : '' }}>
-                                    @if (!$categoryOption->isRequired())
-                                        <option value="">--</option>
-                                    @endif
-                                    @foreach ($categoryOption->options as $option)
-                                        @php
-                                            $selected = false;
-                                            if ($categoryOption->isMultiple()) {
-                                                $selected = old("options.{$categoryOption->id}")
-                                                    ? in_array($option, old("options.{$categoryOption->id}"))
-                                                    : false;
-                                            } else {
-                                                $selected = old("options.{$categoryOption->id}") == $option;
-                                            }
-                                        @endphp
-                                        <option value="{{ $option }}" @selected($selected)>
-                                            {{ $option }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        @endforeach
-                    @endif
-                    <div class="col-12">
-                        <label class="form-label">{{ translate('Version (Optional)') }}</label>
-                        <input type="text" name="version" class="form-control form-control-md"
-                            placeholder="{{ translate('1.0 or 1.0.0') }}" value="{{ old('version') }}">
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label">{{ translate('Demo Link (Optional)') }}</label>
-                        <input type="url" name="demo_link" class="form-control form-control-md"
-                            value="{{ old('demo_link') }}">
-                    </div>
                     <div class="col-12">
                         <label class="form-label">{{ translate('Tags') }}</label>
                         <input id="item-tags" type="text" name="tags" value="{{ old('tags') }}" required>
@@ -102,47 +55,15 @@
             </div>
         </div>
         @include('themes.basic.workspace.items.includes.files-box')
-        @if (@$settings->item->support_status)
-            <div class="dashboard-card card-v p-0 mb-4">
-                <div class="card-v-header border-bottom py-3 px-4 d-flex justify-content-between">
-                    <h5 class="mb-0">{{ translate('Support') }}</h5>
-                </div>
-                <div class="card-v-body p-4">
-                    <p>
-                        {{ translate('Item will be supported?') }}
-                    </p>
-                    <div>
-                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                            <input type="radio" class="btn-check support-option" name="support" value="0"
-                                id="support1" @checked(old('support') ? old('support') == '0' : true)>
-                            <label class="btn btn-outline-primary" for="support1">{{ translate('No') }}</label>
-                            <input type="radio" class="btn-check support-option" name="support" value="1"
-                                id="support2" @checked(old('support') == '1')>
-                            <label class="btn btn-outline-primary" for="support2">{{ translate('Yes') }}</label>
-                        </div>
-                    </div>
-                    <div class="support-instructions mt-3 {{ old('support') && old('support') == '1' ? '' : 'd-none' }}">
-                        <label class="form-label">{{ translate('Instructions') }}</label>
-                        <textarea name="support_instructions" class="form-control" rows="6">{{ old('support_instructions') }}</textarea>
-                        <div class="form-text">
-                            {{ translate('Enter the instructions that the buyer should follow to get support. ') }}</div>
-                    </div>
-                </div>
-            </div>
-        @endif
         <div class="dashboard-card card-v p-0 mb-4">
-            <div class="card-v-header border-bottom py-3 px-4 d-flex justify-content-between">
-                <h5 class="mb-0">{{ translate('Licenses Price') }}</h5>
-                @if (@$settings->links->licenses_terms_link)
-                    <a href="{{ @$settings->links->licenses_terms_link }}">{{ translate('Licenses terms') }}<i
-                            class="fa-solid fa-angle-right fa-rtl ms-1"></i></a>
-                @endif
+            <div class="card-v-header border-bottom py-3 px-4">
+                <h5 class="mb-0">{{ translate('Item Price') }}</h5>
             </div>
             <div class="card-v-body p-4">
                 <div class="row g-4 mb-3">
                     <div class="col-md-12 col-lg-4 col-xxl-5">
                         @include('themes.basic.workspace.partials.input-price', [
-                            'label' => translate('Regular License Price'),
+                            'label' => translate('Item Price'),
                             'id' => 'regular-license-price',
                             'name' => 'regular_license_price',
                             'min' => @$settings->item->minimum_price,
@@ -161,31 +82,6 @@
                         @include('themes.basic.workspace.partials.input-price', [
                             'label' => translate('Purchase price'),
                             'id' => 'regular-license-purchase-price',
-                            'value' => 0,
-                            'disabled' => true,
-                        ])
-                    </div>
-                    <div class="col-md-12 col-lg-4 col-xxl-5">
-                        @include('themes.basic.workspace.partials.input-price', [
-                            'label' => translate('Extended License Price'),
-                            'id' => 'extended-license-price',
-                            'name' => 'extended_license_price',
-                            'min' => @$settings->item->minimum_price,
-                            'max' => @$settings->item->maximum_price,
-                            'required' => true,
-                        ])
-                    </div>
-                    <div class="col-md-12 col-lg-4 col-xxl-3">
-                        @include('themes.basic.workspace.partials.input-price', [
-                            'label' => translate('Buyer fee'),
-                            'value' => $category->extended_buyer_fee,
-                            'disabled' => true,
-                        ])
-                    </div>
-                    <div class="col-md-12 col-lg-4 col-xxl-4">
-                        @include('themes.basic.workspace.partials.input-price', [
-                            'label' => translate('Purchase price'),
-                            'id' => 'extended-license-purchase-price',
                             'value' => 0,
                             'disabled' => true,
                         ])
@@ -265,6 +161,8 @@
         <script src="{{ asset('vendor/libs/tags-input/bootstrap-tagsinput.min.js') }}"></script>
         <script src="{{ asset('vendor/libs/bootstrap/select/bootstrap-select.min.js') }}"></script>
         <script src="{{ asset('vendor/libs/jquery/jquery.priceformat.min.js') }}"></script>
+    @endpush
+    @push('scripts')
         <script src="{{ theme_assets_with_version('assets/js/item.js') }}"></script>
     @endpush
     @include('themes.basic.workspace.partials.ckeditor')

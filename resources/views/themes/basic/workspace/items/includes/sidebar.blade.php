@@ -32,12 +32,6 @@
                                 <a href="{{ route('categories.category', $item->category->slug) }}"
                                     target="_blank">{{ $item->category->name }}</a>
                             </li>
-                            @if ($item->subCategory)
-                                <li class="breadcrumb-item">
-                                    <a href="{{ route('categories.sub-category', [$item->category->slug, $item->subCategory->slug]) }}"
-                                        target="_blank">{{ $item->subCategory->name }}</a>
-                                </li>
-                            @endif
                         </ol>
                     </nav>
                 </div>

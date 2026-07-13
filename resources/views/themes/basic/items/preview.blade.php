@@ -40,7 +40,7 @@
                     </div>
                 </div>
                 <a href="{{ $item->getLink() }}" class="btn btn-primary">
-                    <i class="fa fa-cart-shopping d-inline d-lg-none"></i>
+                    <i class="fa fa-bolt d-inline d-lg-none"></i>
                     <span class="d-none d-lg-inline">{{ translate('Buy Now') }}</span>
                 </a>
             </div>

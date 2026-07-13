@@ -63,7 +63,7 @@ class AppServiceProvider extends ServiceProvider
                 $this->adminViewComposers();
 
                 if (getDirection() == 'rtl') {
-                    Config::set('toastr.options.positionClass', 'vironeer-toast-top-left');
+                    Config::set('toastr.options.positionClass', 'vironeer-toast-bottom-left');
                 }
             } catch (\Exception $e) {
                 // Database not available during package discovery or console commands

@@ -24,19 +24,6 @@
                                         </p>
                                     </div>
                                 </a>
-                                <div class="category-body">
-                                    <div class="category-links">
-                                        @foreach ($category->subCategories as $subCategory)
-                                            <a href="{{ $subCategory->getLink() }}" class="category-link">
-                                                <i class="fa-solid fa-tag fa-rtl me-2"></i>
-                                                {{ translate(':category_name (:count)', [
-                                                    'category_name' => $subCategory->name,
-                                                    'count' => $subCategory->items_count,
-                                                ]) }}
-                                            </a>
-                                        @endforeach
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>

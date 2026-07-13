@@ -25,9 +25,9 @@
                 <div class="overlay"></div>
                 <div class="nav-bar-menu-inner">
                     <div class="nav-bar-menu-header">
-                        <butaton class="nav-bar-menu-close ms-auto">
+                        <button class="nav-bar-menu-close ms-auto">
                             <i class="fa fa-times"></i>
-                        </butaton>
+                        </button>
                     </div>
                     <div class="nav-bar-links">
                         @foreach ($topNavLinks as $topNavLink)
@@ -89,14 +89,6 @@
                         </button>
                     </a>
                 @endif
-                <a href="{{ route('cart.index') }}" class="link-btn cart-btn d-none d-xl-block">
-                    <button class="btn btn-outline-light btn-padding">
-                        <i class="fa fa-cart-shopping"></i>
-                    </button>
-                    @if ($cartItemsCount)
-                        <div class="cart-counter">{{ $cartItemsCount > 99 ? '+99' : $cartItemsCount }}</div>
-                    @endif
-                </a>
                 @guest
                     <a href="{{ route('login') }}" class="link-btn">
                         <button class="btn btn-outline-primary">{{ translate('Sign In') }}</button>
@@ -109,14 +101,6 @@
                 @endguest
             </div>
             <div class="nav-bar-actions">
-                <a href="{{ route('cart.index') }}" class="cart-btn d-block d-xl-none ms-3">
-                    <button class="btn btn-outline-light btn-padding">
-                        <i class="fa fa-cart-shopping"></i>
-                    </button>
-                    @if ($cartItemsCount)
-                        <div class="cart-counter">{{ $cartItemsCount > 99 ? '+99' : $cartItemsCount }}</div>
-                    @endif
-                </a>
                 @auth
                     @include('themes.basic.partials.user-menu', ['menu_class' => 'ms-3 me-0'])
                 @endauth
@@ -127,63 +111,3 @@
         </div>
     </div>
 </div>
-@unless (request()->routeIs('home'))
-    <div class="nav-bar nav-bar-sm nav-bar-bg">
-        <div class="container container-custom">
-            <div class="nav-bar-container">
-                <div class="nav-bar-menu-btn me-3">
-                    <i class="fa-solid fa-bars fa-lg"></i>
-                </div>
-                <div class="nav-bar-menu">
-                    <div class="overlay"></div>
-                    <div class="nav-bar-menu-inner">
-                        <div class="nav-bar-menu-header">
-                            <button class="nav-bar-menu-close ms-auto">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </div>
-                        <div class="nav-bar-links">
-                            @foreach ($bottomNavLinks as $bottomNavLink)
-                                @if ($bottomNavLink->children->count() > 0)
-                                    <div class="drop-down" data-dropdown data-dropdown-position="top">
-                                        <div class="drop-down-btn">
-                                            <span class="me-2">{{ $bottomNavLink->name }}</span>
-                                            <i class="fa fa-angle-down ms-auto"></i>
-                                        </div>
-                                        <div class="drop-down-menu drop-down-menu-md drop-down-menu-end">
-                                            @foreach ($bottomNavLink->children as $child)
-                                                <a href="{{ $child->link }}"
-                                                    {{ $child->isExternal() ? 'target=_blank' : '' }}
-                                                    class="drop-down-item">
-                                                    <span>{{ $child->name }}</span>
-                                                </a>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @else
-                                    <a href="{{ $bottomNavLink->link }}"
-                                        {{ $bottomNavLink->isExternal() ? 'target=_blank' : '' }} class="link">
-                                        <div class="link-title">
-                                            <span>{{ $bottomNavLink->name }}</span>
-                                        </div>
-                                    </a>
-                                @endif
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-                <div class="ms-auto">
-                    <form action="{{ route('items.index') }}" method="GET">
-                        <div class="form-search form-search-reverse">
-                            <button class="icon">
-                                <i class="fa fa-search"></i>
-                            </button>
-                            <input type="text" name="search" placeholder="{{ translate('Search...') }}"
-                                class="form-control form-control-md" value="{{ request()->input('search') }}" required>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-@endunless

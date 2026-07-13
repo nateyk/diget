@@ -16,20 +16,7 @@ class CartController extends Controller
 {
     public function index()
     {
-        $cartItems = CartItem::forCurrentSession()
-            ->orderbyDesc('id')->paginate(12);
-
-        $cartTotal = 0;
-        if ($cartItems->count() > 0) {
-            foreach ($cartItems as $cartItem) {
-                $cartTotal += $cartItem->getTotalAmountWithSupport();
-            }
-        }
-
-        return theme_view('cart', [
-            'cartItems' => $cartItems,
-            'cartTotal' => $cartTotal,
-        ]);
+        return redirect()->route('items.index');
     }
 
     public function addItem(Request $request)

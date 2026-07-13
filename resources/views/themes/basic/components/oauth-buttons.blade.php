@@ -1,17 +1,17 @@
 @if ($oauthProviders->count() > 0)
-    <div class="login-with mt-3">
+    <div class="login-with auth-oauth mt-3">
         <div class="login-with-divider">
-            <span>{{ translate('Or With') }}</span>
+            <span>{{ translate('Or continue with') }}</span>
         </div>
-        <div class="row row-cols-1 row-cols-sm-{{ $oauthProviders->count() > 1 ? 2 : 1 }} g-3">
+        <div class="auth-oauth-list">
             @foreach ($oauthProviders as $oauthProvider)
-                <div class="col">
-                    <a href="{{ route('oauth.login', $oauthProvider->alias) }}"
-                        class="btn btn-social btn-md w-100 text-center">
-                        <img src="{{ asset($oauthProvider->logo) }}" class="me-1" width="25px" height="25px">
+                <a href="{{ route('oauth.login', $oauthProvider->alias) }}"
+                    class="btn btn-social btn-md auth-oauth-btn">
+                    <img src="{{ asset($oauthProvider->logo) }}" alt="" width="22" height="22">
+                    <span>
                         {{ translate($oauthProvider->name) }}
-                    </a>
-                </div>
+                    </span>
+                </a>
             @endforeach
         </div>
     </div>

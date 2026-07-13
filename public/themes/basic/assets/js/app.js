@@ -43,44 +43,86 @@
     }
 
     var dropdown = document.querySelectorAll("[data-dropdown]");
-    if (dropdown) {
-        dropdown.forEach(function(el) {
-            let dropdownMenu = el.querySelector(".drop-down-menu");
-
-            function dropdownOP() {
-                if (
-                    el.getBoundingClientRect().top + dropdownMenu.offsetHeight >
-                    window.innerHeight - 60 &&
-                    el.getAttribute("data-dropdown-position") !== "top"
-                ) {
-                    dropdownMenu.style.top = "auto";
-                    dropdownMenu.style.bottom = "40px";
-                } else {
-                    dropdownMenu.style.top = "40px";
-                    dropdownMenu.style.bottom = "auto";
+    if (dropdown.length) {
+        function closeDropdowns(except) {
+            dropdown.forEach(function(dropdownItem) {
+                if (dropdownItem !== except) {
+                    dropdownItem.classList.remove("active");
+                    dropdownItem.classList.remove("animated");
                 }
-            }
-            window.addEventListener("click", function(e) {
-                if (el.contains(e.target)) {
-                    el.classList.toggle("active");
-                    setTimeout(function() {
-                        el.classList.toggle("animated");
-                    }, 0);
-                } else {
-                    el.classList.remove("active");
-                    el.classList.remove("animated");
-                }
-                dropdownOP();
             });
-            window.addEventListener("resize", dropdownOP);
-            window.addEventListener("scroll", dropdownOP);
+        }
+
+        function setDropdownPosition(el, dropdownMenu) {
+            if (
+                el.getBoundingClientRect().top + dropdownMenu.offsetHeight >
+                window.innerHeight - 60 &&
+                el.getAttribute("data-dropdown-position") !== "top"
+            ) {
+                dropdownMenu.style.top = "auto";
+                dropdownMenu.style.bottom = "40px";
+            } else {
+                dropdownMenu.style.top = "40px";
+                dropdownMenu.style.bottom = "auto";
+            }
+        }
+
+        dropdown.forEach(function(el) {
+            let dropdownMenu = el.querySelector(".drop-down-menu"),
+                dropdownBtn = el.querySelector(".drop-down-btn");
+
+            if (!dropdownMenu || !dropdownBtn) {
+                return;
+            }
+
+            dropdownBtn.addEventListener("click", function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const shouldOpen = !el.classList.contains("active");
+                closeDropdowns(el);
+
+                el.classList.toggle("active", shouldOpen);
+                el.classList.toggle("animated", shouldOpen);
+
+                if (shouldOpen) {
+                    setDropdownPosition(el, dropdownMenu);
+                }
+            });
+
+            dropdownMenu.addEventListener("click", function(e) {
+                e.stopPropagation();
+            });
+
+            window.addEventListener("resize", function() {
+                setDropdownPosition(el, dropdownMenu);
+            });
+            window.addEventListener("scroll", function() {
+                setDropdownPosition(el, dropdownMenu);
+            });
+        });
+
+        document.addEventListener("click", function() {
+            closeDropdowns();
+        });
+
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape") {
+                closeDropdowns();
+            }
         });
     }
 
     var toggle = document.querySelectorAll('[data-toggle]');
-    if (toggle) {
+    if (toggle.length) {
         toggle.forEach(function(el, id) {
-            el.querySelector(".toggle-title").addEventListener("click", () => {
+            const toggleTitle = el.querySelector(".toggle-title");
+
+            if (!toggleTitle) {
+                return;
+            }
+
+            toggleTitle.addEventListener("click", () => {
                 for (var i = 0; i < toggle.length; i++) {
                     if (i !== id) {
                         toggle[i].classList.remove("active");
@@ -258,8 +300,10 @@
         });
     }
 
-    const items = document.querySelector(".items");
-    if (items) {
+    const items = document.querySelector(".items"),
+        itemsGrid = document.querySelector("#itemsGrid"),
+        itemsList = document.querySelector("#itemsList");
+    if (items && itemsGrid && itemsList) {
         const itemElements = items.querySelectorAll(".item");
         itemElements.forEach((el) => {
             el.classList.contains("item-inline") ? itemsList.setAttribute("disabled", "") : itemsGrid.setAttribute("disabled", "");
@@ -420,11 +464,22 @@
 
     let selectpicker = $('.selectpicker');
     if (selectpicker.length) {
-        selectpicker.selectpicker({
-            noneSelectedText: config.translates.noneSelectedText,
-            noneResultsText: config.translates.noneResultsText,
-            countSelectedText: config.translates.countSelectedText
-        });
+        if (typeof $.fn.selectpicker === 'function') {
+            selectpicker.selectpicker({
+                container: 'body',
+                noneSelectedText: config.translates.noneSelectedText,
+                noneResultsText: config.translates.noneResultsText,
+                countSelectedText: config.translates.countSelectedText,
+                width: '100%'
+            });
+        } else {
+            selectpicker.each(function() {
+                $(this)
+                    .removeClass('selectpicker')
+                    .addClass('form-select form-select-md')
+                    .css('display', 'block');
+            });
+        }
     }
 
     let actionConfirm = $('.action-confirm');
@@ -436,21 +491,39 @@
         });
     }
 
-    let ckeditor = document.querySelector('.ckeditor');
-    if (ckeditor) {
+    let ckeditors = document.querySelectorAll('.ckeditor');
+    if (ckeditors.length && typeof ClassicEditor !== 'undefined') {
         function UploadAdapterPlugin(editor) {
             editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
                 return new UploadAdapter(loader);
             };
         }
-        ClassicEditor.create(ckeditor, {
-            language: config.lang,
-            extraPlugins: [UploadAdapterPlugin],
-            mediaEmbed: {
-                previewsInData: true
-            },
-        }).catch(error => {
-            alert(error);
+        ckeditors.forEach((ckeditor) => {
+            if (ckeditor.dataset.ckeditorInitialized === 'true') {
+                return;
+            }
+
+            ckeditor.dataset.ckeditorInitialized = 'true';
+
+            ClassicEditor.create(ckeditor, {
+                language: config.lang,
+                extraPlugins: [UploadAdapterPlugin],
+                toolbar: {
+                    items: [
+                        'heading', '|', 'bold', 'italic', 'link',
+                        'bulletedList', 'numberedList', '|',
+                        'blockQuote', 'insertTable', 'uploadImage', 'mediaEmbed',
+                        '|', 'undo', 'redo'
+                    ],
+                    shouldNotGroupWhenFull: false
+                },
+                mediaEmbed: {
+                    previewsInData: true
+                },
+            }).catch(error => {
+                ckeditor.dataset.ckeditorInitialized = 'false';
+                console.error('Rich text editor could not be initialized.', error);
+            });
         });
     }
 
@@ -574,7 +647,7 @@
     licenseType.on('click', function() {
 
         let licenseTypeValue = $(this).val();
-        buyNowForm.find('input[name=license_type]').val(licenseTypeValue);
+        buyNowForm.find('input[type=hidden][name=license_type]').val(licenseTypeValue);
 
         let regularSupport = $('.regular-support'),
             extendedSupport = $('.extended-support');
@@ -588,7 +661,7 @@
     });
 
     itemSupport.on('click', function() {
-        buyNowForm.find('input[name=support]').val($(this).val());
+        buyNowForm.find('input[type=hidden][name=support]').val($(this).val());
     });
 
     let searchParam = $('#searchFiltersSidebar .search-param');
@@ -607,13 +680,14 @@
         });
     });
 
-    let searchByPrice = $('#searchByPrice');
+    let searchByPrice = $('.search-by-price');
     searchByPrice.on('click', function(e) {
         e.preventDefault();
 
-        let url = new URL($(location).attr('href')),
-            priceForm = $('#priceForm'),
-            priceTo = $('#priceTo');
+        let filtersRoot = $(this).closest('#searchFiltersMenu').length ? $('#searchFiltersMenu') : $('#searchFiltersSidebar'),
+            url = new URL($(location).attr('href')),
+            priceForm = filtersRoot.find('[name="min_price"]').first(),
+            priceTo = filtersRoot.find('[name="max_price"]').first();
 
 
         if (priceForm.val() != '') {

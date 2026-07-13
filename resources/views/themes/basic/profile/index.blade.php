@@ -1,14 +1,22 @@
 @extends('themes.basic.profile.layout')
-@section('title', $user->username)
+@php
+    $cardDescription = trim($user->profile_card_description ?? '');
+    $profileHeading = $user->profile_heading ?: translate('Digital creator');
+    $profileDescription = trim(strip_tags($user->profile_description ?? ''));
+    $profileSeoDescription = $cardDescription ?: $profileDescription ?: translate(':name creator storefront on :website_name', [
+        'name' => $user->getName(),
+        'website_name' => @$settings->general->site_name,
+    ]);
+    $socialLinks = $user->profile_social_links;
+    $socialHandle = fn($value) => ltrim(trim($value), '@');
+    $publishedItemsCount = $items->total();
+    $storefrontLink = $user->getProfileLink();
+@endphp
+@section('title', $user->getName() . ' (@' . $user->username . ')')
+@section('description', shorterText($profileSeoDescription, 160))
+@section('og_image', $user->getProfileCover())
+@section('canonical', $storefrontLink)
 @section('content')
-    @php
-        $cardDescription = trim($user->profile_card_description ?? '');
-        $profileHeading = $user->profile_heading ?: translate('Digital creator');
-        $socialLinks = $user->profile_social_links;
-        $socialHandle = fn($value) => ltrim(trim($value), '@');
-        $publishedItemsCount = $items->total();
-    @endphp
-
     <div class="creator-storefront">
         <aside class="card-v border item-detail-card item-detail-author-card creator-storefront-card" data-storefront-mobile-panel="profile">
             <div class="creator-storefront-cover-banner">
@@ -20,24 +28,28 @@
                         <img src="{{ $user->getAvatar() }}" alt="{{ $user->username }}">
                     </a>
                     <div class="creator-storefront-identity">
-                        <div class="creator-storefront-name">
+                        <div class="creator-storefront-name fw-semibold">
                             {{ $user->getName() }}
                             @if ($user->isAuthor())
-                                <i class="fa-solid fa-circle-check"></i>
+                                <i class="fa-solid fa-circle-check creator-storefront-verified"></i>
                             @endif
                         </div>
-                        <div class="creator-storefront-heading">{{ $profileHeading }}</div>
+                        <div class="creator-storefront-heading text-muted small">{{ $profileHeading }}</div>
                     </div>
                 </div>
 
                 <div class="creator-storefront-actions">
-                    @if ($user->profile_contact_email)
-                        <a href="#storefrontContact" class="btn btn-outline-secondary btn-md" data-storefront-open-panel="about">
-                            <i class="fa-regular fa-message me-1"></i>
-                            {{ translate('Message') }}
-                        </a>
-                    @endif
                     <livewire:follow-button :user="$user" />
+                    <button type="button" class="btn btn-outline-secondary btn-padding"
+                        data-bs-toggle="modal" data-bs-target="#storefrontContactModal"
+                        aria-label="{{ translate('Message') }}">
+                        <i class="fa-regular fa-message"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-padding"
+                        data-bs-toggle="modal" data-bs-target="#storefrontShareModal"
+                        aria-label="{{ translate('Share') }}">
+                        <i class="fa-solid fa-share-nodes"></i>
+                    </button>
                 </div>
 
                 @if ($cardDescription)
@@ -108,7 +120,10 @@
             <div class="creator-storefront-main-header">
                 <div class="creator-storefront-tabs">
                     <a href="#storefrontPortfolio" class="active"
-                        data-storefront-tab="portfolio">{{ translate('Portfolio') }}</a>
+                        data-storefront-tab="portfolio">
+                        {{ translate('Portfolio') }}
+                        <span>{{ numberFormat($publishedItemsCount) }}</span>
+                    </a>
                     <a href="#storefrontAbout" data-storefront-tab="about">{{ translate('About') }}</a>
                 </div>
             </div>
@@ -116,41 +131,10 @@
             <div id="storefrontPortfolio" class="creator-storefront-panel" data-storefront-panel="portfolio">
                 <div class="creator-storefront-items">
                     @forelse ($items as $item)
-                        <a href="{{ $item->getLink() }}" class="storefront-item-card">
-                            <span class="storefront-item-preview">
-                                @if ($item->isPreviewFileTypeImage() || $item->isPreviewFileTypeVideo() || $item->isPreviewFileTypeAudio())
-                                    <img src="{{ $item->getPreviewImageLink() }}" alt="{{ $item->name }}">
-                                @else
-                                    <span class="storefront-item-placeholder">
-                                        <i class="fa-regular fa-file"></i>
-                                    </span>
-                                @endif
-                                <span class="storefront-item-price">
-                                    @if ($item->isFree())
-                                        {{ translate('Free') }}
-                                    @else
-                                        {{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}
-                                    @endif
-                                </span>
-                            </span>
-                            <span class="storefront-item-body">
-                                <strong>{{ $item->name }}</strong>
-                                <span class="storefront-item-meta">
-                                    @if (@$settings->item->reviews_status && $item->hasReviews())
-                                        <span>
-                                            <i class="fa-solid fa-star"></i>
-                                            {{ number_format($item->avg_reviews, 1) }}
-                                            ({{ numberFormat($item->total_reviews) }})
-                                        </span>
-                                    @endif
-                                    @if ($item->hasSales())
-                                        <span>{{ translate($item->total_sales == 1 ? '1 sale' : ':count sales', [
-                                            'count' => numberFormat($item->total_sales),
-                                        ]) }}</span>
-                                    @endif
-                                </span>
-                            </span>
-                        </a>
+                        @include('themes.basic.partials.item', [
+                            'item' => $item,
+                            'item_classes' => 'border creator-storefront-item',
+                        ])
                     @empty
                         <div class="creator-storefront-empty">
                             <i class="fa-regular fa-file-lines"></i>
@@ -176,24 +160,6 @@
                         <p>{{ translate('This creator has not added an about section yet.') }}</p>
                     @endif
                 </div>
-
-                @if ($user->profile_contact_email)
-                    <div id="storefrontContact" class="creator-storefront-contact">
-                        <h3>{{ translate('Contact :username', ['username' => $user->username]) }}</h3>
-                        @if (authUser())
-                            <form action="{{ route('profile.sendmail', $user->username) }}" method="POST">
-                                @csrf
-                                <textarea name="message" class="form-control form-control-md"
-                                    placeholder="{{ translate('Enter Your Message') }}" rows="4" required>{{ old('message') }}</textarea>
-                                <button class="btn btn-primary btn-md mt-2">{{ translate('Send message') }}</button>
-                            </form>
-                        @else
-                            <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-md">
-                                {{ translate('Sign in to message') }}
-                            </a>
-                        @endif
-                    </div>
-                @endif
             </div>
         </main>
 
@@ -214,6 +180,81 @@
                 <span>{{ translate('About') }}</span>
             </button>
         </nav>
+    </div>
+
+    <div class="modal fade" id="storefrontContactModal" tabindex="-1"
+        aria-labelledby="storefrontContactModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+                <div class="modal-header p-0 border-0 mb-3">
+                    <h5 class="modal-title" id="storefrontContactModalLabel">
+                        {{ translate('Contact :username', ['username' => $user->username]) }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="{{ translate('Close') }}"></button>
+                </div>
+                <div class="modal-body p-0">
+                    @if (authUser())
+                        <form action="{{ route('profile.sendmail', $user->username) }}" method="POST">
+                            @csrf
+                            <div class="mb-3">
+                                <label class="form-label">{{ translate('From') }}</label>
+                                <input class="form-control form-control-md" value="{{ authUser()->email }}" disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">{{ translate('Message') }}</label>
+                                <textarea name="message" class="form-control form-control-md"
+                                    placeholder="{{ translate('Enter Your Message') }}" rows="6" required>{{ old('message') }}</textarea>
+                            </div>
+                            <div class="text-end">
+                                <button class="btn btn-primary btn-md">{{ translate('Send') }}</button>
+                            </div>
+                        </form>
+                    @else
+                        <p class="text-muted mb-3">
+                            {{ translate('Please sign in to send a message to this creator.') }}
+                        </p>
+                        <a href="{{ route('login') }}" class="btn btn-primary btn-md">
+                            {{ translate('Sign in to message') }}
+                        </a>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="storefrontShareModal" tabindex="-1"
+        aria-labelledby="storefrontShareModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+                <div class="modal-header p-0 border-0 mb-3">
+                    <h5 class="modal-title" id="storefrontShareModalLabel">
+                        {{ translate('Share storefront') }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="{{ translate('Close') }}"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <p class="text-muted small mb-3">
+                        {{ translate('Share this creator storefront with your audience.') }}
+                    </p>
+                    @include('themes.basic.partials.share-buttons', [
+                        'link' => $storefrontLink,
+                        'socials_classes' => 'creator-storefront-share-socials mb-3',
+                    ])
+                    <label for="storefrontShareLink" class="form-label">{{ translate('Storefront link') }}</label>
+                    <div class="input-group">
+                        <input id="storefrontShareLink" type="text" class="form-control form-control-md"
+                            value="{{ $storefrontLink }}" readonly>
+                        <button type="button" class="btn btn-outline-primary btn-md"
+                            data-storefront-copy="#storefrontShareLink">
+                            <i class="fa-regular fa-copy me-1"></i>
+                            {{ translate('Copy') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -272,13 +313,6 @@
             });
         });
 
-        document.querySelectorAll('[data-storefront-open-panel]').forEach((button) => {
-            button.addEventListener('click', (event) => {
-                event.preventDefault();
-                showStorefrontPanel(button.dataset.storefrontOpenPanel);
-            });
-        });
-
         storefrontMobileTabs.forEach((tab) => {
             tab.addEventListener('click', () => {
                 showStorefrontMobilePanel(tab.dataset.storefrontMobileTab);
@@ -289,10 +323,48 @@
             showStorefrontMobilePanel(storefrontMobilePanel, false);
         });
 
-        if (window.location.hash === '#storefrontAbout' || window.location.hash === '#storefrontContact') {
-            showStorefrontPanel('about');
-        } else {
-            showStorefrontMobilePanel('profile', false);
-        }
+        const openStorefrontModal = (modalId) => {
+            const modalElement = document.getElementById(modalId);
+            if (modalElement && window.bootstrap?.Modal) {
+                bootstrap.Modal.getOrCreateInstance(modalElement).show();
+            }
+        };
+
+        const handleStorefrontHash = () => {
+            if (window.location.hash === '#storefrontContact') {
+                showStorefrontMobilePanel('profile', false);
+                openStorefrontModal('storefrontContactModal');
+            } else if (window.location.hash === '#storefrontShare') {
+                showStorefrontMobilePanel('profile', false);
+                openStorefrontModal('storefrontShareModal');
+            } else if (window.location.hash === '#storefrontPortfolio') {
+                showStorefrontPanel('portfolio');
+            } else if (window.location.hash === '#storefrontAbout') {
+                showStorefrontPanel('about');
+            } else {
+                showStorefrontMobilePanel('profile', false);
+            }
+        };
+
+        handleStorefrontHash();
+        window.addEventListener('load', handleStorefrontHash);
+
+        document.querySelectorAll('[data-storefront-copy]').forEach((button) => {
+            button.addEventListener('click', async () => {
+                const input = document.querySelector(button.dataset.storefrontCopy);
+                if (!input) return;
+
+                input.select();
+                input.setSelectionRange(0, input.value.length);
+
+                try {
+                    await navigator.clipboard.writeText(input.value);
+                } catch (error) {
+                    document.execCommand('copy');
+                }
+
+                toastr.success(config.translates.copied);
+            });
+        });
     </script>
 @endpush

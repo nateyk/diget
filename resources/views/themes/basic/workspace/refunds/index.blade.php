@@ -39,7 +39,6 @@
                             <tr>
                                 <th>{{ translate('ID') }}</th>
                                 <th>{{ translate('Purchased Item') }}</th>
-                                <th class="text-center">{{ translate('License Type') }}</th>
                                 <th class="text-center">{{ translate('Price') }}</th>
                                 <th class="text-center">{{ translate('Status') }}</th>
                                 <th class="text-center">{{ translate('Date') }}</th>
@@ -61,17 +60,6 @@
                                         <a href="{{ $item->getLink() }}" class="table-name text-dark">
                                             {{ $item->name }}
                                         </a>
-                                    </td>
-                                    <td class="text-center">
-                                        @if ($refund->purchase->isLicenseTypeRegular())
-                                            <div class="badge bg-gray rounded-2 fw-light px-3 py-2">
-                                                {{ translate('Regular') }}
-                                            </div>
-                                        @else
-                                            <div class="badge bg-primary rounded-2 fw-light px-3 py-2">
-                                                {{ translate('Extended') }}
-                                            </div>
-                                        @endif
                                     </td>
                                     <td class="text-center text-dark">
                                         {{ getAmount($refund->purchase->sale->price) }}

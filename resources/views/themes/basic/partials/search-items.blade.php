@@ -1,6 +1,6 @@
 @if ($items->count() > 0)
     <div class="items">
-        <div class="row row-cols-1 row-cols-md-2 row-cols-xxl-3 g-3">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
             @foreach ($items as $item)
                 <div class="col">
                     @include('themes.basic.partials.item', [

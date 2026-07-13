@@ -21,7 +21,7 @@ class Popup extends Component
     public function remindLater()
     {
         Cookie::queue('nl_remind', true, (@settings('newsletter')->popup_reminder_time * 60));
-        $this->dispatch('close-modal', ['id' => 'newsletterModal']);
+        $this->dispatchBrowserEvent('close-modal', ['id' => 'newsletterModal']);
     }
 
     public function subscribe()
@@ -41,8 +41,8 @@ class Popup extends Component
             Cookie::queue(Cookie::forever('nl_subscribed', true));
 
             $this->email = '';
-            $this->dispatch('close-modal', ['id' => 'newsletterModal']);
-            $this->dispatch('newsletterRefresh');
+            $this->dispatchBrowserEvent('close-modal', ['id' => 'newsletterModal']);
+            $this->emit('newsletterRefresh');
 
             return $this->toastr('success', translate('You have successfully subscribed'));
         } catch (Exception $e) {

@@ -94,7 +94,7 @@ return [
         |
          */
 
-        'positionClass' => 'vironeer-toast-top-right',
+        'positionClass' => 'vironeer-toast-bottom-right',
 
         /*
         |--------------------------------------------------------------------------

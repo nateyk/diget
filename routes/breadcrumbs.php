@@ -39,7 +39,7 @@ Breadcrumbs::for('categories.sub-category', function (BreadcrumbTrail $trail, $c
 
 Breadcrumbs::for('items', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
-    $trail->push(translate('Items'), route('items.index'));
+    $trail->push(translate('Discover'), route('items.index'));
 });
 
 Breadcrumbs::for('items.view', function (BreadcrumbTrail $trail, $item) {

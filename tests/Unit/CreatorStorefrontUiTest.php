@@ -37,7 +37,8 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('data-storefront-mobile-panel="profile"', $indexView);
         $this->assertStringContainsString('creator-storefront-main', $indexView);
         $this->assertStringContainsString('creator-storefront-items', $indexView);
-        $this->assertStringContainsString('storefront-item-card', $indexView);
+        $this->assertStringContainsString("@include('themes.basic.partials.item'", $indexView);
+        $this->assertStringContainsString("'item_classes' => 'border'", $indexView);
         $this->assertStringContainsString('creator-storefront-cover-banner', $indexView);
         $this->assertStringContainsString('$user->getProfileCover()', $indexView);
         $this->assertStringNotContainsString('style="background-image', $indexView);
@@ -47,7 +48,7 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringNotContainsString('user-avatar user-avatar-lg', $indexView);
         $this->assertStringNotContainsString('<h5 class="mb-0">', $indexView);
         $this->assertStringContainsString('{{ $user->getName() }}', $indexView);
-        $this->assertStringNotContainsString('text-muted small', $indexView);
+        $this->assertStringContainsString('text-muted small', $indexView);
         $this->assertStringNotContainsString('creator-storefront-action-follow', $indexView);
         $this->assertStringContainsString('creator-storefront-avatar', $indexView);
         $this->assertStringContainsString('creator-storefront-identity', $indexView);
@@ -111,19 +112,19 @@ class CreatorStorefrontUiTest extends TestCase
 
         $this->assertStringContainsString('Creator storefront', $css);
         $this->assertStringContainsString('.creator-storefront', $css);
-        $this->assertStringContainsString('.storefront-item-card', $css);
+        $this->assertStringContainsString('.creator-storefront-items .item', $css);
         $this->assertStringContainsString('grid-template-columns: minmax(260px, 330px) minmax(0, 1fr)', $css);
         $this->assertStringContainsString('.creator-storefront-empty', $css);
         $this->assertStringContainsString('.creator-storefront-panel[hidden]', $css);
-        $this->assertStringContainsString('border-bottom: 1px solid rgba(22, 28, 45, .1)', $css);
+        $this->assertStringContainsString('border-bottom: 1px solid var(--border_color)', $css);
         $this->assertStringContainsString('border-bottom: 2px solid transparent', $css);
-        $this->assertStringContainsString('border-bottom-color: var(--primary_color)', $css);
-        $this->assertStringContainsString('width: min(1440px, calc(100% - 56px))', $css);
+        $this->assertStringContainsString('border-bottom-color: var(--secondary_color)', $css);
+        $this->assertStringContainsString('width: calc(100% - 56px)', $css);
         $this->assertStringContainsString('.creator-storefront-mobile-nav', $css);
         $this->assertStringContainsString('bottom: calc(14px + env(safe-area-inset-bottom))', $css);
         $this->assertStringContainsString('grid-template-columns: 1fr', $css);
         $this->assertStringContainsString('min-width: 94px', $css);
-        $this->assertStringContainsString('background-color: var(--primary_color)', $css);
+        $this->assertStringContainsString('background-color: var(--secondary_color)', $css);
         $this->assertStringContainsString('border-radius: 10px', $css);
         $this->assertStringContainsString('.creator-storefront-stats', $css);
         $this->assertStringContainsString('.profile-storefront-page .creator-storefront-card', $css);

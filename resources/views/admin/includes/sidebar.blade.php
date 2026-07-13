@@ -221,21 +221,9 @@
                     </p>
                     <div class="vironeer-sidebar-link-menu">
                         <a href="{{ route('admin.categories.index') }}"
-                            class="vironeer-sidebar-link {{ request()->segment(2) == 'categories' && !request()->routeIs('admin.categories.sub-categories.*') && !request()->routeIs('admin.categories.category-options.*') ? 'current' : '' }}">
+                            class="vironeer-sidebar-link {{ request()->segment(2) == 'categories' ? 'current' : '' }}">
                             <p class="vironeer-sidebar-link-title">
                                 <span>{{ translate('Main Categories') }}</span>
-                            </p>
-                        </a>
-                        <a href="{{ route('admin.categories.sub-categories.index') }}"
-                            class="vironeer-sidebar-link {{ request()->segment(3) == 'sub-categories' ? 'current' : '' }}">
-                            <p class="vironeer-sidebar-link-title">
-                                <span>{{ translate('Sub Categories') }}</span>
-                            </p>
-                        </a>
-                        <a href="{{ route('admin.categories.category-options.index') }}"
-                            class="vironeer-sidebar-link {{ request()->segment(3) == 'category-options' ? 'current' : '' }}">
-                            <p class="vironeer-sidebar-link-title">
-                                <span>{{ translate('Category Options') }}</span>
                             </p>
                         </a>
                     </div>

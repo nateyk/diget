@@ -116,7 +116,7 @@
                     @endif
                     @if ($item->isPurchasingEnabled() && $item->hasSales())
                         <div class="item-sales">
-                            <i class="fa fa-cart-shopping me-1"></i>
+                            <i class="fa fa-chart-line me-1"></i>
                             {{ translate($item->total_sales > 1 ? ':count Sales' : ':count Sale', ['count' => numberFormat($item->total_sales)]) }}
                         </div>
                     @elseif(@$settings->item->free_item_total_downloads && $item->free_downloads > 1)
@@ -146,16 +146,14 @@
                             </div>
                         @else
                             <div class="col">
-                                <form data-action="{{ route('cart.add-item') }}" class="add-to-cart-form"
+                                <form action="{{ route('items.buy-now', [$item->slug, $item->id]) }}"
                                     method="POST">
+                                    @csrf
                                     <input type="hidden" name="item_id" value="{{ $item->id }}">
                                     <input type="hidden" name="license_type" value="1">
-                                    @if (@$settings->item->support_status && $item->isSupported() && defaultSupportPeriod())
-                                        <input type="hidden" name="support" value="{{ defaultSupportPeriod()->id }}">
-                                    @endif
                                     <button class="btn btn-outline-primary btn-md btn-padding"
                                         @disabled(authUser() && authUser()->id == $item->author_id)>
-                                        <i class="fa-solid fa-shopping-cart"></i>
+                                        <i class="fa-solid fa-bolt"></i>
                                     </button>
                                 </form>
                             </div>

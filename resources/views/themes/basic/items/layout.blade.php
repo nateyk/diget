@@ -10,125 +10,136 @@
 </head>
 
 <body>
-    <section class="section forced-start item-detail-page pt-4 pb-3">
+    <header class="item-detail-topbar">
         <div class="container">
-            <div class="section-header mb-4">
-                <div class="row g-3 align-items-center">
-                    <div class="col-12 col-lg">
-                        <h1
-                            class="item-single-title h2 {{ ($settings->item->reviews_status && $item->hasReviews()) || $item->hasSales() ? 'mb-2' : 'mb-0' }}">
-                            {{ $item->name }}
-                        </h1>
-                        @if (($settings->item->reviews_status && $item->hasReviews()) || $item->hasSales() || $item->isRecentlyUpdated())
-                            <div class="row row-cols-auto g-2">
-                                @if ($settings->item->reviews_status && $item->hasReviews())
-                                    <div class="col">
-                                        <a href="{{ $item->getReviewsLink() }}">
-                                            <div class="row row-cols-auto align-items-center g-2">
-                                                <div class="col">
-                                                    @include('themes.basic.partials.rating-stars', [
-                                                        'stars' => $item->avg_reviews,
-                                                    ])
-                                                </div>
-                                                <div class="col">
-                                                    <span class="text-muted">
-                                                        {{ translate($item->total_reviews > 1 ? '(:count Reviews)' : '(:count Review)', [
-                                                            'count' => number_format($item->total_reviews),
-                                                        ]) }}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    @if ($item->hasSales() || $item->isRecentlyUpdated())
+            <a href="{{ $item->author->getProfileLink() }}" class="btn btn-outline-secondary btn-padding"
+                aria-label="{{ translate('Back to storefront') }}">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <a href="{{ $item->author->getProfileLink() }}" class="item-detail-topbar-link">
+                <span>{{ translate('Creator storefront') }}</span>
+                <strong>{{ '@' . $item->author->username }}</strong>
+            </a>
+        </div>
+    </header>
+    <section class="section forced-start item-detail-page py-4">
+        <div class="container">
+            <div class="section-header mb-3">
+                <div class="item-detail-titlebar">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-12 col-lg">
+                            <h1
+                                class="item-single-title h2 {{ ($settings->item->reviews_status && $item->hasReviews()) || $item->hasSales() ? 'mb-2' : 'mb-0' }}">
+                                {{ $item->name }}
+                            </h1>
+                            <div class="row row-cols-auto align-items-center g-2 small text-muted item-detail-title-meta">
+                                @if (($settings->item->reviews_status && $item->hasReviews()) || $item->hasSales() || $item->isRecentlyUpdated())
+                                    @if ($settings->item->reviews_status && $item->hasReviews())
                                         <div class="col">
-                                            <span>-</span>
-                                        </div>
-                                    @endif
-                                @endif
-                                @if ($item->isPurchasingEnabled() && $item->hasSales())
-                                    <div class="col">
-                                        <i class="fa fa-cart-shopping me-1"></i>
-                                        <span>{{ translate($item->total_sales > 1 ? ':count Sales' : ':count Sale', [
-                                            'count' => number_format($item->total_sales),
-                                        ]) }}</span>
-                                    </div>
-                                    @if ($item->isRecentlyUpdated())
-                                        <div class="col">
-                                            <span>-</span>
-                                        </div>
-                                    @endif
-                                @endif
-                                @if ($item->isRecentlyUpdated())
-                                    <div class="col text-primary">
-                                        <i class="fa-solid fa-circle-check me-1"></i>
-                                        <span class="fw-bold">{{ translate('Recently Updated') }}</span>
-                                    </div>
-                                @endif
-                            </div>
-                        @endif
-                    </div>
-                    <div class="col-12 col-lg-auto">
-                        <div class="row g-3">
-                            <div class="col">
-                                <div class="row g-3">
-                                    @if ($item->demo_link)
-                                        <div class="col-auto">
-                                            <a href="{{ $item->getDemoLink() }}" target="_blank"
-                                                class="btn btn-outline-secondary btn-md px-3">
-                                                <i class="fa-solid fa-up-right-from-square"></i>
-                                                <span class="ms-1">{{ translate('Live Preview') }}</span>
+                                            <a href="{{ $item->getReviewsLink() }}">
+                                                <div class="row row-cols-auto align-items-center g-2">
+                                                    <div class="col">
+                                                        @include('themes.basic.partials.rating-stars', [
+                                                            'stars' => $item->avg_reviews,
+                                                        ])
+                                                    </div>
+                                                    <div class="col">
+                                                        <span class="text-muted">
+                                                            {{ translate($item->total_reviews > 1 ? '(:count Reviews)' : '(:count Review)', [
+                                                                'count' => number_format($item->total_reviews),
+                                                            ]) }}
+                                                        </span>
+                                                    </div>
+                                                </div>
                                             </a>
                                         </div>
                                     @endif
-                                    <div class="col-auto">
-                                        <livewire:item.favorite-button :item="$item">
+                                    @if ($item->isPurchasingEnabled() && $item->hasSales())
+                                        @if ($settings->item->reviews_status && $item->hasReviews())
+                                            <div class="col">
+                                                <span>-</span>
+                                            </div>
+                                        @endif
+                                        <div class="col">
+                                            <i class="fa fa-cart-shopping me-1"></i>
+                                            <span>{{ translate($item->total_sales > 1 ? ':count Sales' : ':count Sale', [
+                                                'count' => number_format($item->total_sales),
+                                            ]) }}</span>
+                                        </div>
+                                    @endif
+                                    @if ($item->isRecentlyUpdated())
+                                        @if (($settings->item->reviews_status && $item->hasReviews()) || ($item->isPurchasingEnabled() && $item->hasSales()))
+                                            <div class="col">
+                                                <span>-</span>
+                                            </div>
+                                        @endif
+                                        <div class="col text-primary">
+                                            <i class="fa-solid fa-circle-check me-1"></i>
+                                            <span class="fw-bold">{{ translate('Recently Updated') }}</span>
+                                        </div>
+                                    @endif
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-auto ms-lg-auto">
+                            <div class="row g-2">
+                                <div class="col">
+                                    <div class="row g-2">
+                                        @if ($item->demo_link)
+                                            <div class="col-auto">
+                                                <a href="{{ $item->getDemoLink() }}" target="_blank"
+                                                    class="btn btn-outline-secondary btn-md px-3">
+                                                    <i class="fa-solid fa-up-right-from-square"></i>
+                                                    <span class="ms-1">{{ translate('Live Preview') }}</span>
+                                                </a>
+                                            </div>
+                                        @endif
+                                        <div class="col-auto">
+                                            <livewire:item.favorite-button :item="$item" />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            @if ($item->isFree())
-                                <div class="col-auto d-inline d-lg-none">
-                                    @if ($item->isMainFileExternal())
-                                        <a href="{{ route('items.free.download.external', hash_encode($item->id)) }}"
-                                            target="_blank" class="btn btn-primary btn-md px-3">
-                                            <i class="fa fa-download"></i>
-                                        </a>
-                                    @else
-                                        <form action="{{ route('items.free.download', hash_encode($item->id)) }}"
+                                @if ($item->isFree())
+                                    <div class="col-auto d-inline d-lg-none">
+                                        @if ($item->isMainFileExternal())
+                                            <a href="{{ route('items.free.download.external', hash_encode($item->id)) }}"
+                                                target="_blank" class="btn btn-primary btn-md px-3">
+                                                <i class="fa fa-download"></i>
+                                            </a>
+                                        @else
+                                            <form action="{{ route('items.free.download', hash_encode($item->id)) }}"
+                                                method="POST">
+                                                @csrf
+                                                <button class="btn btn-primary btn-md px-3">
+                                                    <i class="fa-solid fa-download"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
+                                @endif
+                                @if ($item->isPurchasingEnabled())
+                                    <div class="col-auto d-inline d-lg-none">
+                                        <form action="{{ route('items.buy-now', [$item->slug, $item->id]) }}"
                                             method="POST">
                                             @csrf
-                                            <button class="btn btn-primary btn-md px-3">
-                                                <i class="fa-solid fa-download"></i>
+                                            <input type="hidden" name="item_id" value="{{ $item->id }}">
+                                            <input type="hidden" name="license_type" value="1">
+                                            <button class="btn btn-primary btn-md px-3" @disabled(authUser() && authUser()->id == $item->author_id)>
+                                                <i class="fa fa-bolt me-2"></i>
+                                                <span>{{ getAmount($item->price->regular, 2, '.', '', true) }}</span>
                                             </button>
                                         </form>
-                                    @endif
-                                </div>
-                            @endif
-                            @if ($item->isPurchasingEnabled())
-                                <div class="col-auto d-inline d-lg-none">
-                                    <form data-action="{{ route('cart.add-item') }}" class="add-to-cart-form"
-                                        method="POST">
-                                        <input type="hidden" name="item_id" value="{{ $item->id }}">
-                                        <input type="hidden" name="license_type" value="1">
-                                        @if (@$settings->item->support_status && defaultSupportPeriod() && $item->isSupported())
-                                            <input type="hidden" name="support"
-                                                value="{{ defaultSupportPeriod()->id }}">
-                                        @endif
-                                        <button class="btn btn-primary btn-md px-3" @disabled(authUser() && authUser()->id == $item->author_id)>
-                                            <i class="fa fa-cart-shopping me-2"></i>
-                                            <span>{{ getAmount($item->price->regular, 2, '.', '', true) }}</span>
-                                        </button>
-                                    </form>
-                                </div>
-                            @endif
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="section-body">
-                <div class="row g-3 g-xl-4">
-                    <div class="col-12 col-lg-7 col-xl-7 col-xxl-8">
-                        <div class="card-v border item-detail-card item-detail-preview-card p-4 mb-3">
+                <div class="row g-3">
+                    <div class="col-12 col-lg-8">
+                        <div class="card-v border item-detail-card item-detail-preview-card p-3 mb-3">
                             <div class="item-single-preview">
                                 @if ($item->isPreviewFileTypeImage())
                                     <div class="item-single-img">
@@ -213,16 +224,15 @@
                             </div>
                         </div>
                         <div class="tabs-custom">
-                            <div class="card-v border item-detail-card p-4">
+                            <div class="card-v border item-detail-card p-3">
                                 @php
                                     $itemSettings = $settings->item;
                                 @endphp
                                 @if (
                                     @$itemSettings->reviews_status ||
                                         @$itemSettings->comments_status ||
-                                        @$itemSettings->changelogs_status ||
-                                        @$itemSettings->support_status)
-                                    <div class="row row-cols-1 row-cols-lg-2 row-cols-xxl-3 g-3  mb-4">
+                                        @$itemSettings->changelogs_status)
+                                    <div class="row row-cols-1 row-cols-sm-2 g-2 mb-3">
                                         <div class="col">
                                             <a href="{{ $item->getLink() }}"
                                                 class="btn {{ request()->routeIs('items.view') ? 'btn-primary' : 'btn-outline-secondary' }} btn-md w-100">
@@ -255,22 +265,13 @@
                                                 <livewire:item.comments-counter :item="$item" :isActive="request()->routeIs('items.comments') ? true : false" />
                                             </div>
                                         @endif
-                                        @if (@$itemSettings->support_status && $item->isSupported())
-                                            <div class="col">
-                                                <a href="{{ $item->getSupportLink() }}"
-                                                    class="btn {{ request()->routeIs('items.support') ? 'btn-primary' : 'btn-outline-secondary' }} btn-md w-100">
-                                                    <i class="fa-solid fa-headset me-1"></i>
-                                                    <span>{{ translate('Support') }}</span>
-                                                </a>
-                                            </div>
-                                        @endif
                                     </div>
                                 @endif
                                 @yield('content')
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-5 col-xl-5 col-xxl-4 item-detail-sidebar">
+                    <div class="col-12 col-lg-4 item-detail-sidebar sticky-lg-top">
                         @if (licenseType(2) && @$settings->premium->status && $item->isPremium())
                             @if (authUser() && authUser()->isSubscribed())
                                 <div class="card-v border border-2 border-primary item-detail-card p-3 mb-4">
@@ -340,8 +341,8 @@
                             @endif
                         @endif
                         @if ($item->isFree())
-                            <div class="card-v border item-detail-card item-detail-license-card p-0 mb-4">
-                                <div class="card-v-header border-bottom py-3 px-4">
+                            <div class="card-v border item-detail-card item-detail-license-card p-0 mb-3">
+                                <div class="card-v-header border-bottom py-3 px-3">
                                     <div class="row row-cols-auto align-items-center justify-content-between g-2">
                                         <div class="col">
                                             <h5 class="mb-0">{{ translate('Free Item') }}</h5>
@@ -356,7 +357,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="card-v-body p-4">
+                                <div class="card-v-body p-3">
                                     <p class="text-muted">
                                         {{ translate('The author :author has offered the item for free, you can now download it.', [
                                             'author' => strtolower($item->author->username),
@@ -397,158 +398,56 @@
                         @endif
                         @if ($item->isPurchasingEnabled())
                             <div class="card-v border item-detail-card item-detail-license-card p-0">
-                                <div class="card-v-header border-bottom py-3 px-4">
+                                <div class="card-v-header border-bottom py-3 px-3">
                                     <div class="row row-cols-auto align-items-center justify-content-between g-2">
                                         <div class="col">
-                                            <h5 class="mb-0">{{ translate('License Option') }}</h5>
+                                            <h5 class="mb-0">{{ translate('Purchase') }}</h5>
                                         </div>
-                                        @if (@$settings->links->licenses_terms_link)
-                                            <div class="col small">
-                                                <a href="{{ @$settings->links->licenses_terms_link }}">
-                                                    <span>{{ translate('Licenses terms') }}</span>
-                                                    <i class="fa fa-chevron-right fa-rtl ms-1 fa-sm"></i>
-                                                </a>
-                                            </div>
-                                        @endif
                                     </div>
                                 </div>
-                                <div class="card-v-body p-4">
-                                    <form data-action="{{ route('cart.add-item') }}" class="add-to-cart-form"
+                                <div class="card-v-body p-3">
+                                    <form action="{{ route('items.buy-now', [$item->slug, $item->id]) }}" class="buy-now-form"
                                         method="POST">
+                                        @csrf
                                         <input type="hidden" name="item_id" value="{{ $item->id }}">
-                                        <div class="form-check form-check-lg mb-3">
-                                            <input id="license-type-regular"
-                                                class="form-check-input license-type mt-1" type="radio"
-                                                name="license_type" value="1" checked>
-                                            <label class="form-check-label d-flex justify-content-between"
-                                                for="license-type-regular">
-                                                <div>
-                                                    <h6 class="mb-1">{{ translate('Regular') }}</h6>
-                                                    <span
-                                                        class="small text-muted">{{ translate('For one project') }}</span>
-                                                </div>
-                                                <div class="item-price">
-                                                    @if ($item->isOnDiscount())
-                                                        <span class="item-price-through">
-                                                            {{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}
-                                                        </span>
-                                                        <span class="item-price-number">
-                                                            {{ getAmount($item->price->regular, 2, '.', '', true) }}
-                                                        </span>
-                                                    @else
-                                                        <span class="item-price-number">
-                                                            {{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                            </label>
-                                        </div>
-                                        <div class="form-check form-check-lg mb-3">
-                                            <input id="license-type-extended"
-                                                class="form-check-input license-type mt-1" type="radio"
-                                                name="license_type" value="2">
-                                            <label class="form-check-label d-flex justify-content-between"
-                                                for="license-type-extended">
-                                                <div>
-                                                    <h6 class="mb-1">{{ translate('Extended') }}</h6>
-                                                    <span
-                                                        class="small text-muted">{{ translate('For unlimited projects') }}</span>
-                                                </div>
-                                                <div class="item-price">
-                                                    @if ($item->isOnDiscount() && $item->isExtendedOnDiscount())
-                                                        <span class="item-price-through">
-                                                            {{ getAmount($item->getExtendedPrice(), 2, '.', '', true) }}
-                                                        </span>
-                                                        <span class="item-price-number">
-                                                            {{ getAmount($item->price->extended, 2, '.', '', true) }}
-                                                        </span>
-                                                    @else
-                                                        <span class="item-price-number">
-                                                            {{ getAmount($item->getExtendedPrice(), 2, '.', '', true) }}
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                            </label>
-                                        </div>
-                                        @if (@$settings->item->support_status)
-                                            @if ($item->isSupported())
-                                                @php
-                                                    $supportPeriods = supportPeriods();
-                                                @endphp
-                                                @if ($supportPeriods->count() > 0)
-                                                    <div class="p-4 bg-light mb-3 rounded-3">
-                                                        <div class="row g-2">
-                                                            @foreach ($supportPeriods as $supportPeriod)
-                                                                <div class="col-12">
-                                                                    <div class="row g-3">
-                                                                        <div class="col">
-                                                                            <div class="form-check">
-                                                                                <input
-                                                                                    class="form-check-input item-support"
-                                                                                    type="radio" name="support"
-                                                                                    id="support{{ $supportPeriod->id }}"
-                                                                                    value="{{ $supportPeriod->id }}"
-                                                                                    @checked($supportPeriod->isDefault())>
-                                                                                <label class="form-check-label"
-                                                                                    for="support{{ $supportPeriod->id }}">
-                                                                                    {{ $supportPeriod->title }}
-                                                                                </label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-auto">
-                                                                            <strong class="regular-support">
-                                                                                {{ $supportPeriod->isFree() ? translate('Free') : getAmount(($item->price->regular * $supportPeriod->percentage) / 100) }}
-                                                                            </strong>
-                                                                            <strong class="extended-support d-none">
-                                                                                {{ $supportPeriod->isFree() ? translate('Free') : getAmount(($item->price->extended * $supportPeriod->percentage) / 100) }}
-                                                                            </strong>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            @endforeach
-                                                        </div>
-                                                    </div>
+                                        <input type="hidden" name="license_type" value="1">
+                                        <div class="mb-3">
+                                            <div class="small text-muted mb-1">{{ translate('Price') }}</div>
+                                            <div class="d-flex align-items-center gap-2 h4 fw-semibold mb-1">
+                                                @if ($item->isOnDiscount())
+                                                    <span class="text-muted text-decoration-line-through fs-6">
+                                                        {{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}
+                                                    </span>
+                                                    <span class="text-primary">
+                                                        {{ getAmount($item->price->regular, 2, '.', '', true) }}
+                                                    </span>
+                                                @else
+                                                    <span>
+                                                        {{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}
+                                                    </span>
                                                 @endif
-                                            @endif
-                                        @endif
+                                            </div>
+                                            <p class="small text-muted mb-0">
+                                                {{ translate('One-time purchase with access in your library.') }}
+                                            </p>
+                                        </div>
                                         <button class="btn btn-primary btn-md w-100" @disabled(authUser() && authUser()->id == $item->author_id)>
-                                            <i class="fa fa-cart-shopping me-1"></i>
-                                            {{ translate('Add to Cart') }}
+                                            <i class="fa fa-bolt me-1"></i>
+                                            {{ translate('Buy Now') }}
                                         </button>
                                     </form>
-                                    @if (@$itemSettings->buy_now_button)
-                                        <form action="{{ route('items.buy-now', [$item->slug, $item->id]) }}"
-                                            class="buy-now-form" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="item_id" value="{{ $item->id }}">
-                                            <input type="hidden" name="license_type" value="1">
-                                            @if (@$settings->item->support_status && defaultSupportPeriod() && $item->isSupported())
-                                                <input type="hidden" name="support"
-                                                    value="{{ defaultSupportPeriod()->id }}">
-                                            @endif
-                                            <button class="btn btn-outline-primary btn-md w-100 mt-3"
-                                                @disabled(authUser() && authUser()->id == $item->author_id)>
-                                                {{ translate('Buy Now') }}
-                                            </button>
-                                        </form>
-                                    @endif
-                                    <div class="list mt-3">
-                                        <div class="list-item small">
+                                    <div class="list border-top pt-3 mt-3">
+                                        <div class="list-item small text-muted">
                                             <i class="fa fa-check text-primary me-1"></i>
                                             {{ translate('Quality checked by :website_name', ['website_name' => @$settings->general->site_name]) }}
                                         </div>
-                                        <div class="list-item small">
+                                        <div class="list-item small text-muted">
                                             <i class="fa fa-check text-primary me-1"></i>
                                             {{ translate('Full Documentation') }}
                                         </div>
-                                        <div class="list-item small">
+                                        <div class="list-item small text-muted">
                                             <i class="fa fa-check text-primary me-1"></i>
                                             {{ translate('Future updates') }}
-                                        </div>
-                                        <div class="list-item small">
-                                            <i
-                                                class="fa {{ $item->isSupported() ? 'fa-check text-primary' : 'fa-times text-danger' }} me-1"></i>
-                                            {{ translate('Author Support') }}
                                         </div>
                                     </div>
                                 </div>
@@ -558,7 +457,7 @@
                             $featuredItemBadge = featuredItemBadge();
                         @endphp
                         @if ($featuredItemBadge && $item->wasFeatured())
-                            <div class="card-v border item-detail-card p-4 mt-3">
+                            <div class="card-v border item-detail-card p-3 mt-3">
                                 <div class="row alig-items-center g-3">
                                     <div class="col-auto">
                                         <img src="{{ $featuredItemBadge->getImageLink() }}"
@@ -576,7 +475,8 @@
                                 </div>
                             </div>
                         @endif
-                        <div class="card-v border item-detail-card item-detail-author-card p-4 mt-3">
+                        <div class="card-v border item-detail-card item-detail-author-card p-3 mt-3">
+                            <h5 class="mb-3">{{ translate('Creator') }}</h5>
                             <div class="row align-items-center g-2 mb-3">
                                 @php
                                     $author = $item->author;
@@ -628,30 +528,13 @@
                                     </div>
                                 @endforeach
                             </div>
-                            <a href="{{ $author->getPortfolioLink() }}"
-                                class="btn btn-outline-secondary w-100 mt-4">
-                                {{ translate('View Portfolio') }}
+                            <a href="{{ $author->getProfileLink() }}"
+                                class="btn btn-outline-secondary w-100 mt-3">
+                                {{ translate('View Storefront') }}
                             </a>
                         </div>
-                        @if ($item->isPurchasingEnabled() && $item->hasSales())
-                            <div class="card-v border item-detail-card p-4 mt-3">
-                                <h5 class="mb-0">
-                                    <i class="fa fa-cart-shopping me-2"></i>
-                                    {{ translate($item->total_sales > 1 ? ':count Sales' : ':count Sale', [
-                                        'count' => number_format($item->total_sales),
-                                    ]) }}
-                                </h5>
-                            </div>
-                        @endif
-                        @if (@$itemSettings->free_item_total_downloads && $item->isFree() && $item->free_downloads > 0)
-                            <div class="card-v border item-detail-card p-4 mt-3">
-                                <h5 class="mb-0">
-                                    <i class="fa fa-download me-2"></i>
-                                    {{ translate($item->free_downloads > 1 ? ':count Downloads' : ':count Download', ['count' => numberFormat($item->free_downloads)]) }}
-                                </h5>
-                            </div>
-                        @endif
-                        <div class="card-v border item-detail-card item-detail-meta-card p-4 mt-3">
+                        <div class="card-v border item-detail-card item-detail-meta-card p-3 mt-3">
+                            <h5 class="mb-3">{{ translate('Item details') }}</h5>
                             <div class="small">
                                 @if ($item->last_update_at)
                                     <div class="d-flex justify-content-between border-bottom item-detail-meta-row">
@@ -685,12 +568,6 @@
                                                 <a
                                                     href="{{ $item->category->getLink() }}">{{ $item->category->name }}</a>
                                             </li>
-                                            @if ($item->subCategory)
-                                                <li class="breadcrumb-item">
-                                                    <a
-                                                        href="{{ $item->subCategory->getLink() }}">{{ $item->subCategory->name }}</a>
-                                                </li>
-                                            @endif
                                         </ol>
                                     </nav>
                                 </div>
@@ -724,9 +601,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-v border item-detail-card item-detail-share-card p-4 mt-3">
+                        <div class="card-v border item-detail-card item-detail-share-card p-3 mt-3">
                             <div class="d-flex align-items-center gap-3">
-                                <span class="fs-5">{{ translate('Share') }}:</span>
+                                <span class="fs-5">{{ translate('Share') }}</span>
                                 @include('themes.basic.partials.share-buttons', [
                                     'link' => $item->getLink(),
                                 ])
@@ -794,8 +671,7 @@
                             </div>
                         </div>
                         <div class="col d-none d-lg-block">
-                            <a
-                                href="{{ $item->subCategory ? $item->subCategory->getLink() : $item->category->getLink() }}">
+                            <a href="{{ $item->category->getLink() }}">
                                 {{ translate('View More') }}
                                 <i class="fa fa-chevron-right fa-rtl fa-sm ms-2"></i>
                             </a>
@@ -814,8 +690,7 @@
                         @endforeach
                     </div>
                     <div class="text-center mt-5 d-block d-lg-none">
-                        <a href="{{ $item->subCategory ? $item->subCategory->getLink() : $item->category->getLink() }}"
-                            class="btn btn-primary btn-md btn-icon">
+                        <a href="{{ $item->category->getLink() }}" class="btn btn-primary btn-md btn-icon">
                             {{ translate('View More') }}
                             <i class="fa fa-arrow-right fa-rtl ms-2"></i>
                         </a>

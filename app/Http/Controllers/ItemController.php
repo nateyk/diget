@@ -9,7 +9,6 @@ use App\Models\ItemChangeLog;
 use App\Models\ItemComment;
 use App\Models\ItemReview;
 use App\Models\ItemReviewReply;
-use App\Models\SupportPeriod;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
 use App\Models\UserBadge;
@@ -44,46 +43,27 @@ class ItemController extends Controller
         $item = Item::where('slug', $slug)->where('id', $id)
             ->approved()->purchasingEnabled()->firstOrFail();
 
-        $rules = [
-            'license_type' => ['required', 'integer', 'min:1', 'max:2'],
-        ];
-
-        $supportPeriod = null;
-        if (@settings('item')->support_status && $item->isSupported()) {
-            $supportPeriod = SupportPeriod::where('id', $request->support)->firstOrFail();
-            $rules['support'] = ['required', 'integer', 'exists:support_periods,id'];
+        if (authUser()->id == $item->author_id) {
+            toastr()->error(translate('You cannot purchase your own item'));
+            return back();
         }
+
+        $rules = [
+            'license_type' => ['nullable', 'integer', 'in:1'],
+        ];
 
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             foreach ($validator->errors()->all() as $error) {
-                return response()->json(['error' => $error]);
+                toastr()->error($error);
+                return back();
             }
         }
 
         $price = $item->price->regular;
-        if ($request->license_type == 2) {
-            $price = $item->price->extended;
-        }
 
         $transactionTotalAmount = $price;
-
-        $support = null;
-        if ($supportPeriod) {
-            $supportPrice = (($price * $supportPeriod->percentage) / 100);
-            $support = [
-                'name' => $supportPeriod->name,
-                'title' => $supportPeriod->title,
-                'days' => $supportPeriod->days,
-                'percentage' => $supportPeriod->percentage,
-                'price' => round($supportPrice, 2),
-                'quantity' => 1,
-                'total' => round($supportPrice, 2),
-            ];
-
-            $transactionTotalAmount += $supportPrice;
-        }
 
         $transaction = new Transaction();
         $transaction->user_id = authUser()->id;
@@ -95,9 +75,9 @@ class ItemController extends Controller
         $transactionItem = new TransactionItem();
         $transactionItem->transaction_id = $transaction->id;
         $transactionItem->item_id = $item->id;
-        $transactionItem->license_type = $request->license_type;
+        $transactionItem->license_type = TransactionItem::LICENSE_TYPE_REGULAR;
         $transactionItem->price = $price;
-        $transactionItem->support = $support;
+        $transactionItem->support = null;
         $transactionItem->total = $price;
         $transactionItem->save();
 
@@ -244,11 +224,7 @@ class ItemController extends Controller
 
         $similarItems = Item::query();
 
-        if ($item->subCategory) {
-            $similarItems->where('sub_category_id', $item->subCategory->id);
-        } else {
-            $similarItems->where('category_id', $item->category->id);
-        }
+        $similarItems->where('category_id', $item->category->id);
 
         $similarItems = $similarItems->whereNot('id', $item->id)
             ->whereNot('author_id', $item->author->id)
@@ -274,9 +250,10 @@ class ItemController extends Controller
 
     public function support($slug, $id)
     {
-        $data = $this->getItemPageData($slug, $id);
+        $item = Item::where('slug', $slug)->where('id', $id)
+            ->approved()->firstOrFail();
 
-        return theme_view('items.support', $data);
+        return redirect($item->getLink());
     }
 
     public function freeDownload(Request $request, $id)
@@ -402,9 +379,6 @@ class ItemController extends Controller
                             ->orWhere('demo_link', 'like', $searchTerm)
                             ->orWhere('tags', 'like', $searchTerm)
                             ->orWhereHas('category', function ($query) use ($searchTerm) {
-                                $query->where('name', 'like', $searchTerm);
-                            })
-                            ->orWhereHas('subCategory', function ($query) use ($searchTerm) {
                                 $query->where('name', 'like', $searchTerm);
                             });
                     });

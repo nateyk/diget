@@ -87,16 +87,12 @@
                 @foreach ($trx->trxItems as $trxItem)
                     @php
                         $item = $trxItem->item;
-                        $licenseType = $trxItem->isLicenseTypeRegular()
-                            ? translate('Regular License')
-                            : translate('Extended License');
                     @endphp
                     <li class="list-group-item p-4">
                         <div class="row g-2 align-items-center">
                             <div class="col">
                                 <div class="mb-1">
                                     <strong>{{ $item->name }}</strong>
-                                    <span>({{ $licenseType }})</span>
                                 </div>
                                 <div>({{ getAmount($trxItem->price) . ' x ' . $trxItem->quantity }})</div>
                             </div>

@@ -69,20 +69,6 @@
                                             </li>
                                             <li>
                                                 <a class="dropdown-item"
-                                                    href="{{ route('admin.categories.sub-categories.index', 'category=' . $category->id) }}">
-                                                    <i class="fa-solid fa-tag me-2"></i>
-                                                    {{ translate('Sub Categories') }}
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item"
-                                                    href="{{ route('admin.categories.category-options.index', 'category=' . $category->id) }}">
-                                                    <i class="fa-solid fa-list me-2"></i>
-                                                    {{ translate('Category Options') }}
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item"
                                                     href="{{ route('admin.categories.edit', $category->id) }}">
                                                     <i class="fa-regular fa-pen-to-square me-2"></i>
                                                     {{ translate('Edit') }}

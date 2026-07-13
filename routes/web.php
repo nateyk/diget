@@ -209,8 +209,12 @@ Route::middleware(['oauth.complete', 'verified', '2fa.verify'])->group(function 
             Route::get('{category_slug}/{sub_category_slug}', 'CategoryController@subCategory')->name('sub-category');
         });
 
+        Route::get('discover', 'ItemController@index')->name('items.index');
+
         Route::name('items.')->prefix('items')->group(function () {
-            Route::get('/', 'ItemController@index')->name('index');
+            Route::get('/', function () {
+                return redirect()->route('items.index', request()->query(), 301);
+            })->name('legacy.index');
             Route::get('preview/{id}', 'ItemController@preview')->name('preview');
             Route::name('free.')->prefix('free')->middleware('free_items_login')->group(function () {
                 Route::post('download/{id}', 'ItemController@freeDownload')->name('download');
@@ -260,15 +264,36 @@ Route::middleware(['oauth.complete', 'verified', '2fa.verify'])->group(function 
             });
         });
 
-        Route::name('profile.')->prefix('user')->group(function () {
+        Route::name('profile.')->group(function () {
             Route::middleware('lowercase')->group(function () {
-                Route::get('{username}', 'ProfileController@index')->name('index');
-                Route::get('{username}/portfolio', 'ProfileController@portfolio')->name('portfolio');
-                Route::get('{username}/followers', 'ProfileController@followers')->name('followers');
-                Route::get('{username}/following', 'ProfileController@following')->name('following');
-                Route::get('{username}/reviews', 'ProfileController@reviews')->name('reviews')->middleware('item_reviews.disable');
+                Route::get('@{username}', 'ProfileController@index')->name('index');
+                Route::get('@{username}/portfolio', 'ProfileController@portfolio')->name('portfolio');
+                Route::get('@{username}/followers', 'ProfileController@followers')->name('followers');
+                Route::get('@{username}/following', 'ProfileController@following')->name('following');
+                Route::get('@{username}/reviews', 'ProfileController@reviews')->name('reviews')->middleware('item_reviews.disable');
             });
-            Route::post('{username}/sendmail', 'ProfileController@sendMail')->name('sendmail')->middleware('demo');
+            Route::post('@{username}/sendmail', 'ProfileController@sendMail')->name('sendmail')->middleware('demo');
+        });
+
+        Route::prefix('user')->group(function () {
+            Route::middleware('lowercase')->group(function () {
+                Route::get('{username}', function ($username) {
+                    return redirect()->route('profile.index', strtolower($username), 301);
+                });
+                Route::get('{username}/portfolio', function ($username) {
+                    return redirect()->route('profile.portfolio', strtolower($username), 301);
+                });
+                Route::get('{username}/followers', function ($username) {
+                    return redirect()->route('profile.followers', strtolower($username), 301);
+                });
+                Route::get('{username}/following', function ($username) {
+                    return redirect()->route('profile.following', strtolower($username), 301);
+                });
+                Route::get('{username}/reviews', function ($username) {
+                    return redirect()->route('profile.reviews', strtolower($username), 301);
+                })->middleware('item_reviews.disable');
+            });
+            Route::post('{username}/sendmail', 'ProfileController@sendMail')->middleware('demo');
         });
 
         Route::name('help.')->prefix('help')->middleware('addon.active:help_center')->group(function () {

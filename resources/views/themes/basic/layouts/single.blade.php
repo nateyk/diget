@@ -6,7 +6,7 @@
     <x-ad alias="head_code" />
 </head>
 
-<body class="bg-white">
+<body class="bg-white public-page @yield('body_class')">
     @include('themes.basic.includes.navbar')
     @hasSection('header_v1')
         <header class="header header-sm">
@@ -98,7 +98,7 @@
             </div>
         </header>
     @endif
-    <section class="section {{ $__env->yieldContent('header_v1') ? 'pt-0' : '' }}">
+    <section class="section public-page-section {{ $__env->yieldContent('header_v1') ? 'pt-0' : '' }}">
         <div class="container @yield('container')">
             <div class="section-body">
                 @yield('content')

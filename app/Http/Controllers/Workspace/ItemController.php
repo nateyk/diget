@@ -16,7 +16,6 @@ use App\Models\ItemHistory;
 use App\Models\ItemUpdate;
 use App\Models\ItemView;
 use App\Models\Sale;
-use App\Models\SubCategory;
 use App\Models\UploadedFile;
 use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Services\SlugService;
@@ -151,11 +150,8 @@ class ItemController extends Controller
             'description' => ['required'],
             'category' => ['required', 'string', 'exists:categories,slug'],
             'sub_category' => ['nullable', 'string', 'exists:sub_categories,slug'],
-            'version' => ['nullable', 'regex:/^\d+\.\d+(\.\d+)*$/', 'max:100'],
-            'demo_link' => ['nullable', 'url', 'block_patterns'],
             'tags' => ['required', 'block_patterns'],
             'regular_license_price' => ['required', 'numeric', 'min:' . @$itemSettings->minimum_price, 'max:' . @$itemSettings->maximum_price],
-            'extended_license_price' => ['required', 'numeric', 'min:' . @$itemSettings->minimum_price, 'max:' . @$itemSettings->maximum_price],
             'free_item' => ['nullable', 'boolean'],
             'purchasing_status' => ['nullable', 'boolean'],
             'message' => ['nullable', 'string'],
@@ -170,17 +166,12 @@ class ItemController extends Controller
             $request->main_file_source = false;
         }
 
-        if (@$itemSettings->support_status) {
-            $rules['support'] = ['required', 'boolean'];
-            if ($request->support == 1) {
-                $rules['support_instructions'] = ['required', 'string', 'max:2000'];
-            } else {
-                $request->support_instructions = null;
-            }
-        } else {
-            $request->is_supported = 0;
-            $request->support_instructions = null;
-        }
+        $request->merge([
+            'support' => Item::NOT_SUPPORTED,
+            'support_instructions' => null,
+            'version' => null,
+            'demo_link' => null,
+        ]);
 
         try {
             $validator = Validator::make($request->all(), $rules);
@@ -206,11 +197,6 @@ class ItemController extends Controller
             $category = Category::where('slug', $request->category)->with('categoryOptions')->firstOrFail();
             $options = $this->handleItemOptions($request, $category);
 
-            $subCategory = null;
-            if ($request->has('sub_category') && !is_null($request->sub_category)) {
-                $subCategory = SubCategory::where('slug', $request->sub_category)->firstOrFail();
-            }
-
             $itemFiles = $this->handleItemFiles($request, $category);
             $thumbnail = $itemFiles->thumbnail;
             $previewType = $itemFiles->preview_type;
@@ -235,7 +221,7 @@ class ItemController extends Controller
             }
 
             $regularPrice = $request->regular_license_price;
-            $extendedPrice = $request->extended_license_price;
+            $extendedPrice = $regularPrice;
 
             $status = @$itemSettings->adding_require_review ? Item::STATUS_PENDING : Item::STATUS_APPROVED;
             $itemHistoryTitle = @$itemSettings->adding_require_review ? ItemHistory::TITLE_SUBMISSION : ItemHistory::TITLE_TRUST_SUBMISSION;
@@ -246,7 +232,7 @@ class ItemController extends Controller
             $item->slug = SlugService::createSlug(Item::class, 'slug', $request->name, ['unique' => false]);
             $item->description = $description;
             $item->category_id = $category->id;
-            $item->sub_category_id = $subCategory ? $subCategory->id : null;
+            $item->sub_category_id = null;
             $item->options = $options;
             $item->version = $request->version;
             $item->demo_link = $request->demo_link;
@@ -321,8 +307,6 @@ class ItemController extends Controller
         $rules = [
             'name' => ['required', 'string', 'block_patterns', 'max:100', 'unique:items,name,' . $item->id],
             'description' => ['required'],
-            'version' => ['nullable', 'regex:/^\d+\.\d+(\.\d+)*$/', 'max:100'],
-            'demo_link' => ['nullable', 'url', 'block_patterns'],
             'tags' => ['required', 'block_patterns'],
             'free_item' => ['nullable', 'boolean'],
             'purchasing_status' => ['nullable', 'boolean'],
@@ -338,21 +322,15 @@ class ItemController extends Controller
             $request->main_file_source = false;
         }
 
-        if (@$itemSettings->support_status) {
-            $rules['support'] = ['required', 'boolean'];
-            if ($request->support == 1) {
-                $rules['support_instructions'] = ['required', 'string', 'max:2000'];
-            } else {
-                $request->support_instructions = null;
-            }
-        } else {
-            $request->is_supported = 0;
-            $request->support_instructions = null;
-        }
+        $request->merge([
+            'support' => Item::NOT_SUPPORTED,
+            'support_instructions' => null,
+            'version' => null,
+            'demo_link' => null,
+        ]);
 
         if (!$item->hasDiscount()) {
             $rules['regular_license_price'] = ['required', 'numeric', 'min:' . @$itemSettings->minimum_price, 'max:' . @$itemSettings->maximum_price];
-            $rules['extended_license_price'] = ['required', 'numeric', 'min:' . @$itemSettings->minimum_price, 'max:' . @$itemSettings->maximum_price];
         }
 
         try {
@@ -404,7 +382,7 @@ class ItemController extends Controller
 
             if (!$item->hasDiscount()) {
                 $regularPrice = $request->regular_license_price;
-                $extendedPrice = $request->extended_license_price;
+                $extendedPrice = $regularPrice;
 
                 if ($regularPrice != $item->regular_price || $extendedPrice != $item->extended_price) {
                     $priceUpdatedAt = Carbon::now();
@@ -557,36 +535,7 @@ class ItemController extends Controller
 
     private function handleItemOptions($request, $category)
     {
-        $options = null;
-        if ($category->categoryOptions->count() > 0) {
-            $options = [];
-            foreach ($category->categoryOptions as $categoryOption) {
-                $option = isset($request->options[$categoryOption->id]) ? $request->options[$categoryOption->id] : null;
-                if ($categoryOption->isMultiple()) {
-                    $requestOptions = $option ? $option : [];
-                    if ($categoryOption->isRequired() && count($requestOptions) < 1) {
-                        throw new Exception(translate(':field Cannot be empty', ['field' => $categoryOption->name]));
-                    }
-                    foreach ($requestOptions as $requestOption) {
-                        if ($requestOption && !in_array($requestOption, $categoryOption->options)) {
-                            throw new Exception(translate('Something went wrong, please refresh the page and try again.'));
-                        }
-                    }
-                } else {
-                    $requestOption = $option ? $option : null;
-                    if ($categoryOption->isRequired() && empty($requestOption)) {
-                        throw new Exception(translate(':field Cannot be empty', ['field' => $categoryOption->name]));
-                    }
-                    if ($requestOption && !in_array($requestOption, $categoryOption->options)) {
-                        throw new Exception(translate('Something went wrong, please refresh the page and try again.'));
-                    }
-                }
-                if ($option) {
-                    $options[$categoryOption->name] = $option;
-                }
-            }
-        }
-        return $options;
+        return null;
     }
 
     private function handleItemFiles($request, $category, $required = true)
@@ -920,7 +869,6 @@ class ItemController extends Controller
 
         $validator = Validator::make($request->all(), [
             'regular_percentage' => ['required', 'integer', 'min:1', 'max:' . @$itemSettings->discount_max_percentage],
-            'extended_percentage' => ['nullable', 'integer', 'min:1', 'max:' . @$itemSettings->discount_max_percentage],
             'starting_date' => ['required', 'date'],
             'ending_date' => ['required', 'date'],
         ]);
@@ -976,17 +924,14 @@ class ItemController extends Controller
         $regularDiscountAmount = ($item->regular_price * $request->regular_percentage) / 100;
         $regularPrice = intval(ceil(($item->regular_price - $regularDiscountAmount)), 0);
 
-        $extendedPrice = null;
-        if ($request->filled('extended_percentage')) {
-            $extendedDiscountAmount = ($item->extended_price * $request->extended_percentage) / 100;
-            $extendedPrice = intval(ceil(($item->extended_price - $extendedDiscountAmount)), 0);
-        }
+        $extendedDiscountAmount = ($item->extended_price * $request->regular_percentage) / 100;
+        $extendedPrice = intval(ceil(($item->extended_price - $extendedDiscountAmount)), 0);
 
         $discount = new ItemDiscount();
         $discount->item_id = $item->id;
         $discount->regular_percentage = $request->regular_percentage;
         $discount->regular_price = $regularPrice;
-        $discount->extended_percentage = $request->extended_percentage ?? null;
+        $discount->extended_percentage = $request->regular_percentage;
         $discount->extended_price = $extendedPrice;
         $discount->starting_at = $startingDate;
         $discount->ending_at = $endingDate;

@@ -77,12 +77,6 @@
                                                                 <a href="{{ route('categories.category', $item->category->slug) }}"
                                                                     target="_blank">{{ $item->category->name }}</a>
                                                             </li>
-                                                            @if ($item->subCategory)
-                                                                <li class="breadcrumb-item small">
-                                                                    <a href="{{ route('categories.sub-category', [$item->category->slug, $item->subCategory->slug]) }}"
-                                                                        target="_blank">{{ $item->subCategory->name }}</a>
-                                                                </li>
-                                                            @endif
                                                         </ol>
                                                     </nav>
                                                 </div>
@@ -113,7 +107,7 @@
                                                     class="row row-cols-auto align-items-center justify-content-between flex-nowrap">
                                                     <div class="col">
                                                         <h6 class="mb-0 text-dark small">
-                                                            {{ translate('Regular') }}
+                                                            {{ translate('Item Price') }}
                                                         </h6>
                                                     </div>
                                                     <div class="col">
@@ -128,32 +122,6 @@
                                                             @else
                                                                 <span class="small text-dark">
                                                                     {{ getAmount($item->getRegularPrice()) }}
-                                                                </span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="table-price">
-                                                <div
-                                                    class="row row-cols-auto align-items-center justify-content-between flex-nowrap">
-                                                    <div class="col">
-                                                        <h6 class="mb-0 text-dark small">
-                                                            {{ translate('Extended') }}
-                                                        </h6>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="item-price small">
-                                                            @if ($item->isOnDiscount() && $item->isExtendedOnDiscount())
-                                                                <span class="item-price-through small">
-                                                                    {{ getAmount($item->getExtendedPrice()) }}
-                                                                </span>
-                                                                <span class="item-price-number small">
-                                                                    {{ getAmount($item->price->extended) }}
-                                                                </span>
-                                                            @else
-                                                                <span class="small text-dark">
-                                                                    {{ getAmount($item->getExtendedPrice()) }}
                                                                 </span>
                                                             @endif
                                                         </div>

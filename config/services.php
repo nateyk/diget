@@ -65,4 +65,8 @@ return [
         'client_secret' => env('GITHUB_CLIENT_SECRET'),
         'redirect' => env('APP_URL') . '/oauth/github/callback',
     ],
+
+    'chapa' => [
+        'ssl_verify' => env('CHAPA_SSL_VERIFY', true),
+    ],
 ];

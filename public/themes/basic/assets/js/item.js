@@ -9,18 +9,40 @@
         });
     }
 
+    let mainFileGroupSelects = $('.main-file-group select.selectpicker-md');
+    if (mainFileGroupSelects.length && typeof $.fn.selectpicker === 'function') {
+        mainFileGroupSelects.each(function() {
+            let select = $(this);
+            select
+                .addClass('selectpicker')
+                .removeClass('form-select form-select-md')
+                .css('display', '')
+                .selectpicker({
+                    container: 'body',
+                    noneSelectedText: config.translates.noneSelectedText,
+                    noneResultsText: config.translates.noneResultsText,
+                    countSelectedText: config.translates.countSelectedText,
+                    width: '100%'
+                });
+        });
+    }
+
     let mainFileSource = $('#mainFileSource');
     mainFileSource.on('change', function() {
         let mainFileSource1 = $('.main-file-source-1'),
-            mainFileSource2 = $('.main-file-source-2');
+            mainFileSource2 = $('.main-file-source-2'),
+            mainFileSource1Select = $('select.main-file-source-1');
         if ($(this).val() == 0) {
             mainFileSource2.prop('disabled', true);
             mainFileSource2.addClass('d-none');
             mainFileSource1.prop('disabled', false);
             mainFileSource1.removeClass('d-none');
+            mainFileSource1Select.closest('.bootstrap-select').removeClass('d-none');
+            mainFileSource1Select.selectpicker('refresh');
         } else {
             mainFileSource1.prop('disabled', true);
             mainFileSource1.addClass('d-none');
+            mainFileSource1Select.closest('.bootstrap-select').addClass('d-none');
             mainFileSource2.prop('disabled', false);
             mainFileSource2.removeClass('d-none');
         }
@@ -271,7 +293,9 @@
                 dataType: "JSON",
                 success: function(response) {
                     let itemFilesSelect = $('select.item-files-select');
-                    itemFilesSelect.selectpicker('destroy');
+                    if (typeof itemFilesSelect.selectpicker === 'function') {
+                        itemFilesSelect.selectpicker('destroy');
+                    }
                     if (itemFilesSelect.length > 0) {
                         itemFilesSelect.empty();
                         $.each(response, function(index, option) {
@@ -280,8 +304,9 @@
                     } else {
                         itemFilesSelect.empty();
                     }
-                    itemFilesSelect.selectpicker();
-                    itemFilesSelect.addClass('selectpicker');
+                    if (typeof itemFilesSelect.selectpicker === 'function') {
+                        itemFilesSelect.selectpicker();
+                    }
                 },
                 error: function(request, status, error) {
                     toastr.error(error);
@@ -293,8 +318,6 @@
 
     let regularLicensePrice = $('#regular-license-price'),
         regularLicensePurchasePrice = $('#regular-license-purchase-price'),
-        extendedLicensePrice = $('#extended-license-price'),
-        extendedLicensePurchasePrice = $('#extended-license-purchase-price'),
         maxDiscountPercentage = parseInt(itemConfig.max_discount_percentage);
 
     function updateRegularLicensePurchasePrice(discountPercentage = 0) {
@@ -327,45 +350,10 @@
         }
     });
 
-    function updateExtendedLicensePurchasePrice(discountPercentage = 0) {
-        if (extendedLicensePrice.length) {
-            let inputVal = extendedLicensePrice.val(),
-                extendedBuyerFee = parseFloat(itemConfig.buyer_fee.extended);
-            let price = (inputVal !== null && inputVal.trim() !== '' && !isNaN(inputVal)) ? parseFloat(inputVal) + extendedBuyerFee : 0;
-
-            if (discountPercentage > 0) {
-                let discountAmount = (itemConfig.prices.extended * discountPercentage) / 100,
-                    extendedPrice = itemConfig.prices.extended - discountAmount;
-                price = Math.ceil(extendedPrice + extendedBuyerFee);
-                extendedLicensePurchasePrice.val(price.toFixed(2));
-            } else {
-                extendedLicensePurchasePrice.val(price.toFixed(2));
-            }
-        }
-    }
-
-    let extendedLicensePercentage = $('#extended-license-percentage');
-    extendedLicensePercentage.on('input', function() {
-        let percentageValue = extendedLicensePercentage.val(),
-            percentage = (percentageValue !== null && percentageValue.trim() !== '' && !isNaN(percentageValue)) ? parseFloat(percentageValue) : 0;
-
-        if (percentage > maxDiscountPercentage) {
-            extendedLicensePercentage.val(maxDiscountPercentage);
-            alert(itemConfig.translates.max_discount_percentage_error);
-        } else {
-            updateExtendedLicensePurchasePrice(percentage);
-        }
-    });
-
     updateRegularLicensePurchasePrice();
-    updateExtendedLicensePurchasePrice();
 
     regularLicensePrice.on('input', function() {
         updateRegularLicensePurchasePrice();
-    });
-
-    extendedLicensePrice.on('input', function() {
-        updateExtendedLicensePurchasePrice();
     });
 
 })(jQuery);

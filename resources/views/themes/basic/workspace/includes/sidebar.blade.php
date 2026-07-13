@@ -94,7 +94,7 @@
                         @endif
                         @if (authUser()->isAuthor() && isAddonActive('license_verification_tool'))
                             <div class="dashboard-sidebar-link {{ request()->segment(2) == 'tools' ? 'active animated ' : '' }} dashboard-toggle"
-                                data-bs-toggle>
+                                data-toggle>
                                 <div class="dashboard-sidebar-link-title toggle-title">
                                     <i class="fa-solid fa-screwdriver-wrench"></i>
                                     <span>{{ translate('Tools') }}</span>

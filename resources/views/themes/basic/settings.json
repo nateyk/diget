@@ -74,7 +74,7 @@
             "field": "color",
             "label": "Primary Color",
             "key": "primary_color",
-            "value": "#4caf50",
+            "value": "#FF5A3D",
             "required": true,
             "rule": [
                 "required",
@@ -87,7 +87,7 @@
             "field": "color",
             "label": "Secondary Color",
             "key": "secondary_color",
-            "value": "#222222",
+            "value": "#111827",
             "required": true,
             "rule": [
                 "required",
@@ -100,7 +100,7 @@
             "field": "color",
             "label": "Background Color",
             "key": "background_color",
-            "value": "#f8f8f8",
+            "value": "#F7F7F4",
             "required": true,
             "rule": [
                 "required",
@@ -113,7 +113,7 @@
             "field": "color",
             "label": "Navbar 1 Background Color",
             "key": "navbar1_background_color",
-            "value": "#222222",
+            "value": "#111827",
             "required": true,
             "rule": [
                 "required",
@@ -139,7 +139,7 @@
             "field": "color",
             "label": "Trending Item Badge Color",
             "key": "trending_item_badge_color",
-            "value": "#0074e4",
+            "value": "#2563EB",
             "required": true,
             "rule": [
                 "required",
@@ -152,7 +152,7 @@
             "field": "color",
             "label": "Sale Item Badge Color",
             "key": "sale_item_badge_color",
-            "value": "#0bbe9a",
+            "value": "#10B981",
             "required": true,
             "rule": [
                 "required",
@@ -165,7 +165,7 @@
             "field": "color",
             "label": "Free Item Badge Color",
             "key": "free_item_badge_color",
-            "value": "#743cee",
+            "value": "#8B5CF6",
             "required": true,
             "rule": [
                 "required",
@@ -178,7 +178,7 @@
             "field": "color",
             "label": "Header Background Color",
             "key": "header_background_color",
-            "value": "#f7f7f7",
+            "value": "#F7F7F4",
             "required": true,
             "rule": [
                 "required",
@@ -191,7 +191,7 @@
             "field": "color",
             "label": "Swiper Background Color",
             "key": "swiper_background_color",
-            "value": "#ecf5f8",
+            "value": "#FFF1EC",
             "required": true,
             "rule": [
                 "required",
@@ -204,7 +204,7 @@
             "field": "color",
             "label": "Text Color",
             "key": "text_color",
-            "value": "#2b2b2b",
+            "value": "#151515",
             "required": true,
             "rule": [
                 "required",
@@ -217,7 +217,7 @@
             "field": "color",
             "label": "Heading Color",
             "key": "heading_color",
-            "value": "#010d4c",
+            "value": "#111827",
             "required": true,
             "rule": [
                 "required",
@@ -230,7 +230,7 @@
             "field": "color",
             "label": "Text Muted",
             "key": "text_muted",
-            "value": "#8e9cba",
+            "value": "#737373",
             "required": true,
             "rule": [
                 "required",
@@ -243,7 +243,7 @@
             "field": "color",
             "label": "Border Color",
             "key": "border_color",
-            "value": "#ececec",
+            "value": "#E7E5E0",
             "required": true,
             "rule": [
                 "required",
@@ -256,7 +256,7 @@
             "field": "color",
             "label": "Dashboard Sidebar Header Background Color",
             "key": "dashboard_sidebar_header_background_color",
-            "value": "#262626",
+            "value": "#111827",
             "required": true,
             "rule": [
                 "required",
@@ -269,7 +269,7 @@
             "field": "color",
             "label": "Dashboard Sidebar Body Background Color",
             "key": "dashboard_sidebar_body_background_color",
-            "value": "#333333",
+            "value": "#111827",
             "required": true,
             "rule": [
                 "required",
@@ -282,7 +282,7 @@
             "field": "color",
             "label": "Dashboard Sidebar Elements Background Color",
             "key": "dashboard_sidebar_elements_background_color",
-            "value": "#3d3d3d",
+            "value": "#1f2937",
             "required": true,
             "rule": [
                 "required",
@@ -295,7 +295,7 @@
             "field": "color",
             "label": "Files Icon Color",
             "key": "files_icon_color",
-            "value": "#4caf50",
+            "value": "#FF5A3D",
             "required": true,
             "rule": [
                 "required",
@@ -308,7 +308,7 @@
             "field": "color",
             "label": "Item Preview Navbar Background",
             "key": "item_preview_navbar_background",
-            "value": "#222222",
+            "value": "#111827",
             "required": true,
             "rule": [
                 "required",
@@ -321,7 +321,7 @@
             "field": "color",
             "label": "Footer Background Color",
             "key": "footer_background_color",
-            "value": "#222222",
+            "value": "#111827",
             "required": true,
             "rule": [
                 "required",
@@ -334,7 +334,7 @@
             "field": "color",
             "label": "Footer Border Color",
             "key": "footer_border_color",
-            "value": "#292929",
+            "value": "#1F2937",
             "required": true,
             "rule": [
                 "required",
@@ -347,7 +347,7 @@
             "field": "color",
             "label": "Footer Text Color",
             "key": "footer_text_color",
-            "value": "#888888",
+            "value": "#A3A3A3",
             "required": true,
             "rule": [
                 "required",

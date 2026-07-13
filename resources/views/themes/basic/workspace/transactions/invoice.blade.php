@@ -259,14 +259,10 @@
                                 @foreach ($trx->trxItems as $trxItem)
                                     @php
                                         $item = $trxItem->item;
-                                        $licenseType = $trxItem->isLicenseTypeRegular()
-                                            ? translate('Regular License')
-                                            : translate('Extended License');
                                     @endphp
                                     <tr>
                                         <td>
                                             <p class="mb-0">{{ $item->name }}</p>
-                                            <p class="mb-0">({{ $licenseType }})</p>
                                         </td>
                                         <td class="text-center">{{ getAmount($trxItem->price) }}</td>
                                         <td class="text-center">{{ $trxItem->quantity }}</td>

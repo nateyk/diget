@@ -181,73 +181,70 @@
     @else
         <form action="{{ route('workspace.settings.kyc.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="dashboard-card card-v mb-3">
+            <div class="dashboard-card card-v mb-3 workspace-kyc-card">
                 <div class="form-section">
                     <h4 class="mb-0">{{ translate('ID Verification') }}</h4>
                 </div>
-                <div class="row g-4">
-                    <div class="col-12 col-lg-12 col-xxl-5">
-                        <div class="mb-4">
-                            <p>
-                                {{ translate('Upload a clear, legible image and Ensure that all relevant details, such as your name, photo, and ID number, are visible. the image must be type of .JPG or .PNG') }}
-                            </p>
-                        </div>
-                        <div>
+                <div class="row g-3">
+                    <div class="col-12 col-xl-4">
+                        <p class="text-muted small mb-3">
+                            {{ translate('Upload clear JPG or PNG images. Make sure your name, photo, and ID number are readable.') }}
+                        </p>
+                        <div class="mb-3">
                             <label class="form-label">{{ translate('Document type') }}</label>
-                            <select id="kycDocument" name="document_type" class="form-select form-select-md rounded-3">
+                            <select id="kycDocument" name="document_type" class="form-select form-select-md">
                                 <option value="national_id">{{ translate('National ID') }}</option>
                                 <option value="passport">{{ translate('Passport') }}</option>
                             </select>
                         </div>
-                        <div id="nationalIDNumber" class="mt-4">
+                        <div id="nationalIDNumber">
                             <label class="form-label">{{ translate('National ID Number') }}</label>
                             <input type="text" name="national_id_number" class="form-control form-control-md"
                                 autofocus>
                         </div>
-                        <div id="passportNumber" class="mt-4 d-none">
+                        <div id="passportNumber" class="d-none">
                             <label class="form-label">{{ translate('Passport Number') }}</label>
                             <input type="text" name="passport_number" class="form-control form-control-md" autofocus>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-12 col-xxl-7">
+                    <div class="col-12 col-xl-8">
                         <div id="nationalId" class="row g-3">
-                            <div class="col-md-6 col-lg-6">
-                                <div class="border rounded-3 p-3">
+                            <div class="col-md-6">
+                                <div class="workspace-kyc-upload border rounded-3 p-3">
                                     <h6 class="mb-3">{{ translate('Front Of ID') }}</h6>
                                     <div class="image-preview-box mb-3">
                                         <img id="image-preview-1" src="{{ asset(@$settings->kyc->id_front_image) }}"
-                                            height="205px">
+                                            alt="{{ translate('Front Of ID') }}">
                                     </div>
                                     <input type="file" name="front_of_id"
-                                        class="form-control form-control-md image-input rounded-3" data-id="1">
+                                        class="form-control form-control-md image-input" data-id="1"
+                                        accept=".jpg,.jpeg,.png">
                                 </div>
                             </div>
-                            <div class="col-md-6 col-lg-6">
-                                <div class="border rounded-3 p-3">
+                            <div class="col-md-6">
+                                <div class="workspace-kyc-upload border rounded-3 p-3">
                                     <h6 class="mb-3">{{ translate('Back Of ID') }}</h6>
                                     <div class="image-preview-box mb-3">
-                                        <div class="mb-3">
-                                            <img id="image-preview-2" src="{{ asset(@$settings->kyc->id_back_image) }}"
-                                                height="205px">
-                                        </div>
+                                        <img id="image-preview-2" src="{{ asset(@$settings->kyc->id_back_image) }}"
+                                            alt="{{ translate('Back Of ID') }}">
                                     </div>
                                     <input type="file" name="back_of_id"
-                                        class="form-control form-control-md image-input rounded-3" data-id="2">
+                                        class="form-control form-control-md image-input" data-id="2"
+                                        accept=".jpg,.jpeg,.png">
                                 </div>
                             </div>
                         </div>
-                        <div id="passport" class="row g-3 justify-content-lg-center d-none">
-                            <div class="col-lg-7">
-                                <div class="border rounded-3 p-3">
+                        <div id="passport" class="row g-3 d-none">
+                            <div class="col-md-6 col-xl-7">
+                                <div class="workspace-kyc-upload border rounded-3 p-3">
                                     <h6 class="mb-3">{{ translate('Passport') }}</h6>
                                     <div class="image-preview-box mb-3">
-                                        <div class="mb-3">
-                                            <img id="image-preview-4" src="{{ asset(@$settings->kyc->passport_image) }}"
-                                                height="400px">
-                                        </div>
+                                        <img id="image-preview-4" src="{{ asset(@$settings->kyc->passport_image) }}"
+                                            alt="{{ translate('Passport') }}">
                                     </div>
                                     <input type="file" name="passport"
-                                        class="form-control form-control-md image-input rounded-3" data-id="4">
+                                        class="form-control form-control-md image-input" data-id="4"
+                                        accept=".jpg,.jpeg,.png">
                                 </div>
                             </div>
                         </div>
@@ -255,26 +252,29 @@
                 </div>
             </div>
             @if (@$settings->kyc->selfie_verification)
-                <div class="dashboard-card card-v mb-3">
+                <div class="dashboard-card card-v mb-3 workspace-kyc-card">
                     <div class="form-section">
                         <h4 class="mb-0">{{ translate('Selfie Verification') }}</h4>
                     </div>
-                    <div class="row g-4">
-                        <div class="col-lg-6">
-                            <p>
-                                {{ translate("Upload a clear selfie and Ensure it's well-lit and visible. the image must be type of.JPG or .PNG") }}
+                    <div class="row g-3 align-items-start">
+                        <div class="col-12 col-xl-4">
+                            <p class="text-muted small mb-0">
+                                {{ translate('Upload a clear, well-lit selfie as a JPG or PNG image.') }}
                             </p>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="d-flex justify-content-lg-center">
-                                <div class="border rounded-3 p-3">
-                                    <div class="image-preview-box mb-3">
-                                        <img id="image-preview-3" src="{{ asset(@$settings->kyc->selfie_image) }}"
-                                            height="400px">
+                        <div class="col-12 col-xl-8">
+                            <div class="row g-3">
+                                <div class="col-md-6 col-xl-7">
+                                    <div class="workspace-kyc-upload border rounded-3 p-3">
+                                        <h6 class="mb-3">{{ translate('Selfie') }}</h6>
+                                        <div class="image-preview-box mb-3">
+                                            <img id="image-preview-3" src="{{ asset(@$settings->kyc->selfie_image) }}"
+                                                alt="{{ translate('Selfie') }}">
+                                        </div>
+                                        <input type="file" id="selfie" name="selfie"
+                                            class="form-control form-control-md image-input" data-id="3"
+                                            accept=".jpg,.jpeg,.png">
                                     </div>
-                                    <input type="file" id="selfie" name="selfie"
-                                        class="form-control form-control-md image-input rounded-3" data-id="3"
-                                        accept=".jpg,.jpeg,.png">
                                 </div>
                             </div>
                         </div>
@@ -282,7 +282,7 @@
                 </div>
             @endif
             <div class="dashboard-card card-v">
-                <button class="btn btn-primary btn-md ">{{ translate('Submit') }}</button>
+                <button class="btn btn-primary btn-md">{{ translate('Submit') }}</button>
             </div>
         </form>
     @endif

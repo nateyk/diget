@@ -5,7 +5,7 @@
     @include('themes.basic.includes.head')
 </head>
 
-<body class="bg-white">
+<body class="bg-white public-page">
     @include('themes.basic.includes.navbar')
     @hasSection('header_v1')
         <header class="header header-bg">
@@ -62,7 +62,7 @@
             </div>
         </header>
     @endif
-    <section class="section">
+    <section class="section public-page-section">
         <div class="container @yield('container')">
             <div class="section-body">
                 @yield('content')

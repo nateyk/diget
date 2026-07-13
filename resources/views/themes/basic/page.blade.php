@@ -7,5 +7,7 @@
 @section('header_v2', true)
 @section('container', 'container-custom')
 @section('content')
-    {!! $page->body !!}
+    <article class="card-v border public-content-card p-4">
+        {!! $page->body !!}
+    </article>
 @endsection

@@ -26,8 +26,12 @@ class ChapaController extends Controller
 
     public function __construct(?ClientInterface $client = null, ?PaymentGateway $paymentGateway = null)
     {
-        $this->client = $client ?: new Client(['timeout' => 15, 'connect_timeout' => 5]);
-        $this->paymentGateway = $paymentGateway ?: paymentGateway('chapa');
+        $this->client = $client ?: new Client([
+            'timeout' => 15,
+            'connect_timeout' => 5,
+            'verify' => config('services.chapa.ssl_verify', true),
+        ]);
+        $this->paymentGateway = $paymentGateway?->exists ? $paymentGateway : paymentGateway('chapa');
     }
 
     public function process($trx)
@@ -46,11 +50,11 @@ class ChapaController extends Controller
                 'first_name' => $user->firstname ?: $user->username,
                 'last_name' => $user->lastname ?: '',
                 'tx_ref' => $txRef,
-                'callback_url' => route('payments.ipn.chapa'),
-                'return_url' => route('payments.ipn.chapa'),
+                'callback_url' => route('payments.ipn.chapa', ['tx_ref' => $txRef]),
+                'return_url' => route('payments.ipn.chapa', ['tx_ref' => $txRef]),
                 'customization' => [
                     'title' => @settings('general')->site_name ?: config('app.name'),
-                    'description' => translate('Payment for order #:number', ['number' => $trx->id]),
+                    'description' => translate('Payment for order :number', ['number' => $trx->id]),
                 ],
             ];
 
@@ -89,6 +93,12 @@ class ChapaController extends Controller
         $trx = $this->findCustomerTransaction($txRef);
 
         if (! $trx) {
+            Log::warning('Chapa callback payment reference not found', [
+                'tx_ref' => $txRef,
+                'query' => $request->query(),
+                'is_authenticated' => auth()->check(),
+                'user_id' => auth()->id(),
+            ]);
             toastr()->error(translate('Invalid payment reference'));
 
             return redirect()->route('home');

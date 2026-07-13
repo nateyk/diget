@@ -446,6 +446,14 @@ body {
     border-top-right-radius: 0;
 }
 
+.form-group .bootstrap-select.second-input {
+    display: block;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    width: 1% !important;
+}
+
 .form-group .first-input.bootstrap-select .btn {
     border-radius: 8px;
     border-bottom-left-radius: 0;
@@ -457,6 +465,53 @@ body {
     border-radius: 8px;
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
+    height: 100%;
+}
+
+.main-file-group .first-input.bootstrap-select {
+    flex: 0 0 112px;
+    width: 112px !important;
+}
+
+.main-file-group .first-input:not(.bootstrap-select) {
+    flex: 0 0 118px;
+    max-width: 118px;
+    min-width: 118px;
+}
+
+.main-file-group .second-input:not(.bootstrap-select) {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.main-file-group .first-input.bootstrap-select .btn,
+.main-file-group .second-input.bootstrap-select .btn,
+.main-file-group .first-input:not(.bootstrap-select),
+.main-file-group .second-input:not(.bootstrap-select) {
+    min-height: 42px;
+}
+
+.main-file-group .first-input.bootstrap-select .filter-option-inner-inner,
+.main-file-group .second-input.bootstrap-select .filter-option-inner-inner {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 575.98px) {
+    .main-file-group {
+        flex-direction: column;
+    }
+
+    .main-file-group .first-input,
+    .main-file-group .second-input,
+    .main-file-group .first-input.bootstrap-select,
+    .main-file-group .second-input.bootstrap-select {
+        border-left: 1px solid var(--border_color);
+        border-radius: var(--ui-control-radius) !important;
+        flex-basis: auto;
+        max-width: 100%;
+        width: 100% !important;
+    }
 }
 
 .plan .plan-pro {

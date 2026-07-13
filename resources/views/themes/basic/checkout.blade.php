@@ -20,7 +20,7 @@
                             {{ translate('Thank you for your purchase. Your payment has been completed successfully.') }}
                         </p>
                         <a href="{{ route('workspace.purchases.index') }}" class="btn btn-outline-primary btn-md mt-2">
-                            <i class="fa-solid fa-cart-shopping me-2"></i>
+                            <i class="fa-solid fa-receipt me-2"></i>
                             <span>{{ translate('View My Purchases') }}</span>
                         </a>
                     @elseif($trx->isTypeDeposit())
@@ -48,7 +48,7 @@
                             {{ translate('Payment has been completed and your support has been purchased successfully.') }}
                         </p>
                         <a href="{{ route('workspace.purchases.index') }}" class="btn btn-outline-primary btn-md mt-2">
-                            <i class="fa-solid fa-cart-shopping me-2"></i>
+                            <i class="fa-solid fa-receipt me-2"></i>
                             <span>{{ translate('View My Purchases') }}</span>
                         </a>
                     @elseif($trx->isTypeSupportExtend())
@@ -57,7 +57,7 @@
                             {{ translate('Payment has been completed and your support has been extended successfully.') }}
                         </p>
                         <a href="{{ route('workspace.purchases.index') }}" class="btn btn-outline-primary btn-md mt-2">
-                            <i class="fa-solid fa-cart-shopping me-2"></i>
+                            <i class="fa-solid fa-receipt me-2"></i>
                             <span>{{ translate('View My Purchases') }}</span>
                         </a>
                     @endif

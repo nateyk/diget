@@ -57,24 +57,6 @@
                 <li class="list-group-item p-4">
                     <div class="row align-items-center g-3">
                         <div class="col">
-                            <strong>{{ translate('License Type') }}</strong>
-                        </div>
-                        <div class="col-auto">
-                            @if ($purchase->isLicenseTypeRegular())
-                                <div class="badge bg-gray rounded-2 fw-light px-3 py-2">
-                                    {{ translate('Regular') }}
-                                </div>
-                            @else
-                                <div class="badge bg-primary rounded-2 fw-light px-3 py-2">
-                                    {{ translate('Extended') }}
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item p-4">
-                    <div class="row align-items-center g-3">
-                        <div class="col">
                             <strong>{{ translate('Purchase Date') }}</strong>
                         </div>
                         <div class="col-auto">

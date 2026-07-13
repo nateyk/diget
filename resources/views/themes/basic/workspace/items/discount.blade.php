@@ -13,7 +13,7 @@
                         @csrf
                         <div class="dashboard-card card-v p-0 mb-4">
                             <div class="card-v-header border-bottom py-3 px-4">
-                                <h5 class="mb-0">{{ translate('Regular License discount') }}</h5>
+                                <h5 class="mb-0">{{ translate('Item Discount') }}</h5>
                             </div>
                             <div class="card-v-body p-4">
                                 <p class="mb-4">
@@ -25,7 +25,7 @@
                                 <div class="row g-4 mb-3">
                                     <div class="col-12 col-lg-3">
                                         @include('themes.basic.workspace.partials.input-price', [
-                                            'label' => translate('Regular License Price'),
+                                            'label' => translate('Item Price'),
                                             'id' => 'regular-license-price',
                                             'value' => $item->regular_price,
                                             'disabled' => true,
@@ -55,58 +55,6 @@
                                         @include('themes.basic.workspace.partials.input-price', [
                                             'label' => translate('Purchase price'),
                                             'id' => 'regular-license-purchase-price',
-                                            'value' => 0,
-                                            'disabled' => true,
-                                        ])
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="dashboard-card card-v p-0 mb-4">
-                            <div class="card-v-header border-bottom py-3 px-4">
-                                <h5 class="mb-0">{{ translate('Extended License discount (Optional)') }}
-                                </h5>
-                            </div>
-                            <div class="card-v-body p-4">
-                                <p class="mb-4">
-                                    <i class="fa-regular fa-circle-question me-1"></i>
-                                    <span>{{ translate('The maximum discount percentage should be less or equal :percentage%', [
-                                        'percentage' => @$settings->item->discount_max_percentage,
-                                    ]) }}</span>
-                                </p>
-                                <div class="row g-4 mb-3">
-                                    <div class="col-12 col-lg-3">
-                                        @include('themes.basic.workspace.partials.input-price', [
-                                            'label' => translate('Extended License Price'),
-                                            'id' => 'extended-license-price',
-                                            'value' => $item->extended_price,
-                                            'disabled' => true,
-                                        ])
-                                    </div>
-                                    <div class="col-12 col-lg-3">
-                                        <label class="form-label">
-                                            {{ translate('Discount Percentage') }}
-                                        </label>
-                                        <div class="input-group">
-                                            <input id="extended-license-percentage" type="number"
-                                                name="extended_percentage" placeholder="0" min="1"
-                                                max="{{ @$settings->item->discount_max_percentage }}"
-                                                class="form-control form-control-md border-success">
-                                            <span
-                                                class="input-group-text fs-5 px-3 bg-success text-white border-success">%</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-lg-3">
-                                        @include('themes.basic.workspace.partials.input-price', [
-                                            'label' => translate('Buyer fee'),
-                                            'value' => $item->category->extended_buyer_fee,
-                                            'disabled' => true,
-                                        ])
-                                    </div>
-                                    <div class="col-12 col-lg-3">
-                                        @include('themes.basic.workspace.partials.input-price', [
-                                            'label' => translate('Purchase price'),
-                                            'id' => 'extended-license-purchase-price',
                                             'value' => 0,
                                             'disabled' => true,
                                         ])
@@ -159,10 +107,7 @@
                             <table class="dashboard-table table text-center table-borderless align-middle">
                                 <thead>
                                     <tr>
-                                        <th class="text-start">{{ translate('Regular') }}</th>
-                                        @if ($discount->withExtended())
-                                            <th class="text-start">{{ translate('Extended') }}</th>
-                                        @endif
+                                        <th class="text-start">{{ translate('Item Price') }}</th>
                                         <th>{{ translate('Starting at') }}</th>
                                         <th>{{ translate('Ending at') }}</th>
                                         <th>{{ translate('Status') }}</th>
@@ -216,50 +161,6 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        @if ($discount->withExtended())
-                                            <td class="text-start">
-                                                <div class="table-price mb-2">
-                                                    <div class="row g-3">
-                                                        <div class="col-lg-12">
-                                                            <div
-                                                                class="row row-cols-auto align-items-center justify-content-between flex-nowrap">
-                                                                <div class="col">
-                                                                    <h6 class="mb-0 text-dark">
-                                                                        {{ translate('Discount') }}
-                                                                    </h6>
-                                                                </div>
-                                                                <div class="col">
-                                                                    <div class="item-price">
-                                                                        <span class="item-price-number small">
-                                                                            {{ $discount->extended_percentage }}%
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-12">
-                                                            <div
-                                                                class="row row-cols-auto align-items-center justify-content-between flex-nowrap">
-                                                                <div class="col">
-                                                                    <h6 class="mb-0 text-dark">
-                                                                        {{ translate('Purchase Price') }}
-                                                                    </h6>
-                                                                </div>
-                                                                <div class="col">
-                                                                    <div class="item-price">
-                                                                        <span class="item-price-through small">
-                                                                            {{ getAmount($item->getExtendedPrice(), 0) }}
-                                                                        </span>
-                                                                        <span class="item-price-number small">
-                                                                            {{ getAmount($discount->getExtendedPrice(), 0) }}</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        @endif
                                         <td>{{ dateFormat($discount->starting_at, 'd M Y') }}</td>
                                         <td>{{ dateFormat($discount->ending_at, 'd M Y') }}</td>
                                         <td>

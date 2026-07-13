@@ -41,7 +41,7 @@
                 </div>
             </div>
             <div class="mb-3">
-                <label class="form-label">{{ translate('Profile Heading') }}</label>
+                <label class="form-label">{{ translate('Profile Title') }}</label>
                 <input type="text" name="profile_heading" class="form-control form-control-md"
                     value="{{ $user->profile_heading }}">
             </div>

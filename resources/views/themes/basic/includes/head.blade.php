@@ -3,6 +3,7 @@ $title = seoTitle($__env);
 $description = $__env->yieldContent('description') ? $__env->yieldContent('description') : @$settings->seo->description ?? '';
 $keywords = $__env->yieldContent('keywords') ? $__env->yieldContent('keywords') : @$settings->seo->keywords ?? '';
 $ogImage = $__env->yieldContent('og_image') ? $__env->yieldContent('og_image'): asset($themeSettings->general->social_image);
+$canonical = $__env->yieldContent('canonical') ? $__env->yieldContent('canonical') : url()->current();
 @endphp
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,13 +22,14 @@ $ogImage = $__env->yieldContent('og_image') ? $__env->yieldContent('og_image'): 
 <meta property="og:description" content="{{ $description }}">
 <meta property="og:image:height" content="600">
 <meta property="og:image:width" content="316">
-<meta property="og:url" content="{{ url()->current() }}">
+<meta property="og:url" content="{{ $canonical }}">
 <meta property="og:image" content="{{ $ogImage }}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ $title }}">
 <meta name="twitter:description" content="{{ $description }}">
 <meta name="twitter:image:src" content="{{ $ogImage }}">
 <title>{{ $title }}</title>
+<link rel="canonical" href="{{ $canonical }}">
 <link rel="icon" href="{{ asset($themeSettings->general->favicon) }}">
 @include('themes.basic.includes.styles')
 @yield('breadcrumbs_schema')
