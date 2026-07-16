@@ -76,4 +76,11 @@ class SecurityRemediationTest extends TestCase
             @unlink($path);
         }
     }
+
+    public function test_archive_manifest_paths_are_validated(): void
+    {
+        $source = $this->source('app/Services/ArchiveValidator.php');
+        self::assertStringContainsString('validateConfigPaths', $source);
+        self::assertStringContainsString('forbidden path', $source);
+    }
 }

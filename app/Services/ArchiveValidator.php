@@ -49,4 +49,31 @@ class ArchiveValidator
             throw new RuntimeException('The archive compression ratio is unsafe.');
         }
     }
+
+    public function validateConfigPaths(array $config): void
+    {
+        $paths = [];
+        $paths[] = $config['path'] ?? null;
+        foreach (['remove', 'create'] as $section) {
+            foreach (['directories', 'files'] as $key) {
+                $paths = array_merge($paths, (array) data_get($config, $section . '.' . $key, []));
+            }
+        }
+        foreach (['directories', 'files'] as $key) {
+            $paths = array_merge($paths, (array) data_get($config, 'copy.' . $key, []));
+        }
+
+        foreach ($paths as $path) {
+            if (!is_string($path) || $path === '') {
+                continue;
+            }
+            $normalized = str_replace('\\', '/', $path);
+            if (str_starts_with($normalized, '/')
+                || preg_match('/^[A-Za-z]:\//', $normalized)
+                || in_array('..', explode('/', $normalized), true)
+                || str_contains($normalized, "\0")) {
+                throw new RuntimeException('The archive manifest contains a forbidden path.');
+            }
+        }
+    }
 }

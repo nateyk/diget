@@ -78,6 +78,7 @@ class AddonController extends Controller
             }
 
             $config = json_decode(File::get($configFile), true);
+            app(ArchiveValidator::class)->validateConfigPaths($config ?: []);
 
             if ($config['type'] != "addon") {
                 throw new Exception(translate('Invalid addon files'));

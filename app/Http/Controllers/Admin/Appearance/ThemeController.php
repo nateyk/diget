@@ -81,6 +81,7 @@ class ThemeController extends Controller
             }
 
             $config = json_decode(File::get($configFile), true);
+            app(ArchiveValidator::class)->validateConfigPaths($config ?: []);
 
             if ($config['type'] != "theme") {
                 throw new Exception(translate('Invalid theme files'));
