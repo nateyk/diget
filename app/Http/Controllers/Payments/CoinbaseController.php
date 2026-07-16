@@ -97,12 +97,17 @@ class CoinbaseController extends Controller
             if ($event->type === 'charge:confirmed') {
                 $trx = Transaction::where('payment_id', $event->data->id)->unpaid()->first();
                 if ($trx) {
+                    $verified = json_decode($this->getCharge($event->data->id));
+                    $charge = $verified->data ?? null;
+                    if (!$charge || !in_array(end($charge->timeline)->status ?? null, ['COMPLETED', 'CONFIRMED'], true)) {
+                        return response('Payment not verified', 400);
+                    }
                     app(PaymentSettlementService::class)->settle($trx, [
                         'id' => $event->data->id,
                         'gateway_id' => $this->paymentGateway->id,
-                        'amount' => $event->data->pricing->local->amount ?? null,
+                        'amount' => $charge->pricing->local->amount ?? null,
                         'expected_amount' => amountFormat($this->paymentGateway->getChargeAmount($trx->total)),
-                        'currency' => $event->data->pricing->local->currency ?? null,
+                        'currency' => $charge->pricing->local->currency ?? null,
                         'expected_currency' => $this->paymentGateway->getCurrency(),
                     ]);
                 }
@@ -128,6 +133,19 @@ class CoinbaseController extends Controller
         $response = $client->post('https://api.commerce.coinbase.com/charges', [
             'headers' => $headers,
             'json' => $array,
+        ]);
+
+        return $response->getBody()->getContents();
+    }
+
+    private function getCharge(string $id): string
+    {
+        $client = new Client();
+        $response = $client->get('https://api.commerce.coinbase.com/charges/' . rawurlencode($id), [
+            'headers' => [
+                'X-CC-Api-Key' => $this->paymentGateway->credentials->api_key,
+                'X-CC-Version' => '2018-03-22',
+            ],
         ]);
 
         return $response->getBody()->getContents();
