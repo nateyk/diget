@@ -2,24 +2,32 @@
 
 Date: 2026-07-16
 
-## Current baseline
+## Verified baseline
 
-- Laravel framework: `v11.54.0`
-- PHP: `8.3.28`
-- Branch: `security/verified-remediation`
+- Laravel framework: `v12.64.0`
+- Carbon: `v3.13.1`
+- PHP runtime observed by Artisan: `8.4.21`
+- Branch: `upgrade/laravel-12-secure`
 
 ## Result
 
-Laravel 12 was not upgraded in this remediation. Composer reports these compatibility constraints:
+The requested Laravel 12 dependency resolution completed successfully. The upgrade keeps
+`nunomaduro/collision` and removes `jenssegers/date` in favor of Laravel's native Carbon 3
+integration.
 
-- `laravel/laravel` requires `laravel/framework ^11.0`.
-- `nunomaduro/collision v8.5.0` conflicts with Laravel 12 or newer.
-- `cviebrock/eloquent-sluggable 11.0.1` requires Illuminate 11 packages.
-- `diglactic/laravel-breadcrumbs v9.0.0` supports through Laravel 11.
-- Laravel 12 also requires dependency changes including `brick/math` and `nesbot/carbon` ranges that are not declared by the current application root.
+Verified package targets:
 
-The current application test suite passes on Laravel 11.54.0. A Laravel 12 upgrade needs a dedicated dependency and application compatibility cycle; it is intentionally out of scope for this security remediation.
+- `laravel/framework ^12.64`
+- `nunomaduro/collision ^8.9.5`
+- `phpunit/phpunit ^11.5.50`
+- `cviebrock/eloquent-sluggable ^12.0`
+- `diglactic/laravel-breadcrumbs ^10.1`
+
+Date compatibility tests cover parsing, timezone preservation, relative time output, English
+weekday/month translations, and Amharic weekday/month translations. No `ago()` or `timespan()`
+usage was present in the repository.
 
 ## Security note
 
-`composer audit --locked` reports three Laravel advisories affecting the current 11.x line, including one high-severity CRLF injection advisory and one medium signed-URL path-confusion advisory. They remain release risks until a patched compatible framework release is available or the application is upgraded through a reviewed Laravel 12 compatibility cycle.
+`composer audit --locked` reports no advisories on the upgraded lockfile. The security
+remediation test suite and the full application test suite pass on this branch.

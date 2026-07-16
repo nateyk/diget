@@ -17,7 +17,6 @@ use App\Models\ItemUpdate;
 use App\Models\ItemView;
 use App\Models\Sale;
 use App\Models\UploadedFile;
-use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Exception;
 use Illuminate\Http\Request;
