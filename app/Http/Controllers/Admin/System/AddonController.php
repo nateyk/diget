@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\System;
 
 use App\Http\Controllers\Controller;
 use App\Models\Addon;
+use App\Services\ArchiveValidator;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -61,6 +62,8 @@ class AddonController extends Controller
             if ($res != true) {
                 throw new Exception(translate('Could not open the addon zip file'));
             }
+
+            app(ArchiveValidator::class)->validate($zip);
 
             $res = $zip->extractTo($addonTempPath);
             if ($res == true) {
