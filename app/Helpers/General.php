@@ -417,21 +417,11 @@ function curl_get_file_contents($URL)
 
 function getIp()
 {
-    $ip = null;
-    if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-        $ip = $_SERVER["HTTP_CF_CONNECTING_IP"];
-    } else {
-        if (filter_var($ip, FILTER_VALIDATE_IP) === false) {
-            $ip = $_SERVER["REMOTE_ADDR"] ?? '127.0.0.1';
-            if (filter_var(@$_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)) {
-                $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            }
-            if (filter_var(@$_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP)) {
-                $ip = $_SERVER['HTTP_CLIENT_IP'];
-            }
-        }
+    if (app()->bound('request')) {
+        return app('request')->ip() ?: '127.0.0.1';
     }
-    return $ip;
+
+    return $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
 }
 
 function countries($code = null)
