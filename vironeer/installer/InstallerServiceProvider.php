@@ -32,7 +32,7 @@ class InstallerServiceProvider extends ServiceProvider
     public function registerHelper()
     {
         if (file_exists($file = __DIR__ . '/Helper.php')) {
-            require $file;
+            require_once $file;
         }
     }
 }
