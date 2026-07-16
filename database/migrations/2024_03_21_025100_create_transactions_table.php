@@ -32,7 +32,6 @@ return new class extends Migration
             $table->foreign("user_id")->references("id")->on('users')->onDelete('cascade');
             $table->foreign("payment_gateway_id")->references("id")->on('payment_gateways');
             $table->foreign("purchase_id")->references("id")->on('purchases')->onDelete('set null');
-            $table->foreign("plan_id")->references("id")->on('plans')->onDelete('set null');
             $table->timestamps();
         });
     }

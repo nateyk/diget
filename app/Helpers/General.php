@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Jenssegers\Date\Date;
@@ -109,6 +110,11 @@ function reviewerUrl($path = null)
 
 function settings($key = null)
 {
+    // Installation and migration commands can boot before the settings table exists.
+    if (!Schema::hasTable((new Settings)->getTable())) {
+        return !empty($key) ? false : (object) [];
+    }
+
     if (!empty($key)) {
         return Settings::selectSettings($key);
     }
