@@ -137,7 +137,8 @@ class UploadController extends Controller
             ]);
 
         } catch (Exception $e) {
-            return $this->error($e->getMessage());
+            report($e);
+            return $this->error(translate('File upload failed.'));
         }
     }
 }
