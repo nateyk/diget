@@ -122,7 +122,7 @@ class PaypalController extends Controller
 
         $checkoutLink = route('checkout.index', hash_encode($trx->id));
 
-        if ($trx->isPaid()) {
+        if ($trx->isPaid() && $trx->fulfilled_at) {
             $trx->user->emptyCart();
             return redirect($checkoutLink);
         }
@@ -143,6 +143,7 @@ class PaypalController extends Controller
             $currency = $capture->amount->currency_code ?? null;
             app(PaymentSettlementService::class)->settle($trx, [
                 'id' => $capture->id ?? $trx->payment_id,
+                'local_reference' => (string) $trx->payment_id,
                 'gateway_id' => $this->paymentGateway->id,
                 'amount' => $amount,
                 'expected_amount' => $this->expectedAmount($trx),
@@ -181,11 +182,14 @@ class PaypalController extends Controller
             if (isset($payload['event_type']) && $payload['event_type'] === 'PAYMENT.CAPTURE.COMPLETED') {
                 if (isset($payload['resource']['status']) && $payload['resource']['status'] === 'COMPLETED') {
                     $supplementaryData = $payload['resource']['supplementary_data'];
-                    $trx = Transaction::where('payment_id', $supplementaryData['related_ids']['order_id'])->unpaid()->first();
+                    $trx = Transaction::where('payment_id', $supplementaryData['related_ids']['order_id'])
+                        ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                        ->whereNull('fulfilled_at')->first();
                     if ($trx) {
                         $capture = $payload['resource'];
                         app(PaymentSettlementService::class)->settle($trx, [
                             'id' => $capture['id'] ?? '',
+                            'local_reference' => (string) $supplementaryData['related_ids']['order_id'],
                             'gateway_id' => $this->paymentGateway->id,
                             'amount' => $capture['amount']['value'] ?? null,
                             'expected_amount' => $this->expectedAmount($trx),

@@ -25,18 +25,38 @@ class PaymentSettlementService
         return DB::transaction(function () use ($transaction, $provider) {
             $locked = Transaction::query()->whereKey($transaction->getKey())->lockForUpdate()->firstOrFail();
 
-            if ($locked->fulfilled_at || $locked->isPaid()) {
+            if ($locked->fulfilled_at) {
                 return $locked;
-            }
-
-            $allowPending = (bool) ($provider['allow_pending'] ?? false);
-            if (!$locked->isUnpaid() && !($allowPending && $locked->isPending())) {
-                throw new InvalidArgumentException('The transaction is not eligible for settlement.');
             }
 
             $providerId = (string) ($provider['id'] ?? '');
             if ($providerId === '') {
                 throw new InvalidArgumentException('A provider payment identifier is required.');
+            }
+
+            $localReference = (string) ($provider['local_reference'] ?? '');
+            if ($localReference !== '' && (string) $locked->payment_id !== $localReference) {
+                throw new InvalidArgumentException('The provider payment identifier does not match the transaction.');
+            }
+
+            if ($localReference === ''
+                && $locked->payment_id
+                && (string) $locked->payment_id !== $providerId
+                && $locked->isPaid()) {
+                throw new InvalidArgumentException('The provider payment identifier does not match the transaction.');
+            }
+
+            $providerIdUsed = Transaction::query()
+                ->where('payment_id', $providerId)
+                ->whereKeyNot($locked->getKey())
+                ->exists();
+            if ($providerIdUsed) {
+                throw new InvalidArgumentException('The provider payment identifier has already been used.');
+            }
+
+            $allowPending = (bool) ($provider['allow_pending'] ?? false);
+            if (!$locked->isUnpaid() && !$locked->isPaid() && !($allowPending && $locked->isPending())) {
+                throw new InvalidArgumentException('The transaction is not eligible for settlement.');
             }
 
             if (isset($provider['gateway_id']) && (int) $locked->payment_gateway_id !== (int) $provider['gateway_id']) {
@@ -73,6 +93,28 @@ class PaymentSettlementService
 
     private function sameMoney(mixed $actual, mixed $expected): bool
     {
-        return abs((float) $actual - (float) $expected) < 0.00001;
+        return $this->normalizeMoney($actual) === $this->normalizeMoney($expected);
+    }
+
+    private function normalizeMoney(mixed $value, int $scale = 8): string
+    {
+        if (is_float($value)) {
+            $value = sprintf('%.' . $scale . 'F', $value);
+        }
+
+        $value = trim((string) $value);
+        if (!preg_match('/^-?\d+(?:\.\d+)?$/', $value)) {
+            throw new InvalidArgumentException('Invalid money value.');
+        }
+
+        $negative = str_starts_with($value, '-');
+        $value = ltrim($value, '-');
+        [$whole, $fraction] = array_pad(explode('.', $value, 2), 2, '');
+
+        $whole = ltrim($whole, '0');
+        $whole = $whole === '' ? '0' : $whole;
+        $fraction = str_pad(substr($fraction, 0, $scale), $scale, '0');
+
+        return ($negative ? '-' : '') . $whole . '.' . $fraction;
     }
 }

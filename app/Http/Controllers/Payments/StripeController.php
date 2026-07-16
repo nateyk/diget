@@ -78,7 +78,7 @@ class StripeController extends Controller
 
         $checkoutLink = route('checkout.index', hash_encode($trx->id));
 
-        if ($trx->isPaid()) {
+        if ($trx->isPaid() && $trx->fulfilled_at) {
             $trx->user->emptyCart();
             return redirect($checkoutLink);
         }
@@ -93,6 +93,7 @@ class StripeController extends Controller
             $customer = Customer::retrieve($session->customer);
             app(PaymentSettlementService::class)->settle($trx, [
                 'id' => $session->payment_intent ?: $session->id,
+                'local_reference' => (string) $session->id,
                 'gateway_id' => $this->paymentGateway->id,
                 'amount' => $session->amount_total,
                 'expected_amount' => round($this->paymentGateway->getChargeAmount($trx->total) * 100),
@@ -126,11 +127,14 @@ class StripeController extends Controller
             $event = Webhook::constructEvent($payload, $sigHeader, $endpointSecret);
             if ($event && $event->type == 'checkout.session.completed') {
                 $session = $event->data->object;
-                $trx = Transaction::where('payment_id', $session->id)->unpaid()->first();
+                $trx = Transaction::where('payment_id', $session->id)
+                    ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                    ->whereNull('fulfilled_at')->first();
                 if ($trx) {
                     $customer = Customer::retrieve($session->customer);
                     app(PaymentSettlementService::class)->settle($trx, [
                         'id' => $session->payment_intent ?: $session->id,
+                        'local_reference' => (string) $session->id,
                         'gateway_id' => $this->paymentGateway->id,
                         'amount' => $session->amount_total,
                         'expected_amount' => round($this->paymentGateway->getChargeAmount($trx->total) * 100),

@@ -24,7 +24,7 @@ class RefundService
 
             $refund->status = Refund::STATUS_ACCEPTED;
             $refund->save();
-            event(new RefundAccepted($refund));
+            DB::afterCommit(fn () => event(new RefundAccepted($refund)));
 
             return $refund;
         }, 3);

@@ -69,7 +69,7 @@ class MollieController extends Controller
 
         $checkoutLink = route('checkout.index', hash_encode($trx->id));
 
-        if ($trx->isPaid()) {
+        if ($trx->isPaid() && $trx->fulfilled_at) {
             $trx->user->emptyCart();
             return redirect($checkoutLink);
         }
@@ -112,7 +112,9 @@ class MollieController extends Controller
                 }
 
                 $trx = Transaction::where('id', $payment->metadata->trx_id)
-                    ->where('payment_id', $payment->id)->unpaid()->first();
+                    ->where('payment_id', $payment->id)
+                    ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                    ->whereNull('fulfilled_at')->first();
                 if ($trx) {
                     app(PaymentSettlementService::class)->settle($trx, [
                         'id' => $payment->id,

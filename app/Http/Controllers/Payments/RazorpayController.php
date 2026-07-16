@@ -84,7 +84,7 @@ class RazorpayController extends Controller
 
         $checkoutLink = route('checkout.index', hash_encode($trx->id));
 
-        if ($trx->isPaid()) {
+        if ($trx->isPaid() && $trx->fulfilled_at) {
             $trx->user->emptyCart();
             return redirect($checkoutLink);
         }
@@ -100,6 +100,7 @@ class RazorpayController extends Controller
 
             app(PaymentSettlementService::class)->settle($trx, [
                 'id' => $payment['id'],
+                'local_reference' => (string) $orderId,
                 'gateway_id' => $this->paymentGateway->id,
                 'amount' => $payment['amount'],
                 'expected_amount' => round($this->paymentGateway->getChargeAmount($trx->total) * 100),
@@ -133,12 +134,14 @@ class RazorpayController extends Controller
             }
 
             $trx = Transaction::where('payment_id', $data['payment']['entity']['order_id'])
-                ->unpaid()->first();
+                ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                ->whereNull('fulfilled_at')->first();
 
             if ($trx) {
                 $payment = $data['payment']['entity'];
                 app(PaymentSettlementService::class)->settle($trx, [
                     'id' => $payment['id'],
+                    'local_reference' => (string) $data['payment']['entity']['order_id'],
                     'gateway_id' => $this->paymentGateway->id,
                     'amount' => $payment['amount'],
                     'expected_amount' => round($this->paymentGateway->getChargeAmount($trx->total) * 100),

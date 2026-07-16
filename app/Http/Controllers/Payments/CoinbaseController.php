@@ -67,7 +67,7 @@ class CoinbaseController extends Controller
                 ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
                 ->firstOrFail();
 
-            if ($trx->isPaid()) {
+            if ($trx->isPaid() && $trx->fulfilled_at) {
                 $trx->user->emptyCart();
                 return redirect()->route('checkout.index', $request->id);
             }
@@ -95,7 +95,9 @@ class CoinbaseController extends Controller
             $event = $data->event;
 
             if ($event->type === 'charge:confirmed') {
-                $trx = Transaction::where('payment_id', $event->data->id)->unpaid()->first();
+                $trx = Transaction::where('payment_id', $event->data->id)
+                    ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                    ->whereNull('fulfilled_at')->first();
                 if ($trx) {
                     $verified = json_decode($this->getCharge($event->data->id));
                     $charge = $verified->data ?? null;

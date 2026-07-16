@@ -82,7 +82,7 @@ class PaypalIpnController extends Controller
                 ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
                 ->firstOrFail();
 
-            if ($trx->isPaid()) {
+            if ($trx->isPaid() && $trx->fulfilled_at) {
                 $trx->user->emptyCart();
                 return redirect()->route('checkout.index', hash_encode($trx->id));
             }
@@ -120,7 +120,8 @@ class PaypalIpnController extends Controller
                 if ($paymentStatus === 'Completed' && $paymentId && ctype_digit((string) $trxId)) {
                     $trx = Transaction::where('id', (int) $trxId)
                         ->where('payment_gateway_id', $this->paymentGateway->id)
-                        ->unpaid()->first();
+                        ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                        ->whereNull('fulfilled_at')->first();
                     if ($trx && !Transaction::where('payment_id', $paymentId)->exists()) {
                         $expectedAmount = $this->expectedAmount($trx);
                         $expectedCurrency = strtoupper((string) $this->paymentGateway->getCurrency());

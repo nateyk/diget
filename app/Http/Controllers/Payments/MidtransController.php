@@ -78,7 +78,7 @@ class MidtransController extends Controller
                 ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
                 ->firstOrFail();
 
-            if ($trx->isPaid()) {
+            if ($trx->isPaid() && $trx->fulfilled_at) {
                 $trx->user->emptyCart();
                 return redirect()->route('checkout.index', hash_encode($trx->id));
             }
@@ -115,10 +115,13 @@ class MidtransController extends Controller
             }
 
             if ($paid) {
-                $trx = Transaction::where('payment_id', $request['order_id'])->unpaid()->first();
+                $trx = Transaction::where('payment_id', $request['order_id'])
+                    ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                    ->whereNull('fulfilled_at')->first();
                 if ($trx) {
                     app(PaymentSettlementService::class)->settle($trx, [
                         'id' => (string) ($payload['transaction_id'] ?? $payload['order_id']),
+                        'local_reference' => (string) $payload['order_id'],
                         'gateway_id' => $this->paymentGateway->id,
                         'amount' => $payload['gross_amount'],
                         'expected_amount' => round($this->paymentGateway->getChargeAmount($trx->total), 0),

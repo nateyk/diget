@@ -20,6 +20,12 @@ class SecurityRemediationTest extends TestCase
         self::assertStringContainsString('lockForUpdate()', $source);
         self::assertStringContainsString('fulfilled_at', $source);
         self::assertStringContainsString('DB::transaction', $source);
+        self::assertStringContainsString('whereKeyNot($locked->getKey())', $source);
+        self::assertStringContainsString('The provider payment identifier has already been used.', $source);
+        self::assertStringContainsString("'local_reference'", $source);
+        self::assertStringContainsString('normalizeMoney', $source);
+        self::assertStringNotContainsString('abs((float) $actual - (float) $expected)', $source);
+        self::assertStringContainsString('!$locked->isUnpaid() && !$locked->isPaid()', $source);
     }
 
     public function test_provider_callbacks_bind_verified_payment_values(): void
@@ -43,6 +49,32 @@ class SecurityRemediationTest extends TestCase
         $twoFactor = $this->source('app/Http/Middleware/TwoFactorVerify.php');
         self::assertStringContainsString("['session_id']", $twoFactor);
         self::assertStringContainsString("['user_id']", $twoFactor);
+    }
+
+    public function test_refund_side_effects_are_dispatched_after_commit(): void
+    {
+        $refundService = $this->source('app/Services/RefundService.php');
+        self::assertStringContainsString('DB::afterCommit', $refundService);
+        self::assertStringContainsString('event(new RefundAccepted($refund))', $refundService);
+
+        $acceptedRefundListener = $this->source('app/Listeners/ProcessAcceptedRefund.php');
+        self::assertStringNotContainsString('DB::transaction', $acceptedRefundListener);
+        self::assertStringContainsString('event(new SaleRefunded($sale))', $acceptedRefundListener);
+    }
+
+    public function test_gateway_callbacks_can_recover_paid_unfulfilled_transactions(): void
+    {
+        foreach (glob(dirname(__DIR__, 2) . '/app/Http/Controllers/Payments/*Controller.php') as $controller) {
+            $name = basename($controller);
+            $source = file_get_contents($controller);
+
+            if ($name !== 'BankwireController.php') {
+                self::assertStringNotContainsString('->unpaid()->first()', $source, $name);
+            }
+
+            self::assertStringNotContainsString('if ($trx->isPaid())', $source, $name);
+            self::assertStringNotContainsString('if (! $trx || $trx->isPaid())', $source, $name);
+        }
     }
 
     public function test_cron_and_editor_uploads_are_protected(): void

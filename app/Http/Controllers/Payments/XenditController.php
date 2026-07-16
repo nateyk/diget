@@ -76,7 +76,7 @@ class XenditController extends Controller
                 ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
                 ->firstOrFail();
 
-            if ($trx->isPaid()) {
+            if ($trx->isPaid() && $trx->fulfilled_at) {
                 $trx->user->emptyCart();
                 return redirect()->route('checkout.index', hash_encode($trx->id));
             }
@@ -106,7 +106,8 @@ class XenditController extends Controller
 
             if ($payload['status'] == "PAID") {
                 $trx = Transaction::where('payment_id', $payload['id'])
-                    ->unpaid()->first();
+                    ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                    ->whereNull('fulfilled_at')->first();
 
                 if ($trx) {
                     app(PaymentSettlementService::class)->settle($trx, [

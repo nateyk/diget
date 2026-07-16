@@ -117,7 +117,7 @@ class IyzicoController extends Controller
 
         $checkoutLink = route('checkout.index', hash_encode($trx->id));
 
-        if ($trx->isPaid()) {
+        if ($trx->isPaid() && $trx->fulfilled_at) {
             $trx->user->emptyCart();
             return redirect($checkoutLink);
         }
@@ -142,6 +142,7 @@ class IyzicoController extends Controller
 
             app(PaymentSettlementService::class)->settle($trx, [
                 'id' => $paymentId,
+                'local_reference' => (string) $trx->payment_id,
                 'gateway_id' => $this->paymentGateway->id,
                 'amount' => $checkoutForm->getPaidPrice() ?: $checkoutForm->getPrice(),
                 'expected_amount' => $this->paymentGateway->getChargeAmount($trx->total),
@@ -182,11 +183,13 @@ class IyzicoController extends Controller
 
             if ($payload['status'] == "SUCCESS") {
                 $trx = Transaction::where('payment_id', $payload['token'])
-                    ->unpaid()->first();
+                    ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                    ->whereNull('fulfilled_at')->first();
 
                 if ($trx) {
                     app(PaymentSettlementService::class)->settle($trx, [
                         'id' => $payload['iyziPaymentId'],
+                        'local_reference' => (string) $payload['token'],
                         'gateway_id' => $this->paymentGateway->id,
                         'amount' => $payload['paidPrice'] ?? $payload['price'] ?? null,
                         'expected_amount' => $this->paymentGateway->getChargeAmount($trx->total),

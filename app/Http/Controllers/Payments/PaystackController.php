@@ -57,7 +57,7 @@ class PaystackController extends Controller
 
         $checkoutLink = route('checkout.index', hash_encode($trx->id));
 
-        if ($trx->isPaid()) {
+        if ($trx->isPaid() && $trx->fulfilled_at) {
             $trx->user->emptyCart();
             return redirect($checkoutLink);
         }
@@ -124,7 +124,8 @@ class PaystackController extends Controller
                 $data = $payload['data'];
                 $trx = Transaction::where('payment_gateway_id', $this->paymentGateway->id)
                     ->where('payment_id', $data['reference'])
-                    ->unpaid()->first();
+                    ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                    ->whereNull('fulfilled_at')->first();
                 if ($trx) {
                     $verified = json_decode($this->verifyReference($data['reference']), true);
                     $verifiedData = $verified['data'] ?? [];

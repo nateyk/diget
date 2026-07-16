@@ -105,7 +105,7 @@ class ChapaController extends Controller
 
         $checkoutLink = route('checkout.index', hash_encode($trx->id));
 
-        if ($trx->isPaid()) {
+        if ($trx->isPaid() && $trx->fulfilled_at) {
             $trx->user->emptyCart();
 
             return redirect($checkoutLink);
@@ -152,7 +152,7 @@ class ChapaController extends Controller
             ->where('payment_id', $txRef)
             ->first();
 
-        if (! $trx || $trx->isPaid()) {
+        if (! $trx || ($trx->isPaid() && $trx->fulfilled_at)) {
             return response('Webhook acknowledged', 200);
         }
 
@@ -211,6 +211,7 @@ class ChapaController extends Controller
         $data = $verified['data'];
         return app(PaymentSettlementService::class)->settle($trx, [
             'id' => (string) ($data['reference'] ?? $trx->payment_id),
+            'local_reference' => (string) $trx->payment_id,
             'gateway_id' => $this->paymentGateway->id,
             'amount' => $data['amount'] ?? null,
             'expected_amount' => $this->expectedAmount($trx),
