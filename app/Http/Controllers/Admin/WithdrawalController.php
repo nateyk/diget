@@ -7,6 +7,7 @@ use App\Jobs\Author\SendAuthorWithdrawalStatusUpdateNotification;
 use App\Models\Statement;
 use App\Models\Withdrawal;
 use App\Models\WithdrawalMethod;
+use App\Services\WithdrawalService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Validator;
@@ -81,12 +82,6 @@ class WithdrawalController extends Controller
 
     public function update(Request $request, Withdrawal $withdrawal)
     {
-        abort_if(in_array($withdrawal->status, [
-            Withdrawal::STATUS_RETURNED,
-            Withdrawal::STATUS_COMPLETED,
-            Withdrawal::STATUS_CANCELLED,
-        ]), 401);
-
         $validator = Validator::make($request->all(), [
             'status' => ['required', 'integer', 'min:1', 'max:5'],
         ]);
@@ -114,14 +109,14 @@ class WithdrawalController extends Controller
             }
         }
 
-        $withdrawal->status = $request->status;
-        $withdrawal->update();
+        try {
+            $withdrawal = app(WithdrawalService::class)->transition($withdrawal, (int) $request->status);
+        } catch (\Throwable $e) {
+            toastr()->error(translate($e->getMessage()));
+            return back();
+        }
 
         $author = $withdrawal->author;
-
-        if ($withdrawal->isReturned()) {
-            $author->increment('balance', $withdrawal->amount);
-        }
 
         if ($request->has('email_notification')) {
             dispatch(new SendAuthorWithdrawalStatusUpdateNotification($withdrawal));

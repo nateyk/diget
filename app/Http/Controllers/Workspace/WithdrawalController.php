@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Workspace;
 use App\Events\WithdrawalSubmitted;
 use App\Http\Controllers\Controller;
 use App\Models\Withdrawal;
+use App\Services\WithdrawalService;
 use Illuminate\Http\Request;
 
 class WithdrawalController extends Controller
@@ -45,24 +46,12 @@ class WithdrawalController extends Controller
 
     public function withdraw(Request $request)
     {
-        $author = authUser();
-
-        if ($author->balance < $author->withdrawalMethod->minimum) {
-            toastr()->error(translate('Your balance is less than the minimum withdrawal limit'));
+        try {
+            $withdrawal = app(WithdrawalService::class)->submit(authUser()->id);
+        } catch (\Throwable $e) {
+            toastr()->error(translate($e->getMessage()));
             return back();
         }
-
-        $amount = $author->balance;
-
-        $withdrawal = new Withdrawal();
-        $withdrawal->author_id = $author->id;
-        $withdrawal->amount = $amount;
-        $withdrawal->method = $author->withdrawalMethod->name;
-        $withdrawal->account = $author->withdrawal_account;
-        $withdrawal->status = Withdrawal::STATUS_PENDING;
-        $withdrawal->save();
-
-        $author->decrement('balance', $amount);
 
         event(new WithdrawalSubmitted($withdrawal));
 
