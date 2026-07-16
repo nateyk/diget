@@ -16,6 +16,7 @@ class ArchiveValidator
 
         $compressed = 0;
         $uncompressed = 0;
+        $paths = [];
         for ($index = 0; $index < $count; $index++) {
             $name = $zip->getNameIndex($index);
             if (!is_string($name) || $name === '' || str_contains($name, "\0")) {
@@ -28,6 +29,15 @@ class ArchiveValidator
                 || in_array('..', explode('/', $normalized), true)) {
                 throw new RuntimeException('The archive contains a forbidden path.');
             }
+
+            $canonical = implode('/', array_values(array_filter(
+                explode('/', trim($normalized, '/')),
+                static fn (string $part): bool => $part !== '' && $part !== '.'
+            )));
+            if ($canonical === '' || isset($paths[$canonical])) {
+                throw new RuntimeException('The archive contains a duplicate path.');
+            }
+            $paths[$canonical] = true;
 
             $stat = $zip->statIndex($index);
             $compressed += (int) ($stat['comp_size'] ?? 0);
@@ -52,28 +62,28 @@ class ArchiveValidator
 
     public function validateConfigPaths(array $config): void
     {
-        $paths = [];
-        $paths[] = $config['path'] ?? null;
-        foreach (['remove', 'create'] as $section) {
-            foreach (['directories', 'files'] as $key) {
-                $paths = array_merge($paths, (array) data_get($config, $section . '.' . $key, []));
+        $pathKeys = ['path', 'directories', 'files', 'root', 'destination'];
+        $validate = function (mixed $value, ?string $key) use (&$validate, $pathKeys): void {
+            if (is_array($value)) {
+                foreach ($value as $childKey => $childValue) {
+                    $validate($childValue, is_string($childKey) ? $childKey : $key);
+                }
+                return;
             }
-        }
-        foreach (['directories', 'files'] as $key) {
-            $paths = array_merge($paths, (array) data_get($config, 'copy.' . $key, []));
-        }
 
-        foreach ($paths as $path) {
-            if (!is_string($path) || $path === '') {
-                continue;
+            if (!in_array($key, $pathKeys, true) || !is_string($value) || $value === '') {
+                return;
             }
-            $normalized = str_replace('\\', '/', $path);
-            if (str_starts_with($normalized, '/')
+
+            $normalized = str_replace('\\', '/', $value);
+            if (str_contains($normalized, "\0")
+                || str_starts_with($normalized, '/')
                 || preg_match('/^[A-Za-z]:\//', $normalized)
-                || in_array('..', explode('/', $normalized), true)
-                || str_contains($normalized, "\0")) {
+                || in_array('..', explode('/', $normalized), true)) {
                 throw new RuntimeException('The archive manifest contains a forbidden path.');
             }
-        }
+        };
+
+        $validate($config, null);
     }
 }

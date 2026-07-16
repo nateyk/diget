@@ -89,17 +89,82 @@ class SecurityRemediationTest extends TestCase
 
     public function test_archive_validator_rejects_traversal(): void
     {
-        if (!class_exists(ZipArchive::class)) {
-            self::markTestSkipped('ZipArchive is not available');
+        self::assertTrue(class_exists(ZipArchive::class), 'The ZIP extension must be enabled for security tests.');
+        $zip = $this->zipWithEntries(['../escape.php' => '<?php echo 1;']);
+        try {
+            $this->expectException(RuntimeException::class);
+            (new ArchiveValidator())->validate($zip);
+        } finally {
+            $zip->close();
+        }
+    }
+
+    /**
+     * @dataProvider forbiddenArchivePathProvider
+     */
+    public function test_archive_validator_rejects_absolute_and_windows_paths(string $entry): void
+    {
+        $zip = $this->zipWithEntries([$entry => 'payload']);
+        try {
+            $this->expectException(RuntimeException::class);
+            (new ArchiveValidator())->validate($zip);
+        } finally {
+            $zip->close();
+        }
+    }
+
+    public static function forbiddenArchivePathProvider(): array
+    {
+        return [['/etc/passwd'], ['C:\\Windows\\system32\\drivers\\etc\\hosts'], ['folder/../../escape.txt']];
+    }
+
+    public function test_archive_validator_rejects_duplicate_normalized_paths(): void
+    {
+        $zip = $this->zipWithEntries(['assets/app.js' => 'one', 'assets\\app.js' => 'two']);
+        try {
+            $this->expectException(RuntimeException::class);
+            (new ArchiveValidator())->validate($zip);
+        } finally {
+            $zip->close();
+        }
+    }
+
+    public function test_archive_validator_rejects_excessive_file_count(): void
+    {
+        $entries = [];
+        for ($index = 0; $index < 1001; $index++) {
+            $entries["files/{$index}.txt"] = 'x';
         }
 
+        $zip = $this->zipWithEntries($entries);
+        try {
+            $this->expectException(RuntimeException::class);
+            (new ArchiveValidator())->validate($zip);
+        } finally {
+            $zip->close();
+        }
+    }
+
+    public function test_archive_validator_rejects_unsafe_compression_ratio(): void
+    {
+        $zip = $this->zipWithEntries(['zeros.bin' => str_repeat("\0", 1024 * 1024)]);
+        try {
+            $this->expectException(RuntimeException::class);
+            (new ArchiveValidator())->validate($zip);
+        } finally {
+            $zip->close();
+        }
+    }
+
+    public function test_archive_validator_rejects_unix_symlinks(): void
+    {
         $path = tempnam(sys_get_temp_dir(), 'security-zip-');
         $zip = new ZipArchive();
         self::assertSame(true, $zip->open($path, ZipArchive::CREATE | ZipArchive::OVERWRITE));
-        $zip->addFromString('../escape.php', '<?php echo 1;');
+        $zip->addFromString('link', 'target.txt');
+        self::assertTrue($zip->setExternalAttributesName('link', ZipArchive::OPSYS_UNIX, (0120000 | 0777) << 16));
         $zip->close();
-
-        $zip->open($path);
+        self::assertSame(true, $zip->open($path));
         try {
             $this->expectException(RuntimeException::class);
             (new ArchiveValidator())->validate($zip);
@@ -109,10 +174,65 @@ class SecurityRemediationTest extends TestCase
         }
     }
 
+    public function test_archive_validator_accepts_valid_theme_and_addon_shapes(): void
+    {
+        $zip = $this->zipWithEntries([
+            'config.json' => json_encode([
+                'type' => 'theme',
+                'path' => 'themes/example',
+                'copy' => ['directories' => ['resources'], 'files' => ['config.json']],
+                'general_files' => ['copy' => ['files' => [['root' => 'resources/app.js', 'destination' => 'public/app.js']]]],
+            ]),
+            'resources/app.js' => 'payload',
+        ]);
+        try {
+            (new ArchiveValidator())->validate($zip);
+            (new ArchiveValidator())->validateConfigPaths(json_decode($zip->getFromName('config.json'), true));
+            self::assertTrue(true);
+        } finally {
+            $zip->close();
+        }
+    }
+
+    public function test_archive_validator_rejects_manifest_paths_in_nested_addon_sections(): void
+    {
+        $this->expectException(RuntimeException::class);
+        (new ArchiveValidator())->validateConfigPaths([
+            'path' => 'addons/example',
+            'general_files' => ['copy' => ['files' => [['root' => 'safe.txt', 'destination' => '..\\app.php']]]],
+        ]);
+    }
+
+    public function test_archive_uploaders_validate_before_extract_and_manifest_mutation(): void
+    {
+        foreach ([
+            'app/Http/Controllers/Admin/Appearance/ThemeController.php',
+            'app/Http/Controllers/Admin/System/AddonController.php',
+        ] as $controller) {
+            $source = $this->source($controller);
+            self::assertStringContainsString('app(ArchiveValidator::class)->validate($zip);', $source);
+            self::assertStringContainsString('validateConfigPaths($config ?: []);', $source);
+            self::assertLessThan(strpos($source, 'extractTo('), strpos($source, 'validate($zip);'));
+        }
+    }
+
     public function test_archive_manifest_paths_are_validated(): void
     {
         $source = $this->source('app/Services/ArchiveValidator.php');
         self::assertStringContainsString('validateConfigPaths', $source);
         self::assertStringContainsString('forbidden path', $source);
+    }
+
+    private function zipWithEntries(array $entries): ZipArchive
+    {
+        $path = tempnam(sys_get_temp_dir(), 'security-zip-');
+        $zip = new ZipArchive();
+        self::assertSame(true, $zip->open($path, ZipArchive::CREATE | ZipArchive::OVERWRITE));
+        foreach ($entries as $name => $contents) {
+            $zip->addFromString($name, $contents);
+        }
+        $zip->close();
+        self::assertSame(true, $zip->open($path));
+        return $zip;
     }
 }
