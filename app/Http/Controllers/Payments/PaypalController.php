@@ -6,6 +6,7 @@ use App\Events\TransactionPaid;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Vironeer\PayPal\Core\PayPalHttpClient;
 use Vironeer\PayPal\Core\ProductionEnvironment;
@@ -181,14 +182,21 @@ class PaypalController extends Controller
 
             return response('Webhook processed successfully', 200);
         } catch (\Exception $e) {
-            return response($e->getMessage(), 500);
+            report($e);
+            return response('Webhook processing failed', 500);
         }
     }
 
     private function verifyPayPalSignature($headers, $rawRequestBody)
     {
-        $transmissionId = $headers['paypal-transmission-id'][0];
-        $timeStamp = $headers['paypal-transmission-time'][0];
+        $transmissionId = $headers['paypal-transmission-id'][0] ?? null;
+        $timeStamp = $headers['paypal-transmission-time'][0] ?? null;
+        $signature = $headers['paypal-transmission-sig'][0] ?? null;
+        $certUrl = $headers['paypal-cert-url'][0] ?? null;
+        if (!$transmissionId || !$timeStamp || !$signature || !$certUrl) {
+            return false;
+        }
+
         $crc32 = crc32($rawRequestBody);
 
         $webhookId = $this->paymentGateway->credentials->webhook_id;
@@ -200,11 +208,15 @@ class PaypalController extends Controller
             $crc32,
         ]);
 
-        $signature = $headers['paypal-transmission-sig'][0];
+        $cert = $this->fetchPayPalCertificate($certUrl);
+        if ($cert === null) {
+            return false;
+        }
 
-        $certUrl = $headers['paypal-cert-url'][0];
-
-        $publicKey = openssl_pkey_get_public(file_get_contents($certUrl));
+        $publicKey = openssl_pkey_get_public($cert);
+        if ($publicKey === false) {
+            return false;
+        }
 
         $verified = openssl_verify(
             $inputString,
@@ -216,6 +228,39 @@ class PaypalController extends Controller
         openssl_free_key($publicKey);
 
         return $verified === 1;
+    }
+
+    private function fetchPayPalCertificate(string $certUrl): ?string
+    {
+        $parts = parse_url($certUrl);
+        $allowedHosts = [
+            'api-m.paypal.com',
+            'api-m.sandbox.paypal.com',
+        ];
+
+        if (!$parts
+            || strtolower($parts['scheme'] ?? '') !== 'https'
+            || !in_array(strtolower($parts['host'] ?? ''), $allowedHosts, true)
+            || isset($parts['user'], $parts['pass'], $parts['port'], $parts['query'], $parts['fragment'])
+            || !str_starts_with($parts['path'] ?? '', '/v1/notifications/certs/')) {
+            return null;
+        }
+
+        try {
+            $response = Http::timeout(5)
+                ->connectTimeout(3)
+                ->withoutRedirecting()
+                ->get($certUrl);
+
+            if (!$response->successful() || strlen($response->body()) > 1024 * 1024) {
+                return null;
+            }
+
+            return $response->body();
+        } catch (\Throwable $e) {
+            report($e);
+            return null;
+        }
     }
 
 }
