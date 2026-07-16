@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Payments;
 
-use App\Events\TransactionPaid;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Services\PaymentSettlementService;
 use Illuminate\Http\Request;
 use Iyzipay\Model\Address;
 use Iyzipay\Model\BasketItem;
@@ -99,7 +99,8 @@ class IyzicoController extends Controller
             $data['redirect_url'] = $checkoutFormInitialize->getPaymentPageUrl();
         } catch (\Exception $e) {
             $data['type'] = "error";
-            $data['msg'] = $e->getMessage();
+            report($e);
+            $data['msg'] = translate('Payment initialization failed.');
         }
 
         return json_encode($data);
@@ -139,15 +140,20 @@ class IyzicoController extends Controller
 
             $paymentId = $checkoutForm->getPaymentId();
 
-            $trx->payment_id = $paymentId;
-            $trx->status = Transaction::STATUS_PAID;
-            $trx->update();
+            app(PaymentSettlementService::class)->settle($trx, [
+                'id' => $paymentId,
+                'gateway_id' => $this->paymentGateway->id,
+                'amount' => $checkoutForm->getPaidPrice() ?: $checkoutForm->getPrice(),
+                'expected_amount' => $this->paymentGateway->getChargeAmount($trx->total),
+                'currency' => $checkoutForm->getCurrency(),
+                'expected_currency' => $this->paymentGateway->getCurrency(),
+            ]);
 
             $trx->user->emptyCart();
-            event(new TransactionPaid($trx));
             return redirect($checkoutLink);
         } catch (\Exception $e) {
-            toastr()->error($e->getMessage());
+            report($e);
+            toastr()->error(translate('Payment failed'));
             return redirect($checkoutLink);
         }
     }
@@ -179,16 +185,21 @@ class IyzicoController extends Controller
                     ->unpaid()->first();
 
                 if ($trx) {
-                    $trx->payment_id = $payload['iyziPaymentId'];
-                    $trx->status = Transaction::STATUS_PAID;
-                    $trx->update();
-                    event(new TransactionPaid($trx));
+                    app(PaymentSettlementService::class)->settle($trx, [
+                        'id' => $payload['iyziPaymentId'],
+                        'gateway_id' => $this->paymentGateway->id,
+                        'amount' => $payload['paidPrice'] ?? $payload['price'] ?? null,
+                        'expected_amount' => $this->paymentGateway->getChargeAmount($trx->total),
+                        'currency' => $payload['currency'] ?? null,
+                        'expected_currency' => $this->paymentGateway->getCurrency(),
+                    ]);
                 }
             }
 
             return response('Webhook processed successfully', 200);
         } catch (\Exception $e) {
-            return response($e->getMessage(), 500);
+            report($e);
+            return response('Webhook processing failed', 500);
         }
     }
 

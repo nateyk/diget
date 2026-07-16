@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Payments;
 
-use App\Events\TransactionPaid;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Services\PaymentSettlementService;
 use Illuminate\Http\Request;
 use Stripe\Checkout\Session;
 use Stripe\Customer;
@@ -60,7 +60,8 @@ class StripeController extends Controller
             $data['redirect_url'] = $session->url;
         } catch (\Exception $e) {
             $data['type'] = "error";
-            $data['msg'] = $e->getMessage();
+            report($e);
+            $data['msg'] = translate('Payment initialization failed.');
         }
 
         return json_encode($data);
@@ -90,16 +91,22 @@ class StripeController extends Controller
             }
 
             $customer = Customer::retrieve($session->customer);
-            $trx->payer_id = $customer->id;
-            $trx->payer_email = $customer->email;
-            $trx->status = Transaction::STATUS_PAID;
-            $trx->update();
+            app(PaymentSettlementService::class)->settle($trx, [
+                'id' => $session->payment_intent ?: $session->id,
+                'gateway_id' => $this->paymentGateway->id,
+                'amount' => $session->amount_total,
+                'expected_amount' => round($this->paymentGateway->getChargeAmount($trx->total) * 100),
+                'currency' => strtoupper((string) $session->currency),
+                'expected_currency' => strtoupper((string) $this->paymentGateway->getCurrency()),
+                'payer_id' => $customer->id,
+                'payer_email' => $customer->email,
+            ]);
 
             $trx->user->emptyCart();
-            event(new TransactionPaid($trx));
             return redirect($checkoutLink);
         } catch (\Exception $e) {
-            toastr()->error($e->getMessage());
+            report($e);
+            toastr()->error(translate('Payment failed'));
             return redirect($checkoutLink);
         }
     }
@@ -122,11 +129,16 @@ class StripeController extends Controller
                 $trx = Transaction::where('payment_id', $session->id)->unpaid()->first();
                 if ($trx) {
                     $customer = Customer::retrieve($session->customer);
-                    $trx->payer_id = $customer->id;
-                    $trx->payer_email = $customer->email;
-                    $trx->status = Transaction::STATUS_PAID;
-                    $trx->update();
-                    event(new TransactionPaid($trx));
+                    app(PaymentSettlementService::class)->settle($trx, [
+                        'id' => $session->payment_intent ?: $session->id,
+                        'gateway_id' => $this->paymentGateway->id,
+                        'amount' => $session->amount_total,
+                        'expected_amount' => round($this->paymentGateway->getChargeAmount($trx->total) * 100),
+                        'currency' => strtoupper((string) $session->currency),
+                        'expected_currency' => strtoupper((string) $this->paymentGateway->getCurrency()),
+                        'payer_id' => $customer->id,
+                        'payer_email' => $customer->email,
+                    ]);
                 }
             }
 

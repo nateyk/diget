@@ -64,7 +64,8 @@ class PaypalIpnController extends Controller
             $data['redirect_url'] = $redirectUrl;
         } catch (\Exception $e) {
             $data['type'] = "error";
-            $data['msg'] = $e->getMessage();
+            report($e);
+            $data['msg'] = translate('Payment initialization failed.');
         }
 
         return json_encode($data);

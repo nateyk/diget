@@ -2,35 +2,41 @@
 
 namespace App\Http\Controllers\Payments;
 
-use App\Events\TransactionPaid;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Services\PaymentSettlementService;
+use Illuminate\Support\Facades\DB;
 
 class BalanceController extends Controller
 {
     public function process($trx)
     {
         try {
-            $user = $trx->user;
+            DB::transaction(function () use ($trx) {
+                $trx = Transaction::query()->whereKey($trx->id)->lockForUpdate()->firstOrFail();
+                if (!$trx->isUnpaid() || $trx->fulfilled_at) {
+                    return;
+                }
+                $user = $trx->user()->lockForUpdate()->firstOrFail();
+                if ($user->balance < $trx->total) {
+                    throw new \RuntimeException(translate('Your account balance is insufficient'));
+                }
 
-            if ($user->balance < $trx->total) {
-                $data['type'] = "error";
-                $data['msg'] = translate('Your account balance is insufficient');
-                return json_encode($data);
-            }
-
-            $user->decrement('balance', $trx->total);
-
-            $trx->status = Transaction::STATUS_PAID;
-            $trx->update();
+                $user->decrement('balance', $trx->total);
+                app(PaymentSettlementService::class)->settle($trx, [
+                    'id' => 'balance-' . $trx->id,
+                    'gateway_id' => $trx->payment_gateway_id,
+                ]);
+            }, 3);
 
             $user->emptyCart();
-            event(new TransactionPaid($trx));
-
+            $data['type'] = 'success';
         } catch (\Exception $e) {
             $data['type'] = "error";
-            $data['msg'] = $e->getMessage();
+            $data['msg'] = $e instanceof \RuntimeException ? $e->getMessage() : translate('Payment failed');
             return json_encode($data);
         }
+
+        return json_encode($data);
     }
 }

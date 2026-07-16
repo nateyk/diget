@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Events\TransactionPaid;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendTransactionCancelledNotification;
 use App\Models\PaymentGateway;
 use App\Models\Transaction;
+use App\Services\PaymentSettlementService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -120,9 +120,11 @@ class TransactionController extends Controller
             (!licenseType(2) || !@settings('premium')->status), 404);
 
         if ($transaction->isPending()) {
-            $transaction->status = Transaction::STATUS_PAID;
-            $transaction->save();
-            event(new TransactionPaid($transaction));
+            app(PaymentSettlementService::class)->settle($transaction, [
+                'id' => 'manual-' . $transaction->id,
+                'gateway_id' => $transaction->payment_gateway_id,
+                'allow_pending' => true,
+            ]);
             toastr()->success(translate('Transaction has been paid successfully'));
         }
 

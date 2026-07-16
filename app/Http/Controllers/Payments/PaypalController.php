@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Payments;
 
-use App\Events\TransactionPaid;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Services\PaymentSettlementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
@@ -95,7 +95,8 @@ class PaypalController extends Controller
             $data['redirect_url'] = $response->result->links[1]->href;
         } catch (\Exception $e) {
             $data['type'] = "error";
-            $data['msg'] = $e->getMessage();
+            report($e);
+            $data['msg'] = translate('Payment initialization failed.');
         }
 
         return json_encode($data);
@@ -137,16 +138,25 @@ class PaypalController extends Controller
                 return redirect($checkoutLink);
             }
 
-            $trx->payer_id = $response->result->payer->payer_id;
-            $trx->payer_email = $response->result->payer->email_address;
-            $trx->status = Transaction::STATUS_PAID;
-            $trx->update();
+            $capture = $response->result->purchase_units[0]->payments->captures[0] ?? null;
+            $amount = $capture->amount->value ?? null;
+            $currency = $capture->amount->currency_code ?? null;
+            app(PaymentSettlementService::class)->settle($trx, [
+                'id' => $capture->id ?? $trx->payment_id,
+                'gateway_id' => $this->paymentGateway->id,
+                'amount' => $amount,
+                'expected_amount' => $this->expectedAmount($trx),
+                'currency' => $currency,
+                'expected_currency' => $this->paymentGateway->getCurrency(),
+                'payer_id' => $response->result->payer->payer_id ?? null,
+                'payer_email' => $response->result->payer->email_address ?? null,
+            ]);
 
             $trx->user->emptyCart();
-            event(new TransactionPaid($trx));
             return redirect($checkoutLink);
         } catch (\Exception $e) {
-            toastr()->error($e->getMessage());
+            report($e);
+            toastr()->error(translate('Payment failed'));
             return redirect($checkoutLink);
         }
     }
@@ -173,9 +183,15 @@ class PaypalController extends Controller
                     $supplementaryData = $payload['resource']['supplementary_data'];
                     $trx = Transaction::where('payment_id', $supplementaryData['related_ids']['order_id'])->unpaid()->first();
                     if ($trx) {
-                        $trx->status = Transaction::STATUS_PAID;
-                        $trx->update();
-                        event(new TransactionPaid($trx));
+                        $capture = $payload['resource'];
+                        app(PaymentSettlementService::class)->settle($trx, [
+                            'id' => $capture['id'] ?? '',
+                            'gateway_id' => $this->paymentGateway->id,
+                            'amount' => $capture['amount']['value'] ?? null,
+                            'expected_amount' => $this->expectedAmount($trx),
+                            'currency' => $capture['amount']['currency_code'] ?? null,
+                            'expected_currency' => $this->paymentGateway->getCurrency(),
+                        ]);
                     }
                 }
             }
@@ -261,6 +277,15 @@ class PaypalController extends Controller
             report($e);
             return null;
         }
+    }
+
+    private function expectedAmount(Transaction $trx): float
+    {
+        $gateway = $this->paymentGateway;
+        $amount = amountFormat($gateway->getChargeAmount($trx->amount));
+        $fees = amountFormat($gateway->getChargeAmount($trx->fees));
+        $tax = $trx->tax ? amountFormat($gateway->getChargeAmount($trx->tax->amount)) : 0;
+        return (float) amountFormat($amount + $fees + $tax);
     }
 
 }

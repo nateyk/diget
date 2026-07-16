@@ -39,7 +39,8 @@ class PaystackController extends Controller
             $data['view'] = 'paystack';
         } catch (\Exception $e) {
             $data['type'] = "error";
-            $data['msg'] = $e->getMessage();
+            report($e);
+            $data['msg'] = translate('Payment initialization failed.');
         }
 
         return json_encode($data);
@@ -97,7 +98,8 @@ class PaystackController extends Controller
             $trx->user->emptyCart();
             return redirect($checkoutLink);
         } catch (\Exception $e) {
-            toastr()->error($e->getMessage());
+            report($e);
+            toastr()->error(translate('Payment failed'));
             return redirect($checkoutLink);
         }
     }

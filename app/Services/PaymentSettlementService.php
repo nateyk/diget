@@ -25,8 +25,13 @@ class PaymentSettlementService
         return DB::transaction(function () use ($transaction, $provider) {
             $locked = Transaction::query()->whereKey($transaction->getKey())->lockForUpdate()->firstOrFail();
 
-            if ($locked->fulfilled_at || !$locked->isUnpaid()) {
+            if ($locked->fulfilled_at || $locked->isPaid()) {
                 return $locked;
+            }
+
+            $allowPending = (bool) ($provider['allow_pending'] ?? false);
+            if (!$locked->isUnpaid() && !($allowPending && $locked->isPending())) {
+                throw new InvalidArgumentException('The transaction is not eligible for settlement.');
             }
 
             $providerId = (string) ($provider['id'] ?? '');

@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Payments;
 
-use App\Events\TransactionPaid;
 use App\Http\Controllers\Controller;
 use App\Models\PaymentGateway;
 use App\Models\Transaction;
+use App\Services\PaymentSettlementService;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use RuntimeException;
@@ -204,27 +203,22 @@ class ChapaController extends Controller
 
     private function markPaid(int $transactionId, array $verified): ?Transaction
     {
-        $paid = null;
-
-        DB::transaction(function () use ($transactionId, $verified, &$paid) {
-            $trx = Transaction::where('id', $transactionId)->lockForUpdate()->first();
-            if (! $trx || ! $trx->isUnpaid() || ! $this->verifiedPaymentMatches($trx, $verified)) {
-                return;
-            }
-
-            $data = $verified['data'];
-            $trx->payer_id = $data['reference'] ?? null;
-            $trx->payer_email = $data['email'] ?? null;
-            $trx->status = Transaction::STATUS_PAID;
-            $trx->update();
-            $paid = $trx;
-        });
-
-        if ($paid) {
-            event(new TransactionPaid($paid));
+        $trx = Transaction::find($transactionId);
+        if (! $trx || ! $trx->isUnpaid() || ! $this->verifiedPaymentMatches($trx, $verified)) {
+            return null;
         }
 
-        return $paid;
+        $data = $verified['data'];
+        return app(PaymentSettlementService::class)->settle($trx, [
+            'id' => (string) ($data['reference'] ?? $trx->payment_id),
+            'gateway_id' => $this->paymentGateway->id,
+            'amount' => $data['amount'] ?? null,
+            'expected_amount' => $this->expectedAmount($trx),
+            'currency' => $data['currency'] ?? null,
+            'expected_currency' => self::CURRENCY,
+            'payer_id' => $data['reference'] ?? null,
+            'payer_email' => $data['email'] ?? null,
+        ]);
     }
 
     private function verifyTransaction(string $txRef): array

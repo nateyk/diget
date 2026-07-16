@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Payments;
 
-use App\Events\TransactionPaid;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Services\PaymentSettlementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Midtrans\Config;
@@ -60,7 +60,8 @@ class MidtransController extends Controller
             $data['redirect_url'] = $transaction->redirect_url;
         } catch (\Exception $e) {
             $data['type'] = "error";
-            $data['msg'] = $e->getMessage();
+            report($e);
+            $data['msg'] = translate('Payment initialization failed.');
         }
 
         return json_encode($data);
@@ -116,15 +117,21 @@ class MidtransController extends Controller
             if ($paid) {
                 $trx = Transaction::where('payment_id', $request['order_id'])->unpaid()->first();
                 if ($trx) {
-                    $trx->status = Transaction::STATUS_PAID;
-                    $trx->update();
-                    event(new TransactionPaid($trx));
+                    app(PaymentSettlementService::class)->settle($trx, [
+                        'id' => (string) ($payload['transaction_id'] ?? $payload['order_id']),
+                        'gateway_id' => $this->paymentGateway->id,
+                        'amount' => $payload['gross_amount'],
+                        'expected_amount' => round($this->paymentGateway->getChargeAmount($trx->total), 0),
+                        'currency' => $payload['currency'] ?? $this->paymentGateway->getCurrency(),
+                        'expected_currency' => $this->paymentGateway->getCurrency(),
+                    ]);
                 }
             }
 
             return response('Webhook processed successfully', 200);
         } catch (\Exception $e) {
-            return response($e->getMessage(), 500);
+            report($e);
+            return response('Webhook processing failed', 500);
         }
     }
 }
