@@ -48,9 +48,10 @@
     </div>
 @endif
 
-@if (extension('google_analytics')->status)
+@php($googleAnalytics = extension('google_analytics'))
+@if (is_object($googleAnalytics) && ($googleAnalytics->status ?? false))
     <script async
-        src="https://www.googletagmanager.com/gtag/js?id={{ extension('google_analytics')->settings->measurement_id }}">
+        src="https://www.googletagmanager.com/gtag/js?id={{ data_get($googleAnalytics, 'settings.measurement_id') }}">
     </script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -59,11 +60,12 @@
             dataLayer.push(arguments);
         }
         gtag("js", new Date());
-        gtag("config", "{{ extension('google_analytics')->settings->measurement_id }}");
+        gtag("config", "{{ data_get($googleAnalytics, 'settings.measurement_id') }}");
     </script>
 @endif
 
-@if (extension('tawk_to')->status)
+@php($tawkTo = extension('tawk_to'))
+@if (is_object($tawkTo) && ($tawkTo->status ?? false))
     <script type='text/javascript'>
         var Tawk_API = Tawk_API || {},
             Tawk_LoadStart = new Date();
@@ -71,7 +73,7 @@
             var s1 = document.createElement('script'),
                 s0 = document.getElementsByTagName('script')[0];
             s1.async = true;
-            s1.src = 'https://embed.tawk.to/{{ extension('tawk_to')->settings->api_key }}';
+            s1.src = 'https://embed.tawk.to/{{ data_get($tawkTo, 'settings.api_key') }}';
             s1.charset = 'UTF-8';
             s1.setAttribute('crossorigin', '*');
             s0.parentNode.insertBefore(s1, s0);

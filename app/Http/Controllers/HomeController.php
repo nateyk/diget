@@ -9,7 +9,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        if (settings('maintenance')->status && !authAdmin()) {
+        $maintenance = settings('maintenance');
+        if (is_object($maintenance) && ($maintenance->status ?? false) && !authAdmin()) {
             return view('vendor.maintenance');
         } else {
             $homeSections = HomeSection::active()->get();
