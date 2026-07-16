@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Jenssegers\Date\Date;
+use Illuminate\Support\Carbon;
 use Mews\Purifier\Facades\Purifier;
 use Spatie\Newsletter\Facades\Newsletter;
 
@@ -177,11 +177,10 @@ function errorsLayout()
 
 function dateFormat($date, $format = null)
 {
-    Date::setLocale(getLocale());
     if (!$format) {
         $format = Settings::dateFormats()[@settings('general')->date_format];
     }
-    $dateFormat = Date::parse($date)->format($format);
+    $dateFormat = Carbon::parse($date)->locale(getLocale())->translatedFormat($format);
     return $dateFormat;
 }
 
@@ -607,13 +606,13 @@ function countryFlag($country)
 
 function generateMonthRangeFromDate($date)
 {
-    $startMonth = Date::parse($date)->startOfMonth();
-    $currentMonth = Date::now()->startOfMonth();
+    $startMonth = Carbon::parse($date)->startOfMonth();
+    $currentMonth = Carbon::now()->startOfMonth();
     $months = [];
     while ($startMonth->lte($currentMonth)) {
         $months[] = [
             "key" => $startMonth->format('Y-m'),
-            "value" => $startMonth->format('F Y'),
+            "value" => $startMonth->locale(getLocale())->translatedFormat('F Y'),
         ];
         $startMonth->addMonth();
     }

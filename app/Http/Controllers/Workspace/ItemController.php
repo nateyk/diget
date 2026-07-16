@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
-use Jenssegers\Date\Date;
+use Illuminate\Support\Carbon;
 use Mews\Purifier\Facades\Purifier;
 use Str;
 
@@ -964,11 +964,11 @@ class ItemController extends Controller
 
         if (request()->filled('period')) {
             $period = request()->input('period');
-            $startDate = Date::parse($period)->startOfMonth();
-            $endDate = Date::parse($period)->endOfMonth();
+            $startDate = Carbon::parse($period)->startOfMonth();
+            $endDate = Carbon::parse($period)->endOfMonth();
         } else {
-            $startDate = Date::now()->startOfMonth();
-            $endDate = Date::now()->endOfMonth();
+            $startDate = Carbon::now()->startOfMonth();
+            $endDate = Carbon::now()->endOfMonth();
         }
 
         $counters = $this->generateCounters($item, $startDate, $endDate);
@@ -1025,7 +1025,7 @@ class ItemController extends Controller
         $chart['labels'] = [];
         $chart['data'] = [];
         foreach ($salesData as $date => $count) {
-            $label = Date::parse($date)->format('d M');
+            $label = Carbon::parse($date)->locale(getLocale())->translatedFormat('d M');
             $chart['labels'][] = $label;
             $chart['data'][] = $count;
         }
@@ -1079,7 +1079,7 @@ class ItemController extends Controller
         $chart['labels'] = [];
         $chart['data'] = [];
         foreach ($salesData as $date => $count) {
-            $label = Date::parse($date)->format('d M');
+            $label = Carbon::parse($date)->locale(getLocale())->translatedFormat('d M');
             $chart['labels'][] = $label;
             $chart['data'][] = $count;
         }

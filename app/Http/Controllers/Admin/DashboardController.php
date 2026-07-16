@@ -13,7 +13,7 @@ use App\Models\SupportEarning;
 use App\Models\User;
 use App\Models\Withdrawal;
 use Illuminate\Support\Facades\DB;
-use Jenssegers\Date\Date;
+use Illuminate\Support\Carbon;
 
 class DashboardController extends Controller
 {
@@ -79,8 +79,8 @@ class DashboardController extends Controller
     {
         $chart['title'] = translate('Users');
 
-        $startDate = Date::now()->startOfMonth();
-        $endDate = Date::now()->endOfMonth();
+        $startDate = Carbon::now()->startOfMonth();
+        $endDate = Carbon::now()->endOfMonth();
         $dates = chartDates($startDate, $endDate);
 
         $usersRecord = User::where('created_at', '>=', $startDate)
@@ -93,7 +93,7 @@ class DashboardController extends Controller
         $chart['labels'] = [];
         $chart['data'] = [];
         foreach ($usersRecordData as $key => $value) {
-            $chart['labels'][] = Date::parse($key)->format('d F');
+            $chart['labels'][] = Carbon::parse($key)->locale(getLocale())->translatedFormat('d F');
             $chart['data'][] = $value;
         }
 
@@ -106,8 +106,8 @@ class DashboardController extends Controller
     {
         $chart['title'] = translate('Sales');
 
-        $startDate = Date::now()->startOfMonth();
-        $endDate = Date::now()->endOfMonth();
+        $startDate = Carbon::now()->startOfMonth();
+        $endDate = Carbon::now()->endOfMonth();
         $dates = chartDates($startDate, $endDate);
 
         $salesRecord = Sale::active()
@@ -121,7 +121,7 @@ class DashboardController extends Controller
         $chart['labels'] = [];
         $chart['data'] = [];
         foreach ($salesRecordData as $key => $value) {
-            $chart['labels'][] = Date::parse($key)->format('d F');
+            $chart['labels'][] = Carbon::parse($key)->locale(getLocale())->translatedFormat('d F');
             $chart['data'][] = $value;
         }
 
