@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Services\ArchiveValidator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use ZipArchive;
@@ -99,9 +100,7 @@ class SecurityRemediationTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider forbiddenArchivePathProvider
-     */
+    #[DataProvider('forbiddenArchivePathProvider')]
     public function test_archive_validator_rejects_absolute_and_windows_paths(string $entry): void
     {
         $zip = $this->zipWithEntries([$entry => 'payload']);

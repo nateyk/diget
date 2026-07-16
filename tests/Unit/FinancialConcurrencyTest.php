@@ -6,12 +6,13 @@ use App\Models\Refund;
 use App\Models\Transaction;
 use App\Models\Withdrawal;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Process\Process;
 use Tests\TestCase;
 
 class FinancialConcurrencyTest extends TestCase
 {
-    /** @group concurrency */
+    #[Group('concurrency')]
     public function test_payment_settlement_fulfils_a_deposit_once_under_concurrent_callbacks(): void
     {
         $userId = $this->createUser('settlement');
@@ -43,7 +44,7 @@ class FinancialConcurrencyTest extends TestCase
         }
     }
 
-    /** @group concurrency */
+    #[Group('concurrency')]
     public function test_withdrawal_submission_allows_one_pending_withdrawal_under_concurrent_requests(): void
     {
         $methodId = DB::table('withdrawal_methods')->insertGetId([
@@ -70,7 +71,7 @@ class FinancialConcurrencyTest extends TestCase
         }
     }
 
-    /** @group concurrency */
+    #[Group('concurrency')]
     public function test_refund_acceptance_transitions_once_under_concurrent_requests(): void
     {
         [$buyerId, $authorId, $itemId, $saleId, $purchaseId] = $this->createPurchaseFixture();
