@@ -34,15 +34,11 @@ class HomeLandingHeroTest extends TestCase
         $this->assertStringContainsString("@include('themes.basic.includes.navbar')", $layoutView);
         $this->assertStringNotContainsString("routeIs('home')", $layoutView);
         $this->assertStringContainsString('<div class="nav-bar">', $navbarView);
-        $this->assertStringContainsString('<div class="nav-bar nav-bar-sm nav-bar-bg">', $navbarView);
-        $this->assertMatchesRegularExpression(
-            '/@unless\\s*\\(request\\(\\)->routeIs\\(\'home\'\\)\\)\\s*<div class="nav-bar nav-bar-sm nav-bar-bg">.*@endunless/s',
-            $navbarView
-        );
+        $this->assertStringNotContainsString('nav-bar-sm', $navbarView);
 
         $this->assertStringContainsString('Creator storefront landing hero', $css);
         $this->assertStringContainsString('.home-landing-hero', $css);
-        $this->assertStringContainsString('grid-template-columns: minmax(0, 1fr) minmax(320px, 520px)', $css);
+        $this->assertStringContainsString('grid-template-columns: minmax(0, 1fr) minmax(320px, 500px)', $css);
         $this->assertStringContainsString('.home-landing-visual img', $css);
         $this->assertStringContainsString('object-fit: contain', $css);
         $this->assertStringContainsString('.home-landing-actions', $css);

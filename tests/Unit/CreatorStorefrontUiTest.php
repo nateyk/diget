@@ -15,6 +15,7 @@ class CreatorStorefrontUiTest extends TestCase
         $indexView = file_get_contents($root . '/resources/views/themes/basic/profile/index.blade.php');
         $layoutView = file_get_contents($root . '/resources/views/themes/basic/profile/layout.blade.php');
         $settingsProfileView = file_get_contents($root . '/resources/views/themes/basic/workspace/settings/profile.blade.php');
+        $socialLinksPartial = file_get_contents($root . '/resources/views/themes/basic/partials/profile-social-links.blade.php');
         $css = file_get_contents($root . '/public/themes/basic/assets/css/custom.css');
         $profileCardDescriptionMigrations = glob($root . '/database/migrations/*_add_profile_card_description_to_users_table.php');
         $profileCardDescriptionBackfillMigrations = glob($root . '/database/migrations/*_backfill_profile_card_description_from_profile_description.php');
@@ -38,7 +39,7 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('creator-storefront-main', $indexView);
         $this->assertStringContainsString('creator-storefront-items', $indexView);
         $this->assertStringContainsString("@include('themes.basic.partials.item'", $indexView);
-        $this->assertStringContainsString("'item_classes' => 'border'", $indexView);
+        $this->assertStringContainsString("'item_classes' => 'border creator-storefront-item'", $indexView);
         $this->assertStringContainsString('creator-storefront-cover-banner', $indexView);
         $this->assertStringContainsString('$user->getProfileCover()', $indexView);
         $this->assertStringNotContainsString('style="background-image', $indexView);
@@ -75,18 +76,11 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('storefrontTabs.forEach', $indexView);
         $this->assertStringContainsString('storefrontPanels.forEach', $indexView);
         $this->assertStringContainsString('event.preventDefault()', $indexView);
-        $this->assertStringContainsString('$socialHandle = fn($value) => ltrim(trim($value), \'@\')', $indexView);
-        $this->assertStringContainsString('class="creator-storefront-socials socials"', $indexView);
-        $this->assertStringContainsString('social-btn social-facebook', $indexView);
-        $this->assertStringContainsString('social-btn social-x', $indexView);
-        $this->assertStringContainsString('social-btn social-linkedin', $indexView);
-        $this->assertStringContainsString('social-btn social-youtube', $indexView);
-        $this->assertStringContainsString('social-btn social-instagram', $indexView);
-        $this->assertStringContainsString('social-btn social-pinterest', $indexView);
-        $this->assertStringContainsString('fab fa-linkedin', $indexView);
-        $this->assertStringContainsString('fab fa-pinterest', $indexView);
-        $this->assertStringContainsString('{{ \'https://youtube.com/@\' . $socialHandle($socialLinks->youtube) }}', $indexView);
-        $this->assertStringNotContainsString('youtube.com/@{{ $socialHandle($socialLinks->youtube) }}', $indexView);
+        $this->assertStringContainsString("'class' => 'creator-storefront-socials socials'", $indexView);
+        $this->assertStringContainsString('profile_socials.platforms', $socialLinksPartial);
+        $this->assertStringContainsString('take(config(\'profile_socials.max_links\', 7))', $socialLinksPartial);
+        $this->assertStringContainsString('class="social-btn {{ $socialPlatforms[$platform][\'class\'] }}"', $socialLinksPartial);
+        $this->assertStringContainsString('bi {{ $socialPlatforms[$platform][\'icon\'] }}', $socialLinksPartial);
         $this->assertStringContainsString('$cardDescription = trim($user->profile_card_description ?? \'\')', $indexView);
         $this->assertStringNotContainsString('Str::words($profileDescription, 100', $indexView);
         $this->assertStringContainsString('creator-storefront-bio', $indexView);
@@ -112,8 +106,8 @@ class CreatorStorefrontUiTest extends TestCase
 
         $this->assertStringContainsString('Creator storefront', $css);
         $this->assertStringContainsString('.creator-storefront', $css);
-        $this->assertStringContainsString('.creator-storefront-items .item', $css);
-        $this->assertStringContainsString('grid-template-columns: minmax(260px, 330px) minmax(0, 1fr)', $css);
+        $this->assertStringContainsString('.creator-storefront-items .creator-storefront-item', $css);
+        $this->assertStringContainsString('grid-template-columns: minmax(260px, 304px) minmax(0, 1fr)', $css);
         $this->assertStringContainsString('.creator-storefront-empty', $css);
         $this->assertStringContainsString('.creator-storefront-panel[hidden]', $css);
         $this->assertStringContainsString('border-bottom: 1px solid var(--border_color)', $css);
@@ -136,7 +130,7 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('.profile-storefront-page .creator-storefront-socials', $css);
         $this->assertStringContainsString('.profile-storefront-page .creator-storefront-cover-banner', $css);
         $this->assertStringContainsString('gap: 8px', $css);
-        $this->assertStringContainsString('margin-top: -30px', $css);
+        $this->assertStringNotContainsString('margin-top: -30px', $css);
         $this->assertStringNotContainsString('margin-bottom: -', $css);
         $this->assertStringNotContainsString('background-color: #202124', $css);
     }
