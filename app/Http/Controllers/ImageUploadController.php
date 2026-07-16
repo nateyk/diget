@@ -15,6 +15,10 @@ class ImageUploadController extends Controller
 
     public function upload(Request $request)
     {
+        if (!authUser() && !authAdmin() && !authReviewer()) {
+            return response()->json(['error' => translate('Authentication is required.')], 401);
+        }
+
         $validator = Validator::make($request->all(), [
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
@@ -27,7 +31,9 @@ class ImageUploadController extends Controller
 
         $image = $request->file('image');
 
-        if (!in_array($image->getClientMimeType(), ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'])) {
+        $allowedMimeTypes = ['image/png', 'image/jpeg', 'image/gif'];
+        if (!in_array($image->getMimeType(), $allowedMimeTypes, true)
+            || @getimagesize($image->getRealPath()) === false) {
             return response()->json([
                 'error' => translate('Invalid file type. Only image files are allowed (JPEG, JPG, PNG, GIF).'),
             ], 400);
@@ -39,14 +45,14 @@ class ImageUploadController extends Controller
                 return $this->error(translate('Unavailable storage provider'));
             }
 
-            $imageExtension = $image->getClientOriginalExtension();
+            $imageExtension = strtolower($image->extension());
             $imageMimeType = ($this->fileMimeType($imageExtension)) ? $this->fileMimeType($imageExtension) : $image->getMimeType();
 
             $processor = new $storageProvider->processor;
             $response = $processor->upload($image, 'images/editor/', $imageMimeType);
 
             $editorImage = new EditorImage();
-            $editorImage->name = $image->getClientOriginalName();
+            $editorImage->name = basename($image->getClientOriginalName());
             $editorImage->filename = $response->filename;
             $editorImage->path = $response->path;
             $editorImage->save();
@@ -56,8 +62,9 @@ class ImageUploadController extends Controller
                 'default' => $editorImage->getLink(),
             ]);
         } catch (Exception $e) {
+            report($e);
             return response()->json([
-                'error' => $e->getMessage(),
+                'error' => translate('Image upload failed.'),
             ], 500);
         }
     }
