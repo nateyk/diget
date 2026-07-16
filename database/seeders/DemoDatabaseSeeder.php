@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
+use App\Models\Addon;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\ItemComment;
@@ -32,6 +33,7 @@ use App\Models\Withdrawal;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use RuntimeException;
@@ -62,6 +64,7 @@ class DemoDatabaseSeeder extends Seeder
             $reviewers = $this->seedReviewers($password);
             $this->seedUsers($password);
             $this->seedRuntimeDefaults();
+            $this->seedAddons();
             $this->seedCategories($reviewers);
             $this->seedItems();
             $this->seedFiles();
@@ -173,6 +176,29 @@ class DemoDatabaseSeeder extends Seeder
             DB::table('settings')->updateOrInsert(
                 ['key' => $key],
                 ['value' => json_encode($value, JSON_UNESCAPED_UNICODE)]
+            );
+        }
+    }
+
+    private function seedAddons(): void
+    {
+        foreach (File::directories(base_path('addons')) as $addonPath) {
+            $configPath = $addonPath . DIRECTORY_SEPARATOR . 'config.json';
+            if (! File::exists($configPath)) {
+                continue;
+            }
+
+            $config = json_decode(File::get($configPath), true, 512, JSON_THROW_ON_ERROR);
+            Addon::updateOrCreate(
+                ['alias' => $config['alias']],
+                [
+                    'name' => $config['name'],
+                    'version' => $config['version'],
+                    'thumbnail' => $config['thumbnail'],
+                    'path' => $config['path'],
+                    'action' => $config['action'] ?? null,
+                    'status' => Addon::STATUS_ACTIVE,
+                ]
             );
         }
     }
