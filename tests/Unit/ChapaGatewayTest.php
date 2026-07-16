@@ -25,6 +25,7 @@ class ChapaGatewayTest extends TestCase
     private function gateway(): PaymentGateway
     {
         $gateway = new PaymentGateway;
+        $gateway->exists = true;
         $gateway->charge_currency = 'ETB';
         $gateway->charge_rate = 2;
         $gateway->credentials = (object) [

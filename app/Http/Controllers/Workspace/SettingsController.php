@@ -95,7 +95,8 @@ class SettingsController extends Controller
             }],
             'profile_description' => ['nullable', 'string'],
             'profile_contact_email' => ['nullable', 'email', 'block_patterns', 'max:255'],
-            'profile_social_links.*' => ['nullable', 'string', 'block_patterns', 'max:50'],
+            'profile_social_links' => ['nullable', 'array', 'max:' . config('profile_socials.max_links', 7)],
+            'profile_social_links.*' => ['nullable', 'string', 'block_patterns', 'max:255'],
         ]);
 
         if ($validator->fails()) {
@@ -133,12 +134,15 @@ class SettingsController extends Controller
                 $profileCover = $user->profile_cover;
             }
 
+            $socialPlatforms = array_keys(config('profile_socials.platforms', []));
             $socialLinks = [];
-            foreach ($request->profile_social_links as $key => $socialLink) {
-                if (!is_null($socialLink)) {
+            foreach ($request->input('profile_social_links', []) as $key => $socialLink) {
+                $socialLink = trim((string) $socialLink);
+                if (in_array($key, $socialPlatforms, true) && $socialLink !== '') {
                     $socialLinks[$key] = $socialLink;
                 }
             }
+            $socialLinks = array_slice($socialLinks, 0, config('profile_socials.max_links', 7), true);
 
             $profileDescription = purifierClean($request->profile_description);
             $profileCardDescription = trim(strip_tags((string) $request->profile_card_description));
@@ -149,7 +153,7 @@ class SettingsController extends Controller
             $user->profile_card_description = $profileCardDescription;
             $user->profile_description = $profileDescription;
             $user->profile_contact_email = $request->profile_contact_email;
-            $user->profile_social_links = count($socialLinks) > 0 ? $request->profile_social_links : null;
+            $user->profile_social_links = count($socialLinks) > 0 ? $socialLinks : null;
             $user->update();
 
             toastr()->success(translate('Profile details has been updated successfully'));
@@ -340,7 +344,7 @@ class SettingsController extends Controller
 
         $update2FaStatus = $user->update(['google2fa_status' => true]);
         if ($update2FaStatus) {
-            session()->put('user_2fa', hash_encode($user->id));
+            session()->put('user_2fa', ['guard' => 'web', 'user_id' => $user->id, 'session_id' => session()->getId(), 'verified_at' => now()->toIso8601String()]);
             toastr()->success(translate('2FA Authentication has been enabled successfully'));
             return back();
         }

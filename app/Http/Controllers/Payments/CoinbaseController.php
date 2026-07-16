@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Payments;
 
-use App\Events\TransactionPaid;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Services\PaymentSettlementService;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
@@ -49,7 +49,8 @@ class CoinbaseController extends Controller
             $data['redirect_url'] = $result->data->hosted_url;
         } catch (\Exception $e) {
             $data['type'] = "error";
-            $data['msg'] = $e->getMessage();
+            report($e);
+            $data['msg'] = translate('Payment initialization failed.');
         }
 
         return json_encode($data);
@@ -66,7 +67,7 @@ class CoinbaseController extends Controller
                 ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
                 ->firstOrFail();
 
-            if ($trx->isPaid()) {
+            if ($trx->isPaid() && $trx->fulfilled_at) {
                 $trx->user->emptyCart();
                 return redirect()->route('checkout.index', $request->id);
             }
@@ -94,17 +95,30 @@ class CoinbaseController extends Controller
             $event = $data->event;
 
             if ($event->type === 'charge:confirmed') {
-                $trx = Transaction::where('payment_id', $event->data->id)->unpaid()->first();
+                $trx = Transaction::where('payment_id', $event->data->id)
+                    ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                    ->whereNull('fulfilled_at')->first();
                 if ($trx) {
-                    $trx->status = Transaction::STATUS_PAID;
-                    $trx->save();
-                    event(new TransactionPaid($trx));
+                    $verified = json_decode($this->getCharge($event->data->id));
+                    $charge = $verified->data ?? null;
+                    if (!$charge || !in_array(end($charge->timeline)->status ?? null, ['COMPLETED', 'CONFIRMED'], true)) {
+                        return response('Payment not verified', 400);
+                    }
+                    app(PaymentSettlementService::class)->settle($trx, [
+                        'id' => $event->data->id,
+                        'gateway_id' => $this->paymentGateway->id,
+                        'amount' => $charge->pricing->local->amount ?? null,
+                        'expected_amount' => amountFormat($this->paymentGateway->getChargeAmount($trx->total)),
+                        'currency' => $charge->pricing->local->currency ?? null,
+                        'expected_currency' => $this->paymentGateway->getCurrency(),
+                    ]);
                 }
             }
 
             return response('Webhook processed successfully', 200);
         } catch (\Exception $e) {
-            return response($e->getMessage(), 500);
+            report($e);
+            return response('Webhook processing failed', 500);
         }
     }
 
@@ -121,6 +135,19 @@ class CoinbaseController extends Controller
         $response = $client->post('https://api.commerce.coinbase.com/charges', [
             'headers' => $headers,
             'json' => $array,
+        ]);
+
+        return $response->getBody()->getContents();
+    }
+
+    private function getCharge(string $id): string
+    {
+        $client = new Client();
+        $response = $client->get('https://api.commerce.coinbase.com/charges/' . rawurlencode($id), [
+            'headers' => [
+                'X-CC-Api-Key' => $this->paymentGateway->credentials->api_key,
+                'X-CC-Version' => '2018-03-22',
+            ],
         ]);
 
         return $response->getBody()->getContents();

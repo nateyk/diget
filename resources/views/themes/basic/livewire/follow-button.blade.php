@@ -4,12 +4,12 @@
             <button wire:click="followAction"
                 class="btn {{ authUser()->isFollowingUser($user->id) ? 'btn-custom' : 'btn-outline-custom' }} {{ $iconButton ? 'btn-padding' : '' }}">
                 @if (authUser()->isFollowingUser($user->id))
-                    <i class="fa-solid fa-user-check"></i>
+                    <i class="bi bi-person-check-fill"></i>
                     @if (!$iconButton)
                         <span class="ms-1">{{ translate('Following') }}</span>
                     @endif
                 @else
-                    <i class="fa-solid fa-user-plus"></i>
+                    <i class="bi bi-person-plus-fill"></i>
                     @if (!$iconButton)
                         <span class="ms-1">{{ translate('Follow') }}</span>
                     @endif
@@ -17,7 +17,7 @@
             </button>
         @else
             <button class="btn btn-outline-custom {{ $iconButton ? 'btn-padding' : '' }} disabled">
-                <i class="fa-solid fa-user-plus"></i>
+                <i class="bi bi-person-plus-fill"></i>
                 @if (!$iconButton)
                     <span class="ms-1">{{ translate('Follow') }}</span>
                 @endif
@@ -25,7 +25,7 @@
         @endif
     @else
         <a href="{{ route('login') }}" class="btn btn-outline-custom {{ $iconButton ? 'btn-padding' : '' }}">
-            <i class="fa-solid fa-user-plus"></i>
+            <i class="bi bi-person-plus-fill"></i>
             @if (!$iconButton)
                 <span class="ms-1">{{ translate('Follow') }}</span>
             @endif

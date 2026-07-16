@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
  */
-Route::post('image/upload', 'ImageUploadController@upload');
-Route::get('cronjob', 'CronJobController@run')->name('cronjob')->middleware('demo:GET');
+Route::post('image/upload', 'ImageUploadController@upload')->middleware('throttle:20,1');
+Route::get('cronjob', 'CronJobController@run')->name('cronjob')->middleware(['demo:GET', 'throttle:2,1']);
 Route::middleware(['maintenance'])->group(function () {
     Route::post('cookie/accept', 'GeneralController@cookie')->middleware('ajax.only');
     Route::group(['namespace' => 'Auth'], function () {
@@ -54,7 +54,7 @@ Route::middleware(['maintenance'])->group(function () {
         });
     });
     Route::prefix('workspace')->namespace('Workspace')
-        ->middleware(['auth', 'oauth.complete', 'verified', '2fa.verify'])->group(function () {
+        ->middleware(['auth', 'user.status', 'oauth.complete', 'verified', '2fa.verify'])->group(function () {
 
         Route::name('workspace.')->group(function () {
 
@@ -190,7 +190,7 @@ Route::middleware(['maintenance'])->group(function () {
     });
 });
 
-Route::middleware(['oauth.complete', 'verified', '2fa.verify'])->group(function () {
+Route::middleware(['user.status', 'oauth.complete', 'verified', '2fa.verify'])->group(function () {
     Route::get('/', 'HomeController@index')
         ->name('home')->middleware('referral');
 
@@ -220,7 +220,7 @@ Route::middleware(['oauth.complete', 'verified', '2fa.verify'])->group(function 
                 Route::post('download/{id}', 'ItemController@freeDownload')->name('download');
                 Route::get('download/{id}/external', 'ItemController@freeExternalDownload')->name('download.external');
             });
-            Route::middleware(['auth', 'oauth.complete', 'verified', '2fa.verify', 'kyc.required'])->group(function () {
+            Route::middleware(['auth', 'user.status', 'oauth.complete', 'verified', '2fa.verify', 'kyc.required'])->group(function () {
                 Route::get('free/license/{id}', 'ItemController@freeLicense')->name('free.license');
                 Route::name('premium.')->prefix('premium')->middleware(['license:2', 'premium.disable'])->group(function () {
                     Route::post('download/{id}', 'ItemController@premiumDownload')->name('download');
@@ -256,7 +256,7 @@ Route::middleware(['oauth.complete', 'verified', '2fa.verify'])->group(function 
             Route::post('empty', 'CartController@empty')->name('empty');
         });
 
-        Route::middleware(['auth', 'oauth.complete', 'verified', '2fa.verify', 'kyc.required'])->group(function () {
+        Route::middleware(['auth', 'user.status', 'oauth.complete', 'verified', '2fa.verify', 'kyc.required'])->group(function () {
             Route::post('cart/checkout', 'CartController@checkout')->name('cart.checkout');
             Route::name('checkout.')->prefix('checkout')->group(function () {
                 Route::get('{id}', 'CheckoutController@index')->name('index');

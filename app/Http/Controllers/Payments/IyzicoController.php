@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Payments;
 
-use App\Events\TransactionPaid;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Services\PaymentSettlementService;
 use Illuminate\Http\Request;
 use Iyzipay\Model\Address;
 use Iyzipay\Model\BasketItem;
@@ -99,7 +99,8 @@ class IyzicoController extends Controller
             $data['redirect_url'] = $checkoutFormInitialize->getPaymentPageUrl();
         } catch (\Exception $e) {
             $data['type'] = "error";
-            $data['msg'] = $e->getMessage();
+            report($e);
+            $data['msg'] = translate('Payment initialization failed.');
         }
 
         return json_encode($data);
@@ -116,7 +117,7 @@ class IyzicoController extends Controller
 
         $checkoutLink = route('checkout.index', hash_encode($trx->id));
 
-        if ($trx->isPaid()) {
+        if ($trx->isPaid() && $trx->fulfilled_at) {
             $trx->user->emptyCart();
             return redirect($checkoutLink);
         }
@@ -139,15 +140,21 @@ class IyzicoController extends Controller
 
             $paymentId = $checkoutForm->getPaymentId();
 
-            $trx->payment_id = $paymentId;
-            $trx->status = Transaction::STATUS_PAID;
-            $trx->update();
+            app(PaymentSettlementService::class)->settle($trx, [
+                'id' => $paymentId,
+                'local_reference' => (string) $trx->payment_id,
+                'gateway_id' => $this->paymentGateway->id,
+                'amount' => $checkoutForm->getPaidPrice() ?: $checkoutForm->getPrice(),
+                'expected_amount' => $this->paymentGateway->getChargeAmount($trx->total),
+                'currency' => $checkoutForm->getCurrency(),
+                'expected_currency' => $this->paymentGateway->getCurrency(),
+            ]);
 
             $trx->user->emptyCart();
-            event(new TransactionPaid($trx));
             return redirect($checkoutLink);
         } catch (\Exception $e) {
-            toastr()->error($e->getMessage());
+            report($e);
+            toastr()->error(translate('Payment failed'));
             return redirect($checkoutLink);
         }
     }
@@ -176,19 +183,26 @@ class IyzicoController extends Controller
 
             if ($payload['status'] == "SUCCESS") {
                 $trx = Transaction::where('payment_id', $payload['token'])
-                    ->unpaid()->first();
+                    ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                    ->whereNull('fulfilled_at')->first();
 
                 if ($trx) {
-                    $trx->payment_id = $payload['iyziPaymentId'];
-                    $trx->status = Transaction::STATUS_PAID;
-                    $trx->update();
-                    event(new TransactionPaid($trx));
+                    app(PaymentSettlementService::class)->settle($trx, [
+                        'id' => $payload['iyziPaymentId'],
+                        'local_reference' => (string) $payload['token'],
+                        'gateway_id' => $this->paymentGateway->id,
+                        'amount' => $payload['paidPrice'] ?? $payload['price'] ?? null,
+                        'expected_amount' => $this->paymentGateway->getChargeAmount($trx->total),
+                        'currency' => $payload['currency'] ?? null,
+                        'expected_currency' => $this->paymentGateway->getCurrency(),
+                    ]);
                 }
             }
 
             return response('Webhook processed successfully', 200);
         } catch (\Exception $e) {
-            return response($e->getMessage(), 500);
+            report($e);
+            return response('Webhook processing failed', 500);
         }
     }
 

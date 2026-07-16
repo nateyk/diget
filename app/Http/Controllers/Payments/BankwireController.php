@@ -24,8 +24,9 @@ class BankwireController extends Controller
             $data['method'] = "hosted";
             $data['view'] = 'bankwire';
         } catch (\Exception $e) {
+            report($e);
             $data['type'] = "error";
-            $data['msg'] = $e->getMessage();
+            $data['msg'] = translate('Payment initialization failed.');
         }
 
         return json_encode($data);
@@ -71,7 +72,8 @@ class BankwireController extends Controller
 
             return back();
         } catch (\Exception $e) {
-            toastr()->error($e->getMessage());
+            report($e);
+            toastr()->error(translate('Payment proof submission failed.'));
             return back();
         }
     }

@@ -5,15 +5,22 @@ namespace App\Listeners;
 use App\Events\RefundAccepted;
 use App\Events\SaleRefunded;
 use App\Jobs\SendRefundAcceptedNotification;
+use App\Models\Refund;
 
 class ProcessAcceptedRefund
 {
     public function handle(RefundAccepted $event)
     {
-        $refund = $event->refund;
+        $refund = Refund::query()->with('purchase.sale')->whereKey($event->refund->getKey())->first();
+        if (!$refund || !$refund->isAccepted()) {
+            return;
+        }
 
-        event(new SaleRefunded($refund->purchase->sale));
+        $sale = $refund->purchase?->sale;
+        if ($sale && !$sale->isRefunded()) {
+            event(new SaleRefunded($sale));
+        }
 
-        dispatch(new SendRefundAcceptedNotification($refund));
+        dispatch(new SendRefundAcceptedNotification($refund))->afterCommit();
     }
 }

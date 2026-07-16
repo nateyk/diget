@@ -10,8 +10,10 @@ class TwoFactorController extends Controller
 {
     public function show2FaVerifyForm()
     {
-        if (!authReviewer()->google2fa_status ||
-            session()->has('reviewer_2fa') && session('reviewer_2fa') == encrypt(authReviewer()->id)) {
+        $marker = session('reviewer_2fa');
+        if (!authReviewer()->google2fa_status || (is_array($marker)
+            && ($marker['user_id'] ?? null) == authReviewer()->id
+            && ($marker['session_id'] ?? null) === session()->getId())) {
             return redirect()->route('reviewer.dashboard');
         }
         return view('reviewer.auth.2fa');
@@ -37,7 +39,12 @@ class TwoFactorController extends Controller
             return back();
         }
 
-        session()->put('reviewer_2fa', encrypt(authReviewer()->id));
+        session()->put('reviewer_2fa', [
+            'guard' => 'reviewer',
+            'user_id' => authReviewer()->id,
+            'session_id' => session()->getId(),
+            'verified_at' => now()->toIso8601String(),
+        ]);
         return redirect()->route('reviewer.dashboard');
     }
 }

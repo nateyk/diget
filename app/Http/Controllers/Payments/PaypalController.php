@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Payments;
 
-use App\Events\TransactionPaid;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Services\PaymentSettlementService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Vironeer\PayPal\Core\PayPalHttpClient;
 use Vironeer\PayPal\Core\ProductionEnvironment;
@@ -94,7 +95,8 @@ class PaypalController extends Controller
             $data['redirect_url'] = $response->result->links[1]->href;
         } catch (\Exception $e) {
             $data['type'] = "error";
-            $data['msg'] = $e->getMessage();
+            report($e);
+            $data['msg'] = translate('Payment initialization failed.');
         }
 
         return json_encode($data);
@@ -120,7 +122,7 @@ class PaypalController extends Controller
 
         $checkoutLink = route('checkout.index', hash_encode($trx->id));
 
-        if ($trx->isPaid()) {
+        if ($trx->isPaid() && $trx->fulfilled_at) {
             $trx->user->emptyCart();
             return redirect($checkoutLink);
         }
@@ -136,16 +138,26 @@ class PaypalController extends Controller
                 return redirect($checkoutLink);
             }
 
-            $trx->payer_id = $response->result->payer->payer_id;
-            $trx->payer_email = $response->result->payer->email_address;
-            $trx->status = Transaction::STATUS_PAID;
-            $trx->update();
+            $capture = $response->result->purchase_units[0]->payments->captures[0] ?? null;
+            $amount = $capture->amount->value ?? null;
+            $currency = $capture->amount->currency_code ?? null;
+            app(PaymentSettlementService::class)->settle($trx, [
+                'id' => $capture->id ?? $trx->payment_id,
+                'local_reference' => (string) $trx->payment_id,
+                'gateway_id' => $this->paymentGateway->id,
+                'amount' => $amount,
+                'expected_amount' => $this->expectedAmount($trx),
+                'currency' => $currency,
+                'expected_currency' => $this->paymentGateway->getCurrency(),
+                'payer_id' => $response->result->payer->payer_id ?? null,
+                'payer_email' => $response->result->payer->email_address ?? null,
+            ]);
 
             $trx->user->emptyCart();
-            event(new TransactionPaid($trx));
             return redirect($checkoutLink);
         } catch (\Exception $e) {
-            toastr()->error($e->getMessage());
+            report($e);
+            toastr()->error(translate('Payment failed'));
             return redirect($checkoutLink);
         }
     }
@@ -170,25 +182,41 @@ class PaypalController extends Controller
             if (isset($payload['event_type']) && $payload['event_type'] === 'PAYMENT.CAPTURE.COMPLETED') {
                 if (isset($payload['resource']['status']) && $payload['resource']['status'] === 'COMPLETED') {
                     $supplementaryData = $payload['resource']['supplementary_data'];
-                    $trx = Transaction::where('payment_id', $supplementaryData['related_ids']['order_id'])->unpaid()->first();
+                    $trx = Transaction::where('payment_id', $supplementaryData['related_ids']['order_id'])
+                        ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                        ->whereNull('fulfilled_at')->first();
                     if ($trx) {
-                        $trx->status = Transaction::STATUS_PAID;
-                        $trx->update();
-                        event(new TransactionPaid($trx));
+                        $capture = $payload['resource'];
+                        app(PaymentSettlementService::class)->settle($trx, [
+                            'id' => $capture['id'] ?? '',
+                            'local_reference' => (string) $supplementaryData['related_ids']['order_id'],
+                            'gateway_id' => $this->paymentGateway->id,
+                            'amount' => $capture['amount']['value'] ?? null,
+                            'expected_amount' => $this->expectedAmount($trx),
+                            'currency' => $capture['amount']['currency_code'] ?? null,
+                            'expected_currency' => $this->paymentGateway->getCurrency(),
+                        ]);
                     }
                 }
             }
 
             return response('Webhook processed successfully', 200);
         } catch (\Exception $e) {
-            return response($e->getMessage(), 500);
+            report($e);
+            return response('Webhook processing failed', 500);
         }
     }
 
     private function verifyPayPalSignature($headers, $rawRequestBody)
     {
-        $transmissionId = $headers['paypal-transmission-id'][0];
-        $timeStamp = $headers['paypal-transmission-time'][0];
+        $transmissionId = $headers['paypal-transmission-id'][0] ?? null;
+        $timeStamp = $headers['paypal-transmission-time'][0] ?? null;
+        $signature = $headers['paypal-transmission-sig'][0] ?? null;
+        $certUrl = $headers['paypal-cert-url'][0] ?? null;
+        if (!$transmissionId || !$timeStamp || !$signature || !$certUrl) {
+            return false;
+        }
+
         $crc32 = crc32($rawRequestBody);
 
         $webhookId = $this->paymentGateway->credentials->webhook_id;
@@ -200,11 +228,15 @@ class PaypalController extends Controller
             $crc32,
         ]);
 
-        $signature = $headers['paypal-transmission-sig'][0];
+        $cert = $this->fetchPayPalCertificate($certUrl);
+        if ($cert === null) {
+            return false;
+        }
 
-        $certUrl = $headers['paypal-cert-url'][0];
-
-        $publicKey = openssl_pkey_get_public(file_get_contents($certUrl));
+        $publicKey = openssl_pkey_get_public($cert);
+        if ($publicKey === false) {
+            return false;
+        }
 
         $verified = openssl_verify(
             $inputString,
@@ -216,6 +248,48 @@ class PaypalController extends Controller
         openssl_free_key($publicKey);
 
         return $verified === 1;
+    }
+
+    private function fetchPayPalCertificate(string $certUrl): ?string
+    {
+        $parts = parse_url($certUrl);
+        $allowedHosts = [
+            'api-m.paypal.com',
+            'api-m.sandbox.paypal.com',
+        ];
+
+        if (!$parts
+            || strtolower($parts['scheme'] ?? '') !== 'https'
+            || !in_array(strtolower($parts['host'] ?? ''), $allowedHosts, true)
+            || isset($parts['user'], $parts['pass'], $parts['port'], $parts['query'], $parts['fragment'])
+            || !str_starts_with($parts['path'] ?? '', '/v1/notifications/certs/')) {
+            return null;
+        }
+
+        try {
+            $response = Http::timeout(5)
+                ->connectTimeout(3)
+                ->withoutRedirecting()
+                ->get($certUrl);
+
+            if (!$response->successful() || strlen($response->body()) > 1024 * 1024) {
+                return null;
+            }
+
+            return $response->body();
+        } catch (\Throwable $e) {
+            report($e);
+            return null;
+        }
+    }
+
+    private function expectedAmount(Transaction $trx): float
+    {
+        $gateway = $this->paymentGateway;
+        $amount = amountFormat($gateway->getChargeAmount($trx->amount));
+        $fees = amountFormat($gateway->getChargeAmount($trx->fees));
+        $tax = $trx->tax ? amountFormat($gateway->getChargeAmount($trx->tax->amount)) : 0;
+        return (float) amountFormat($amount + $fees + $tax);
     }
 
 }

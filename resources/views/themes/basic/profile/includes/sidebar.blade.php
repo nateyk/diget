@@ -48,43 +48,9 @@
 @if ($user->profile_social_links)
     <div class="card-v card-bg border p-4">
         <h5 class="mb-3">{{ translate('Social links') }}</h5>
-        <div class="socials">
-            @if ($user->profile_social_links->facebook)
-                <a href="https://facebook.com/{{ $user->profile_social_links->facebook }}" target="_blank"
-                    class="social-btn social-facebook">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-            @endif
-            @if ($user->profile_social_links->x)
-                <a href="https://x.com/{{ $user->profile_social_links->x }}" target="_blank"
-                    class="social-btn social-x">
-                    <i class="fab fa-x-twitter"></i>
-                </a>
-            @endif
-            @if ($user->profile_social_links->linkedin)
-                <a href="https://linkedin.com/in/{{ $user->profile_social_links->linkedin }}" target="_blank"
-                    class="social-btn social-linkedin">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-            @endif
-            @if ($user->profile_social_links->youtube)
-                <a href="https://youtube.com/{{ '@' . $user->profile_social_links->youtube }}" target="_blank"
-                    class="social-btn social-youtube">
-                    <i class="fab fa-youtube"></i>
-                </a>
-            @endif
-            @if ($user->profile_social_links->instagram)
-                <a href="https://instagram.com/{{ $user->profile_social_links->instagram }}" target="_blank"
-                    class="social-btn social-instagram">
-                    <i class="fab fa-instagram"></i>
-                </a>
-            @endif
-            @if ($user->profile_social_links->pinterest)
-                <a href="https://pinterest.com/{{ $user->profile_social_links->pinterest }}" target="_blank"
-                    class="social-btn social-pinterest">
-                    <i class="fab fa-pinterest"></i>
-                </a>
-            @endif
-        </div>
+        @include('themes.basic.partials.profile-social-links', [
+            'socialLinks' => $user->profile_social_links,
+            'class' => 'socials',
+        ])
     </div>
 @endif

@@ -31,9 +31,15 @@ class TwoFactorVerify
                 $route = route('2fa.verify');
         }
 
-        if (Auth::guard($guard)->check() && Auth::guard($guard)->user()->google2fa_status &&
-            !$request->session()->has($sessionCookie) &&
-            session($sessionCookie) != encrypt(Auth::guard($guard)->user()->id)) {
+        $authGuard = $guard ?: 'web';
+        $user = Auth::guard($guard)->user();
+        $marker = $request->session()->get($sessionCookie);
+        $verified = is_array($marker)
+            && ($marker['guard'] ?? null) === $authGuard
+            && (int) ($marker['user_id'] ?? 0) === (int) ($user?->getAuthIdentifier() ?? 0)
+            && ($marker['session_id'] ?? null) === $request->session()->getId();
+
+        if ($user && $user->google2fa_status && !$verified) {
             return redirect($route);
         }
 

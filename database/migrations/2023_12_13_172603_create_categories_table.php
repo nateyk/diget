@@ -22,7 +22,7 @@ return new class extends Migration
             $table->tinyInteger('file_type')->default(1)->comment('1:File With Preview Image  2:File With Video Preview  3:File With Audio Preview');
             $table->bigInteger('thumbnail_width')->default(120)->unsigned();
             $table->bigInteger('thumbnail_height')->default(120)->unsigned();
-            $table->bigInteger('preview_image_height')->default(1200)->unsigned()->nullable();
+            $table->bigInteger('preview_image_width')->default(1200)->unsigned()->nullable();
             $table->bigInteger('preview_image_height')->default(610)->unsigned()->nullable();
             $table->bigInteger('maximum_screenshots')->default(15)->unsigned();
             $table->string('main_file_types')->default('zip,rar,pdf');

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Payments;
 
-use App\Events\TransactionPaid;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Services\PaymentSettlementService;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Str;
@@ -39,7 +39,8 @@ class PaystackController extends Controller
             $data['view'] = 'paystack';
         } catch (\Exception $e) {
             $data['type'] = "error";
-            $data['msg'] = $e->getMessage();
+            report($e);
+            $data['msg'] = translate('Payment initialization failed.');
         }
 
         return json_encode($data);
@@ -56,7 +57,7 @@ class PaystackController extends Controller
 
         $checkoutLink = route('checkout.index', hash_encode($trx->id));
 
-        if ($trx->isPaid()) {
+        if ($trx->isPaid() && $trx->fulfilled_at) {
             $trx->user->emptyCart();
             return redirect($checkoutLink);
         }
@@ -70,18 +71,35 @@ class PaystackController extends Controller
                 return redirect($checkoutLink);
             }
 
-            $customer = $result['data']['customer'];
+            $data = $result['data'] ?? [];
+            $customer = $data['customer'] ?? [];
+            $expectedAmount = $this->paymentGateway->getChargeAmount($trx->total) * 100;
+            $providerCurrency = strtoupper((string) ($data['currency'] ?? ''));
+            $expectedCurrency = strtoupper((string) $this->paymentGateway->getCurrency());
 
-            $trx->payer_id = $customer['id'];
-            $trx->payer_email = $customer['email'];
-            $trx->status = Transaction::STATUS_PAID;
-            $trx->update();
+            if ((string) ($data['reference'] ?? '') !== (string) $reference
+                || $providerCurrency !== $expectedCurrency
+                || abs((float) ($data['amount'] ?? -1) - (float) $expectedAmount) > 0.00001) {
+                toastr()->error(translate('Payment failed'));
+                return redirect($checkoutLink);
+            }
+
+            app(PaymentSettlementService::class)->settle($trx, [
+                'id' => $reference,
+                'gateway_id' => $this->paymentGateway->id,
+                'amount' => $data['amount'],
+                'expected_amount' => $expectedAmount,
+                'currency' => $providerCurrency,
+                'expected_currency' => $expectedCurrency,
+                'payer_id' => $customer['id'] ?? null,
+                'payer_email' => $customer['email'] ?? null,
+            ]);
 
             $trx->user->emptyCart();
-            event(new TransactionPaid($trx));
             return redirect($checkoutLink);
         } catch (\Exception $e) {
-            toastr()->error($e->getMessage());
+            report($e);
+            toastr()->error(translate('Payment failed'));
             return redirect($checkoutLink);
         }
     }
@@ -104,22 +122,38 @@ class PaystackController extends Controller
 
             if ($payload['event'] == 'charge.success') {
                 $data = $payload['data'];
-
-                $trx = Transaction::where('payment_id', $data['reference'])
-                    ->unpaid()->first();
+                $trx = Transaction::where('payment_gateway_id', $this->paymentGateway->id)
+                    ->where('payment_id', $data['reference'])
+                    ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                    ->whereNull('fulfilled_at')->first();
                 if ($trx) {
-                    $customer = $data['customer'];
-                    $trx->payer_id = $customer['id'];
-                    $trx->payer_email = $customer['email'];
-                    $trx->status = Transaction::STATUS_PAID;
-                    $trx->update();
-                    event(new TransactionPaid($trx));
+                    $verified = json_decode($this->verifyReference($data['reference']), true);
+                    $verifiedData = $verified['data'] ?? [];
+                    $customer = $verifiedData['customer'] ?? ($data['customer'] ?? []);
+                    $expectedAmount = $this->paymentGateway->getChargeAmount($trx->total) * 100;
+                    $expectedCurrency = strtoupper((string) $this->paymentGateway->getCurrency());
+                    if (($verifiedData['status'] ?? null) === 'success'
+                        && (string) ($verifiedData['reference'] ?? '') === (string) $data['reference']
+                        && strtoupper((string) ($verifiedData['currency'] ?? '')) === $expectedCurrency
+                        && abs((float) ($verifiedData['amount'] ?? -1) - (float) $expectedAmount) <= 0.00001) {
+                        app(PaymentSettlementService::class)->settle($trx, [
+                            'id' => $data['reference'],
+                            'gateway_id' => $this->paymentGateway->id,
+                            'amount' => $verifiedData['amount'],
+                            'expected_amount' => $expectedAmount,
+                            'currency' => $verifiedData['currency'],
+                            'expected_currency' => $expectedCurrency,
+                            'payer_id' => $customer['id'] ?? null,
+                            'payer_email' => $customer['email'] ?? null,
+                        ]);
+                    }
                 }
             }
 
             return response('Webhook processed successfully', 200);
         } catch (\Exception $e) {
-            return response($e->getMessage(), 500);
+            report($e);
+            return response('Webhook processing failed', 500);
         }
     }
 

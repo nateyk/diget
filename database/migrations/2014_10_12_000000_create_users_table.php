@@ -56,8 +56,6 @@ return new class extends Migration
             $table->boolean('status')->default(true)->comment('0: Banned, 1: Active');
             $table->rememberToken();
             $table->timestamps();
-            $table->foreign('level_id')->references('id')->on('levels')->onDelete('set null');
-            $table->foreign("withdrawal_method_id")->references("id")->on('withdrawal_methods')->onDelete('set null');
         });
     }
 

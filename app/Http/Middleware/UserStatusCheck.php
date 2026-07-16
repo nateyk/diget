@@ -19,6 +19,8 @@ class UserStatusCheck
     {
         if (Auth::user() && authUser()->status == 0) {
             Auth::logout();
+            $request->session()->forget('user_2fa');
+            $request->session()->regenerate();
             toastr()->error(translate('Your account has been blocked'));
             return redirect()->route('login');
         }

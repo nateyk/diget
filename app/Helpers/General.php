@@ -26,9 +26,10 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Jenssegers\Date\Date;
+use Illuminate\Support\Carbon;
 use Mews\Purifier\Facades\Purifier;
 use Spatie\Newsletter\Facades\Newsletter;
 
@@ -109,6 +110,11 @@ function reviewerUrl($path = null)
 
 function settings($key = null)
 {
+    // Installation and migration commands can boot before the settings table exists.
+    if (!Schema::hasTable((new Settings)->getTable())) {
+        return !empty($key) ? false : (object) [];
+    }
+
     if (!empty($key)) {
         return Settings::selectSettings($key);
     }
@@ -171,11 +177,10 @@ function errorsLayout()
 
 function dateFormat($date, $format = null)
 {
-    Date::setLocale(getLocale());
     if (!$format) {
         $format = Settings::dateFormats()[@settings('general')->date_format];
     }
-    $dateFormat = Date::parse($date)->format($format);
+    $dateFormat = Carbon::parse($date)->locale(getLocale())->translatedFormat($format);
     return $dateFormat;
 }
 
@@ -411,21 +416,11 @@ function curl_get_file_contents($URL)
 
 function getIp()
 {
-    $ip = null;
-    if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
-        $ip = $_SERVER["HTTP_CF_CONNECTING_IP"];
-    } else {
-        if (filter_var($ip, FILTER_VALIDATE_IP) === false) {
-            $ip = $_SERVER["REMOTE_ADDR"] ?? '127.0.0.1';
-            if (filter_var(@$_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)) {
-                $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            }
-            if (filter_var(@$_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP)) {
-                $ip = $_SERVER['HTTP_CLIENT_IP'];
-            }
-        }
+    if (app()->bound('request')) {
+        return app('request')->ip() ?: '127.0.0.1';
     }
-    return $ip;
+
+    return $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
 }
 
 function countries($code = null)
@@ -611,13 +606,13 @@ function countryFlag($country)
 
 function generateMonthRangeFromDate($date)
 {
-    $startMonth = Date::parse($date)->startOfMonth();
-    $currentMonth = Date::now()->startOfMonth();
+    $startMonth = Carbon::parse($date)->startOfMonth();
+    $currentMonth = Carbon::now()->startOfMonth();
     $months = [];
     while ($startMonth->lte($currentMonth)) {
         $months[] = [
             "key" => $startMonth->format('Y-m'),
-            "value" => $startMonth->format('F Y'),
+            "value" => $startMonth->locale(getLocale())->translatedFormat('F Y'),
         ];
         $startMonth->addMonth();
     }

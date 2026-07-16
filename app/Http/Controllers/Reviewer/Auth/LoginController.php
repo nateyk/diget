@@ -100,6 +100,8 @@ class LoginController extends Controller
         $this->guard()->logout();
 
         $request->session()->forget($sessionKey);
+        $request->session()->forget('reviewer_2fa');
+        $request->session()->regenerate();
 
         $request->session()->regenerateToken();
 

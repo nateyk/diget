@@ -76,7 +76,7 @@
                                 <div class="row g-2 align-items-center">
                                     <div class="col-auto">
                                         <button type="button" class="social-btn btn-facebook">
-                                            <i class="fab fa-facebook-f"></i>
+                                            <i class="bi bi-facebook"></i>
                                         </button>
                                     </div>
                                     <div class="col">
@@ -91,7 +91,7 @@
                                 <div class="row g-2 align-items-center">
                                     <div class="col-auto">
                                         <button type="button" class="social-btn btn-x">
-                                            <i class="fab fa-x-twitter"></i>
+                                            <i class="bi bi-twitter-x"></i>
                                         </button>
                                     </div>
                                     <div class="col">
@@ -106,7 +106,7 @@
                                 <div class="row g-2 align-items-center">
                                     <div class="col-auto">
                                         <button type="button" class="social-btn btn-youtube">
-                                            <i class="fab fa-youtube"></i>
+                                            <i class="bi bi-youtube"></i>
                                         </button>
                                     </div>
                                     <div class="col">
@@ -122,7 +122,7 @@
                                 <div class="row g-2 align-items-center">
                                     <div class="col-auto">
                                         <button type="button" class="social-btn btn-linkedin">
-                                            <i class="fab fa-linkedin"></i>
+                                            <i class="bi bi-linkedin"></i>
                                         </button>
                                     </div>
                                     <div class="col">
@@ -138,7 +138,7 @@
                                 <div class="row g-2 align-items-center">
                                     <div class="col-auto">
                                         <button type="button" class="social-btn btn-instagram">
-                                            <i class="fab fa-instagram"></i>
+                                            <i class="bi bi-instagram"></i>
                                         </button>
                                     </div>
                                     <div class="col">
@@ -154,7 +154,7 @@
                                 <div class="row g-2 align-items-center">
                                     <div class="col-auto">
                                         <button type="button" class="social-btn btn-pinterest">
-                                            <i class="fab fa-pinterest"></i>
+                                            <i class="bi bi-pinterest"></i>
                                         </button>
                                     </div>
                                     <div class="col">

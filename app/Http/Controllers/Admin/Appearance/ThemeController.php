@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Appearance;
 
 use App\Http\Controllers\Controller;
 use App\Models\Theme;
+use App\Services\ArchiveValidator;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -65,6 +66,8 @@ class ThemeController extends Controller
                 throw new Exception(translate('Could not open the theme zip file'));
             }
 
+            app(ArchiveValidator::class)->validate($zip);
+
             $res = $zip->extractTo($themeTempPath);
             if ($res == true) {
                 removeFile($themeUploadPath);
@@ -78,6 +81,7 @@ class ThemeController extends Controller
             }
 
             $config = json_decode(File::get($configFile), true);
+            app(ArchiveValidator::class)->validateConfigPaths($config ?: []);
 
             if ($config['type'] != "theme") {
                 throw new Exception(translate('Invalid theme files'));

@@ -54,6 +54,10 @@ class OAuthController extends Controller
 
             $userExists = User::where($oauthProvider->alias . '_id', $id)->first();
             if ($userExists) {
+                if (!$userExists->status) {
+                    toastr()->error(translate('Your account has been blocked'));
+                    return redirect()->route('login');
+                }
                 Auth::login($userExists);
                 $userExists->registerLoginLog();
                 return redirect($this->redirectTo);

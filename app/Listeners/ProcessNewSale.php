@@ -127,6 +127,6 @@ class ProcessNewSale
         $item->increment('total_sales_amount', $sale->price);
         $item->increment('total_earnings', $authorEarning);
 
-        dispatch(new SendPurchaseConfirmationNotification($purchase));
+        dispatch(new SendPurchaseConfirmationNotification($purchase))->afterCommit();
     }
 }

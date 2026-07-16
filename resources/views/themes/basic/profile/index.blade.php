@@ -8,7 +8,6 @@
         'website_name' => @$settings->general->site_name,
     ]);
     $socialLinks = $user->profile_social_links;
-    $socialHandle = fn($value) => ltrim(trim($value), '@');
     $publishedItemsCount = $items->total();
     $storefrontLink = $user->getProfileLink();
 @endphp
@@ -43,12 +42,12 @@
                     <button type="button" class="btn btn-outline-secondary btn-padding"
                         data-bs-toggle="modal" data-bs-target="#storefrontContactModal"
                         aria-label="{{ translate('Message') }}">
-                        <i class="fa-regular fa-message"></i>
+                        <i class="bi bi-chat-left-text"></i>
                     </button>
                     <button type="button" class="btn btn-outline-secondary btn-padding"
                         data-bs-toggle="modal" data-bs-target="#storefrontShareModal"
                         aria-label="{{ translate('Share') }}">
-                        <i class="fa-solid fa-share-nodes"></i>
+                        <i class="bi bi-share"></i>
                     </button>
                 </div>
 
@@ -56,46 +55,10 @@
                     <p class="creator-storefront-bio">{{ $cardDescription }}</p>
                 @endif
 
-                @if ($socialLinks)
-                    <div class="creator-storefront-socials socials">
-                        @if ($socialLinks->facebook)
-                            <a href="https://facebook.com/{{ $socialHandle($socialLinks->facebook) }}" target="_blank"
-                                class="social-btn social-facebook" aria-label="Facebook">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                        @endif
-                        @if ($socialLinks->x)
-                            <a href="https://x.com/{{ $socialHandle($socialLinks->x) }}" target="_blank"
-                                class="social-btn social-x" aria-label="X">
-                                <i class="fab fa-x-twitter"></i>
-                            </a>
-                        @endif
-                        @if ($socialLinks->instagram)
-                            <a href="https://instagram.com/{{ $socialHandle($socialLinks->instagram) }}" target="_blank"
-                                class="social-btn social-instagram" aria-label="Instagram">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                        @endif
-                        @if ($socialLinks->linkedin)
-                            <a href="https://linkedin.com/in/{{ $socialHandle($socialLinks->linkedin) }}" target="_blank"
-                                class="social-btn social-linkedin" aria-label="LinkedIn">
-                                <i class="fab fa-linkedin"></i>
-                            </a>
-                        @endif
-                        @if ($socialLinks->youtube)
-                            <a href="{{ 'https://youtube.com/@' . $socialHandle($socialLinks->youtube) }}" target="_blank"
-                                class="social-btn social-youtube" aria-label="YouTube">
-                                <i class="fab fa-youtube"></i>
-                            </a>
-                        @endif
-                        @if ($socialLinks->pinterest)
-                            <a href="https://pinterest.com/{{ $socialHandle($socialLinks->pinterest) }}" target="_blank"
-                                class="social-btn social-pinterest" aria-label="Pinterest">
-                                <i class="fab fa-pinterest"></i>
-                            </a>
-                        @endif
-                    </div>
-                @endif
+                @include('themes.basic.partials.profile-social-links', [
+                    'socialLinks' => $socialLinks,
+                    'class' => 'creator-storefront-socials socials',
+                ])
 
                 <div class="creator-storefront-stats">
                     <div>

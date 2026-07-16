@@ -268,11 +268,27 @@
                 <div class="modal-body p-0">
                     <form action="{{ route('workspace.items.create') }}" method="GET">
                         <div class="mb-3">
-                            <select name="category" class="form-select form-select-md">
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->slug }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
+                            <label class="form-label">{{ translate('Category') }}</label>
+                            <div class="dashboard-picker drop-down" data-dropdown data-dropdown-position="top">
+                                <button type="button" class="drop-down-btn form-control form-control-md"
+                                    data-category-picker-btn>
+                                    <span data-category-picker-label>
+                                        {{ $categories->first()->name ?? translate('Choose category') }}
+                                    </span>
+                                    <i class="fa fa-angle-down ms-auto"></i>
+                                </button>
+                                <div class="drop-down-menu" data-category-picker-menu>
+                                    @foreach ($categories as $category)
+                                        <button type="button" class="drop-down-item"
+                                            data-category-option="{{ $category->slug }}"
+                                            data-label="{{ $category->name }}">
+                                            <span>{{ $category->name }}</span>
+                                        </button>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <input type="hidden" name="category" data-category-picker-input
+                                value="{{ $categories->first()->slug ?? '' }}">
                         </div>
                         <button class="btn btn-primary btn-md w-100">{{ translate('Continue') }}</button>
                     </form>
@@ -285,5 +301,29 @@
     @endpush
     @push('scripts_libs')
         <script src="{{ asset('vendor/libs/bootstrap/select/bootstrap-select.min.js') }}"></script>
+    @endpush
+    @push('scripts')
+        <script>
+            (() => {
+                const menu = document.querySelector('[data-category-picker-menu]');
+                const input = document.querySelector('[data-category-picker-input]');
+                const label = document.querySelector('[data-category-picker-label]');
+
+                if (!menu || !input || !label) {
+                    return;
+                }
+
+                menu.addEventListener('click', (event) => {
+                    const option = event.target.closest('[data-category-option]');
+                    if (!option) {
+                        return;
+                    }
+
+                    input.value = option.dataset.categoryOption;
+                    label.textContent = option.dataset.label;
+                    option.closest('[data-dropdown]')?.classList.remove('active', 'animated');
+                });
+            })();
+        </script>
     @endpush
 @endsection

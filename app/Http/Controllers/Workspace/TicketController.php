@@ -212,7 +212,12 @@ class TicketController extends Controller
         $user = authUser();
 
         $ticket = Ticket::where('user_id', $user->id)->where('id', $id)->firstOrFail();
-        $ticketReplyAttachment = TicketReplyAttachment::where('id', $attachment_id)->firstOrFail();
+        $ticketReplyAttachment = TicketReplyAttachment::query()
+            ->whereKey($attachment_id)
+            ->whereHas('reply.ticket', function ($query) use ($ticket) {
+                $query->whereKey($ticket->id)->where('user_id', $user->id);
+            })
+            ->firstOrFail();
 
         $filePath = $ticketReplyAttachment->path;
         $fileName = $ticketReplyAttachment->name;

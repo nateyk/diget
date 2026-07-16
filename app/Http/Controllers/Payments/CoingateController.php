@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Payments;
 
-use App\Events\TransactionPaid;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Services\PaymentSettlementService;
 use CoinGate\Client;
 use Illuminate\Http\Request;
 
@@ -52,7 +52,8 @@ class CoingateController extends Controller
             $data['redirect_url'] = $order->payment_url;
         } catch (\Exception $e) {
             $data['type'] = "error";
-            $data['msg'] = $e->getMessage();
+            report($e);
+            $data['msg'] = translate('Payment initialization failed.');
         }
 
         return json_encode($data);
@@ -69,7 +70,7 @@ class CoingateController extends Controller
                 ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
                 ->firstOrFail();
 
-            if ($trx->isPaid()) {
+            if ($trx->isPaid() && $trx->fulfilled_at) {
                 $trx->user->emptyCart();
                 return redirect()->route('checkout.index', hash_encode($trx->id));
             }
@@ -88,19 +89,29 @@ class CoingateController extends Controller
             if ($request->status == 'paid') {
                 $trx = Transaction::where('id', $request->order_id)
                     ->where('payment_id', $request->id)
-                    ->unpaid()
-                    ->first();
+                    ->where('payment_gateway_id', $this->paymentGateway->id)
+                    ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                    ->whereNull('fulfilled_at')->first();
 
                 if ($trx) {
-                    $trx->status = Transaction::STATUS_PAID;
-                    $trx->update();
-                    event(new TransactionPaid($trx));
+                    $order = $this->client->order->get((int) $request->id);
+                    if ($order && strtolower((string) $order->status) === 'paid') {
+                        app(PaymentSettlementService::class)->settle($trx, [
+                            'id' => (string) $order->id,
+                            'gateway_id' => $this->paymentGateway->id,
+                            'amount' => $order->price_amount ?? null,
+                            'expected_amount' => amountFormat($this->paymentGateway->getChargeAmount($trx->total)),
+                            'currency' => $order->price_currency ?? null,
+                            'expected_currency' => $this->paymentGateway->getCurrency(),
+                        ]);
+                    }
                 }
             }
 
             return response('Webhook processed successfully', 200);
         } catch (\Exception $e) {
-            return response($e->getMessage(), 500);
+            report($e);
+            return response('Webhook processing failed', 500);
         }
     }
 }

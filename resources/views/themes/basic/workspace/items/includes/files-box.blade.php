@@ -152,7 +152,7 @@
             @if ($settings->item->external_file_link_option)
                 <div class="col-12">
                     <label class="form-label">{{ translate('Main File') }}</label>
-                    <div class="form-group main-file-group">
+                    <div class="input-group main-file-group">
                         <select id="mainFileSource" name="main_file_source"
                             class="selectpicker-md selectpicker first-input" data-style="btn-md">
                             <option value="0">{{ translate('Upload') }}</option>
@@ -211,7 +211,8 @@
             @if ($category->isFileTypeFileWithImagePreview())
                 <div class="col-12">
                     <label class="form-label">{{ translate('Screenshots (Optional)') }}</label>
-                    <select name="screenshots[]" class="form-select form-select-md item-files-select" multiple>
+                    <select name="screenshots[]" class="selectpicker-md selectpicker item-files-select" multiple
+                        title="--">
                         @foreach ($uploadedFiles as $uploadedFile)
                             <option value="{{ hash_encode($uploadedFile->id) }}" @selected(old('screenshots') ? in_array(hash_encode($uploadedFile->id), old('screenshots')) : false)>
                                 {{ $uploadedFile->getShortName() }}

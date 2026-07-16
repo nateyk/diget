@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Payments;
 
-use App\Events\TransactionPaid;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Services\PaymentSettlementService;
 use Illuminate\Http\Request;
 use Razorpay\Api\Api;
 use Razorpay\Api\Errors\SignatureVerificationError;
@@ -60,7 +60,8 @@ class RazorpayController extends Controller
             $data['view'] = 'razorpay';
         } catch (\Exception $e) {
             $data['type'] = "error";
-            $data['msg'] = $e->getMessage();
+            report($e);
+            $data['msg'] = translate('Payment initialization failed.');
         }
 
         return json_encode($data);
@@ -83,7 +84,7 @@ class RazorpayController extends Controller
 
         $checkoutLink = route('checkout.index', hash_encode($trx->id));
 
-        if ($trx->isPaid()) {
+        if ($trx->isPaid() && $trx->fulfilled_at) {
             $trx->user->emptyCart();
             return redirect($checkoutLink);
         }
@@ -97,15 +98,21 @@ class RazorpayController extends Controller
                 return redirect($checkoutLink);
             }
 
-            $trx->payment_id = $payment['id'];
-            $trx->status = Transaction::STATUS_PAID;
-            $trx->update();
+            app(PaymentSettlementService::class)->settle($trx, [
+                'id' => $payment['id'],
+                'local_reference' => (string) $orderId,
+                'gateway_id' => $this->paymentGateway->id,
+                'amount' => $payment['amount'],
+                'expected_amount' => round($this->paymentGateway->getChargeAmount($trx->total) * 100),
+                'currency' => $payment['currency'],
+                'expected_currency' => $this->paymentGateway->getCurrency(),
+            ]);
 
             $trx->user->emptyCart();
-            event(new TransactionPaid($trx));
             return redirect($checkoutLink);
         } catch (\Exception $e) {
-            toastr()->error($e->getMessage());
+            report($e);
+            toastr()->error(translate('Payment failed'));
             return redirect($checkoutLink);
         }
     }
@@ -127,20 +134,28 @@ class RazorpayController extends Controller
             }
 
             $trx = Transaction::where('payment_id', $data['payment']['entity']['order_id'])
-                ->unpaid()->first();
+                ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                ->whereNull('fulfilled_at')->first();
 
             if ($trx) {
-                $trx->payment_id = $data['payment']['entity']['id'];
-                $trx->status = Transaction::STATUS_PAID;
-                $trx->update();
-                event(new TransactionPaid($trx));
+                $payment = $data['payment']['entity'];
+                app(PaymentSettlementService::class)->settle($trx, [
+                    'id' => $payment['id'],
+                    'local_reference' => (string) $data['payment']['entity']['order_id'],
+                    'gateway_id' => $this->paymentGateway->id,
+                    'amount' => $payment['amount'],
+                    'expected_amount' => round($this->paymentGateway->getChargeAmount($trx->total) * 100),
+                    'currency' => $payment['currency'],
+                    'expected_currency' => $this->paymentGateway->getCurrency(),
+                ]);
             }
 
             return response('Webhook processed successfully', 200);
         } catch (SignatureVerificationError $e) {
             return response('Invalid signature', 401);
         } catch (\Exception $e) {
-            return response($e->getMessage(), 500);
+            report($e);
+            return response('Webhook processing failed', 500);
         }
     }
 }

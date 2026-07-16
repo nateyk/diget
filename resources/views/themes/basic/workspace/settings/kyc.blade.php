@@ -192,10 +192,29 @@
                         </p>
                         <div class="mb-3">
                             <label class="form-label">{{ translate('Document type') }}</label>
-                            <select id="kycDocument" name="document_type" class="form-select form-select-md">
+                            <select id="kycDocument" name="document_type" class="d-none">
                                 <option value="national_id">{{ translate('National ID') }}</option>
                                 <option value="passport">{{ translate('Passport') }}</option>
                             </select>
+                            <div class="dashboard-picker kyc-document-picker drop-down" data-dropdown
+                                data-dropdown-position="top">
+                                <button type="button" class="drop-down-btn form-control form-control-md">
+                                    <span data-kyc-document-label>{{ translate('National ID') }}</span>
+                                    <i class="fa fa-angle-down ms-auto"></i>
+                                </button>
+                                <div class="drop-down-menu">
+                                    <button type="button" class="drop-down-item" data-kyc-document-option="national_id"
+                                        data-label="{{ translate('National ID') }}">
+                                        <i class="fa-regular fa-id-card"></i>
+                                        <span>{{ translate('National ID') }}</span>
+                                    </button>
+                                    <button type="button" class="drop-down-item" data-kyc-document-option="passport"
+                                        data-label="{{ translate('Passport') }}">
+                                        <i class="fa-solid fa-passport"></i>
+                                        <span>{{ translate('Passport') }}</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         <div id="nationalIDNumber">
                             <label class="form-label">{{ translate('National ID Number') }}</label>
@@ -285,5 +304,34 @@
                 <button class="btn btn-primary btn-md">{{ translate('Submit') }}</button>
             </div>
         </form>
+        <script>
+            (() => {
+                const select = document.getElementById('kycDocument');
+                const label = document.querySelector('[data-kyc-document-label]');
+                const picker = document.querySelector('.kyc-document-picker');
+                const menu = picker ? picker.querySelector('.drop-down-menu') : null;
+
+                if (!select || !label || !picker || !menu) {
+                    return;
+                }
+
+                menu.addEventListener('click', (event) => {
+                    const option = event.target.closest('[data-kyc-document-option]');
+                    if (!option) {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    select.value = option.dataset.kycDocumentOption;
+                    label.textContent = option.dataset.label;
+                    if (window.jQuery) {
+                        window.jQuery(select).trigger('change');
+                    } else {
+                        select.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                    picker.classList.remove('active', 'animated');
+                });
+            })();
+        </script>
     @endif
 @endsection

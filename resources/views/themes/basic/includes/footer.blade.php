@@ -15,56 +15,56 @@
                                 </a>
                                 <p class="footer-text">{{ $themeSettings->footer->footer_about_content }}</p>
                                 @php
-                                    $socialLinksSettings = @$settings->social_links;
-                                    $hasSocialLinks =
-                                        $socialLinksSettings->facebook ||
-                                        $socialLinksSettings->x ||
-                                        $socialLinksSettings->linkedin ||
-                                        $socialLinksSettings->youtube ||
-                                        $socialLinksSettings->instagram ||
-                                        $socialLinksSettings->pinterest;
+                                    $socialLinksSettings = $settings->social_links ?? (object) [];
+                                    $socialFacebook = data_get($socialLinksSettings, 'facebook');
+                                    $socialX = data_get($socialLinksSettings, 'x');
+                                    $socialLinkedin = data_get($socialLinksSettings, 'linkedin');
+                                    $socialYoutube = data_get($socialLinksSettings, 'youtube');
+                                    $socialInstagram = data_get($socialLinksSettings, 'instagram');
+                                    $socialPinterest = data_get($socialLinksSettings, 'pinterest');
+                                    $hasSocialLinks = $socialFacebook || $socialX || $socialLinkedin || $socialYoutube || $socialInstagram || $socialPinterest;
                                 @endphp
                                 @if ($hasSocialLinks)
                                     <div class="socials socials-footer mt-3">
-                                        @if ($socialLinksSettings->facebook)
-                                            <a href="https://facebook.com/{{ $socialLinksSettings->facebook }}"
+                                        @if ($socialFacebook)
+                                            <a href="https://facebook.com/{{ $socialFacebook }}"
                                                 target="_blank" class="social-btn social-facebook"
                                                 aria-label="{{ translate('Facebook') }}">
-                                                <i class="fab fa-facebook-f"></i>
+                                                <i class="bi bi-facebook"></i>
                                             </a>
                                         @endif
-                                        @if ($socialLinksSettings->x)
-                                            <a href="https://x.com/{{ $socialLinksSettings->x }}" target="_blank"
+                                        @if ($socialX)
+                                            <a href="https://x.com/{{ $socialX }}" target="_blank"
                                                 class="social-btn social-x" aria-label="{{ translate('X') }}">
-                                                <i class="fab fa-x-twitter"></i>
+                                                <i class="bi bi-twitter-x"></i>
                                             </a>
                                         @endif
-                                        @if ($socialLinksSettings->linkedin)
-                                            <a href="https://linkedin.com/in/{{ $socialLinksSettings->linkedin }}"
+                                        @if ($socialLinkedin)
+                                            <a href="https://linkedin.com/in/{{ $socialLinkedin }}"
                                                 target="_blank" class="social-btn social-linkedin"
                                                 aria-label="{{ translate('LinkedIn') }}">
-                                                <i class="fab fa-linkedin"></i>
+                                                <i class="bi bi-linkedin"></i>
                                             </a>
                                         @endif
-                                        @if ($socialLinksSettings->youtube)
-                                            <a href="https://youtube.com/{{ '@' . $socialLinksSettings->youtube }}"
+                                        @if ($socialYoutube)
+                                            <a href="https://youtube.com/{{ '@' . $socialYoutube }}"
                                                 target="_blank" class="social-btn social-youtube"
                                                 aria-label="{{ translate('YouTube') }}">
-                                                <i class="fab fa-youtube"></i>
+                                                <i class="bi bi-youtube"></i>
                                             </a>
                                         @endif
-                                        @if ($socialLinksSettings->instagram)
-                                            <a href="https://instagram.com/{{ $socialLinksSettings->instagram }}"
+                                        @if ($socialInstagram)
+                                            <a href="https://instagram.com/{{ $socialInstagram }}"
                                                 target="_blank" class="social-btn social-instagram"
                                                 aria-label="{{ translate('Instagram') }}">
-                                                <i class="fab fa-instagram"></i>
+                                                <i class="bi bi-instagram"></i>
                                             </a>
                                         @endif
-                                        @if ($socialLinksSettings->pinterest)
-                                            <a href="https://pinterest.com/{{ $socialLinksSettings->pinterest }}"
+                                        @if ($socialPinterest)
+                                            <a href="https://pinterest.com/{{ $socialPinterest }}"
                                                 target="_blank" class="social-btn social-pinterest"
                                                 aria-label="{{ translate('Pinterest') }}">
-                                                <i class="fab fa-pinterest"></i>
+                                                <i class="bi bi-pinterest"></i>
                                             </a>
                                         @endif
                                     </div>

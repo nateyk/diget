@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Payments;
 
-use App\Events\TransactionPaid;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Services\PaymentSettlementService;
 use Illuminate\Http\Request;
 use Stripe\Checkout\Session;
 use Stripe\Customer;
@@ -60,7 +60,8 @@ class StripeController extends Controller
             $data['redirect_url'] = $session->url;
         } catch (\Exception $e) {
             $data['type'] = "error";
-            $data['msg'] = $e->getMessage();
+            report($e);
+            $data['msg'] = translate('Payment initialization failed.');
         }
 
         return json_encode($data);
@@ -77,7 +78,7 @@ class StripeController extends Controller
 
         $checkoutLink = route('checkout.index', hash_encode($trx->id));
 
-        if ($trx->isPaid()) {
+        if ($trx->isPaid() && $trx->fulfilled_at) {
             $trx->user->emptyCart();
             return redirect($checkoutLink);
         }
@@ -90,16 +91,23 @@ class StripeController extends Controller
             }
 
             $customer = Customer::retrieve($session->customer);
-            $trx->payer_id = $customer->id;
-            $trx->payer_email = $customer->email;
-            $trx->status = Transaction::STATUS_PAID;
-            $trx->update();
+            app(PaymentSettlementService::class)->settle($trx, [
+                'id' => $session->payment_intent ?: $session->id,
+                'local_reference' => (string) $session->id,
+                'gateway_id' => $this->paymentGateway->id,
+                'amount' => $session->amount_total,
+                'expected_amount' => round($this->paymentGateway->getChargeAmount($trx->total) * 100),
+                'currency' => strtoupper((string) $session->currency),
+                'expected_currency' => strtoupper((string) $this->paymentGateway->getCurrency()),
+                'payer_id' => $customer->id,
+                'payer_email' => $customer->email,
+            ]);
 
             $trx->user->emptyCart();
-            event(new TransactionPaid($trx));
             return redirect($checkoutLink);
         } catch (\Exception $e) {
-            toastr()->error($e->getMessage());
+            report($e);
+            toastr()->error(translate('Payment failed'));
             return redirect($checkoutLink);
         }
     }
@@ -119,14 +127,22 @@ class StripeController extends Controller
             $event = Webhook::constructEvent($payload, $sigHeader, $endpointSecret);
             if ($event && $event->type == 'checkout.session.completed') {
                 $session = $event->data->object;
-                $trx = Transaction::where('payment_id', $session->id)->unpaid()->first();
+                $trx = Transaction::where('payment_id', $session->id)
+                    ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                    ->whereNull('fulfilled_at')->first();
                 if ($trx) {
                     $customer = Customer::retrieve($session->customer);
-                    $trx->payer_id = $customer->id;
-                    $trx->payer_email = $customer->email;
-                    $trx->status = Transaction::STATUS_PAID;
-                    $trx->update();
-                    event(new TransactionPaid($trx));
+                    app(PaymentSettlementService::class)->settle($trx, [
+                        'id' => $session->payment_intent ?: $session->id,
+                        'local_reference' => (string) $session->id,
+                        'gateway_id' => $this->paymentGateway->id,
+                        'amount' => $session->amount_total,
+                        'expected_amount' => round($this->paymentGateway->getChargeAmount($trx->total) * 100),
+                        'currency' => strtoupper((string) $session->currency),
+                        'expected_currency' => strtoupper((string) $this->paymentGateway->getCurrency()),
+                        'payer_id' => $customer->id,
+                        'payer_email' => $customer->email,
+                    ]);
                 }
             }
 

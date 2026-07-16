@@ -11,7 +11,7 @@
             @php($dashboardStorefrontLink = authUser()->getProfileLink())
             <button type="button" class="btn btn-outline-secondary dashboard-storefront-share ms-3"
                 data-bs-toggle="modal" data-bs-target="#dashboardStorefrontShareModal">
-                <i class="fa-solid fa-share-nodes me-1"></i>
+                <i class="bi bi-share me-1"></i>
                 <span>{{ translate('Share') }}</span>
             </button>
         @endif

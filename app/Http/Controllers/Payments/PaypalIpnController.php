@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Payments;
 
-use App\Events\TransactionPaid;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Services\PaymentSettlementService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -64,7 +64,8 @@ class PaypalIpnController extends Controller
             $data['redirect_url'] = $redirectUrl;
         } catch (\Exception $e) {
             $data['type'] = "error";
-            $data['msg'] = $e->getMessage();
+            report($e);
+            $data['msg'] = translate('Payment initialization failed.');
         }
 
         return json_encode($data);
@@ -81,7 +82,7 @@ class PaypalIpnController extends Controller
                 ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
                 ->firstOrFail();
 
-            if ($trx->isPaid()) {
+            if ($trx->isPaid() && $trx->fulfilled_at) {
                 $trx->user->emptyCart();
                 return redirect()->route('checkout.index', hash_encode($trx->id));
             }
@@ -112,19 +113,35 @@ class PaypalIpnController extends Controller
             if ($response->body() === 'VERIFIED') {
                 $paymentStatus = $payload['payment_status'] ?? null;
                 $trxId = $payload['custom'] ?? null;
-                $paymentId = $payload['txn_id'];
+                $paymentId = $payload['txn_id'] ?? null;
                 $payerId = $payload['payer_id'] ?? null;
                 $payerEmail = $payload['payer_email'] ?? null;
 
-                if ($paymentStatus === 'Completed') {
-                    $trx = Transaction::where('id', $trxId)->unpaid()->first();
-                    if ($trx) {
-                        $trx->payment_id = $paymentId;
-                        $trx->payer_id = $payerId;
-                        $trx->payer_email = $payerEmail;
-                        $trx->status = Transaction::STATUS_PAID;
-                        $trx->update();
-                        event(new TransactionPaid($trx));
+                if ($paymentStatus === 'Completed' && $paymentId && ctype_digit((string) $trxId)) {
+                    $trx = Transaction::where('id', (int) $trxId)
+                        ->where('payment_gateway_id', $this->paymentGateway->id)
+                        ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                        ->whereNull('fulfilled_at')->first();
+                    if ($trx && !Transaction::where('payment_id', $paymentId)->exists()) {
+                        $expectedAmount = $this->expectedAmount($trx);
+                        $expectedCurrency = strtoupper((string) $this->paymentGateway->getCurrency());
+                        $receiver = strtolower(trim((string) ($payload['receiver_email'] ?? $payload['business'] ?? '')));
+                        $configuredReceiver = strtolower(trim((string) $this->paymentGateway->credentials->email));
+                        $merchantMatches = $receiver !== '' && hash_equals($configuredReceiver, $receiver);
+                        $currencyMatches = strtoupper((string) ($payload['mc_currency'] ?? '')) === $expectedCurrency;
+                        $amountMatches = abs((float) ($payload['mc_gross'] ?? -1) - $expectedAmount) <= 0.00001;
+                        if ($merchantMatches && $currencyMatches && $amountMatches) {
+                            app(PaymentSettlementService::class)->settle($trx, [
+                                'id' => $paymentId,
+                                'gateway_id' => $this->paymentGateway->id,
+                                'amount' => $payload['mc_gross'],
+                                'expected_amount' => $expectedAmount,
+                                'currency' => $payload['mc_currency'],
+                                'expected_currency' => $expectedCurrency,
+                                'payer_id' => $payerId,
+                                'payer_email' => $payerEmail,
+                            ]);
+                        }
                     }
                 }
 
@@ -137,5 +154,14 @@ class PaypalIpnController extends Controller
         } catch (Exception $e) {
             return response('Notification Error', 500);
         }
+    }
+
+    private function expectedAmount(Transaction $trx): float
+    {
+        $gateway = $this->paymentGateway;
+        $amount = amountFormat($gateway->getChargeAmount($trx->amount));
+        $fees = amountFormat($gateway->getChargeAmount($trx->fees));
+        $tax = $trx->tax ? amountFormat($gateway->getChargeAmount($trx->tax->amount)) : 0;
+        return (float) amountFormat($amount + $fees + $tax);
     }
 }

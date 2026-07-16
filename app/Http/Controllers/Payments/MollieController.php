@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Payments;
 
-use App\Events\TransactionPaid;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Services\PaymentSettlementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Mollie\Laravel\Facades\Mollie;
@@ -53,7 +53,8 @@ class MollieController extends Controller
             $data['redirect_url'] = $payment->getCheckoutUrl();
         } catch (\Exception $e) {
             $data['type'] = "error";
-            $data['msg'] = $e->getMessage();
+            report($e);
+            $data['msg'] = translate('Payment initialization failed.');
         }
 
         return json_encode($data);
@@ -68,7 +69,7 @@ class MollieController extends Controller
 
         $checkoutLink = route('checkout.index', hash_encode($trx->id));
 
-        if ($trx->isPaid()) {
+        if ($trx->isPaid() && $trx->fulfilled_at) {
             $trx->user->emptyCart();
             return redirect($checkoutLink);
         }
@@ -80,15 +81,21 @@ class MollieController extends Controller
                 return redirect($checkoutLink);
             }
 
-            $trx->payer_id = $payment->profileId;
-            $trx->status = Transaction::STATUS_PAID;
-            $trx->update();
+            app(PaymentSettlementService::class)->settle($trx, [
+                'id' => $payment->id,
+                'gateway_id' => $this->paymentGateway->id,
+                'amount' => $payment->amount->value ?? null,
+                'expected_amount' => amountFormat($this->paymentGateway->getChargeAmount($trx->total)),
+                'currency' => $payment->amount->currency ?? null,
+                'expected_currency' => $this->paymentGateway->getCurrency(),
+                'payer_id' => $payment->profileId,
+            ]);
 
             $trx->user->emptyCart();
-            event(new TransactionPaid($trx));
             return redirect($checkoutLink);
         } catch (\Exception $e) {
-            toastr()->error($e->getMessage());
+            report($e);
+            toastr()->error(translate('Payment failed'));
             return redirect($checkoutLink);
         }
     }
@@ -105,18 +112,26 @@ class MollieController extends Controller
                 }
 
                 $trx = Transaction::where('id', $payment->metadata->trx_id)
-                    ->where('payment_id', $payment->id)->unpaid()->first();
+                    ->where('payment_id', $payment->id)
+                    ->whereIn('status', [Transaction::STATUS_PAID, Transaction::STATUS_UNPAID])
+                    ->whereNull('fulfilled_at')->first();
                 if ($trx) {
-                    $trx->payer_id = $payment->profileId;
-                    $trx->status = Transaction::STATUS_PAID;
-                    $trx->update();
-                    event(new TransactionPaid($trx));
+                    app(PaymentSettlementService::class)->settle($trx, [
+                        'id' => $payment->id,
+                        'gateway_id' => $this->paymentGateway->id,
+                        'amount' => $payment->amount->value ?? null,
+                        'expected_amount' => amountFormat($this->paymentGateway->getChargeAmount($trx->total)),
+                        'currency' => $payment->amount->currency ?? null,
+                        'expected_currency' => $this->paymentGateway->getCurrency(),
+                        'payer_id' => $payment->profileId,
+                    ]);
                 }
             }
 
             return response('Webhook processed successfully', 200);
         } catch (\Exception $e) {
-            return response($e->getMessage(), 500);
+            report($e);
+            return response('Webhook processing failed', 500);
         }
     }
 }

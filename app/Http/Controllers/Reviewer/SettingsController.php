@@ -106,7 +106,7 @@ class SettingsController extends Controller
         }
         $update2FaStatus = $this->reviewer()->update(['google2fa_status' => true]);
         if ($update2FaStatus) {
-            session()->put('reviewer_2fa', encrypt($this->reviewer()->id));
+            session()->put('reviewer_2fa', ['guard' => 'reviewer', 'user_id' => $this->reviewer()->id, 'session_id' => session()->getId(), 'verified_at' => now()->toIso8601String()]);
             toastr()->success(translate('2FA Authentication has been enabled successfully'));
             return back();
         }

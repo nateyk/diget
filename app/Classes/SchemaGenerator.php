@@ -15,6 +15,19 @@ class SchemaGenerator
     {
         $this->settings = settings();
         $this->themeSettings = themeSettings();
+
+        if (!is_object($this->settings)) {
+            $this->settings = (object) [];
+        }
+        $this->settings->general ??= (object) [
+            'site_name' => config('app.name', 'Diget'),
+            'contact_email' => null,
+        ];
+
+        if (!is_object($this->themeSettings)) {
+            $this->themeSettings = (object) [];
+        }
+        $this->themeSettings->general ??= (object) ['logo_dark' => null];
     }
 
     public function render($__env, $method = null, $options = [])

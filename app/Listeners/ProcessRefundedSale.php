@@ -8,15 +8,21 @@ use App\Models\Purchase;
 use App\Models\ReferralEarning;
 use App\Models\Sale;
 use App\Models\Statement;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class ProcessRefundedSale
 {
     public function handle(SaleRefunded $event)
     {
-        $sale = $event->sale;
+        DB::transaction(function () use ($event) {
+        $sale = Sale::query()->whereKey($event->sale->getKey())->lockForUpdate()->first();
+        if (!$sale || $sale->isRefunded()) {
+            return;
+        }
 
-        $author = $sale->author;
-        $user = $sale->user;
+        $author = User::query()->lockForUpdate()->findOrFail($sale->author_id);
+        $user = User::query()->lockForUpdate()->findOrFail($sale->user_id);
         $item = $sale->item;
         $purchase = $sale->purchase;
         $referralEarning = $sale->referralEarning;
@@ -127,5 +133,6 @@ class ProcessRefundedSale
                 $itemReview->delete();
             }
         }
+        });
     }
 }

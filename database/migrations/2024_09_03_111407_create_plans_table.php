@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->enum('interval', ['week', 'month', 'year', 'lifetime']);
             $table->double('price')->nullable();
-            $table->string('author_earning_percentage', 10)->unsigned()->default(0);
+            $table->double('author_earning_percentage')->unsigned()->default(0);
             $table->bigInteger('downloads')->unsigned()->nullable();
             $table->longText('custom_features')->nullable();
             $table->boolean('status')->default(true);

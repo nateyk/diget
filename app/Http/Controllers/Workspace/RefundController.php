@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Workspace;
 
-use App\Events\RefundAccepted;
 use App\Http\Controllers\Controller;
 use App\Jobs\Author\SendAuthorNewRefundNotification;
 use App\Jobs\SendRefundDeclinedNotification;
@@ -10,6 +9,7 @@ use App\Jobs\SendRefundReplyNotification;
 use App\Models\Purchase;
 use App\Models\Refund;
 use App\Models\RefundReply;
+use App\Services\RefundService;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -200,13 +200,12 @@ class RefundController extends Controller
 
     public function accept(Request $request, $id)
     {
-        $refund = Refund::where('id', $id)->where('author_id', authUser()->id)
-            ->pending()->firstOrFail();
-
-        $refund->status = Refund::STATUS_ACCEPTED;
-        $refund->update();
-
-        event(new RefundAccepted($refund));
+        try {
+            $refund = app(RefundService::class)->accept((int) $id, authUser()->id);
+        } catch (\Throwable $e) {
+            toastr()->error(translate($e->getMessage()));
+            return back();
+        }
 
         toastr()->success(translate('The refund request has been accepted'));
         return back();
