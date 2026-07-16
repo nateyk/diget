@@ -344,7 +344,7 @@ class SettingsController extends Controller
 
         $update2FaStatus = $user->update(['google2fa_status' => true]);
         if ($update2FaStatus) {
-            session()->put('user_2fa', hash_encode($user->id));
+            session()->put('user_2fa', ['guard' => 'web', 'user_id' => $user->id, 'session_id' => session()->getId(), 'verified_at' => now()->toIso8601String()]);
             toastr()->success(translate('2FA Authentication has been enabled successfully'));
             return back();
         }

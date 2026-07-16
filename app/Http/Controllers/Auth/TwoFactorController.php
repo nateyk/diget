@@ -10,8 +10,10 @@ class TwoFactorController extends Controller
 {
     public function show2FaVerifyForm()
     {
-        if (!authUser()->google2fa_status || session()->has('user_2fa')
-            && session('user_2fa') == hash_encode(authUser()->id)) {
+        $marker = session('user_2fa');
+        if (!authUser()->google2fa_status || (is_array($marker)
+            && ($marker['user_id'] ?? null) == authUser()->id
+            && ($marker['session_id'] ?? null) === session()->getId())) {
             return redirect()->route('home');
         }
         return theme_view('auth.2fa');
@@ -37,7 +39,12 @@ class TwoFactorController extends Controller
             return back();
         }
 
-        session()->put('user_2fa', hash_encode(authUser()->id));
+        session()->put('user_2fa', [
+            'guard' => 'web',
+            'user_id' => authUser()->id,
+            'session_id' => session()->getId(),
+            'verified_at' => now()->toIso8601String(),
+        ]);
         return redirect()->route('home');
     }
 }

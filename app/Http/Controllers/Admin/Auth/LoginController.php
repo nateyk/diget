@@ -101,6 +101,8 @@ class LoginController extends Controller
         $this->guard()->logout();
 
         $request->session()->forget($sessionKey);
+        $request->session()->forget('admin_2fa');
+        $request->session()->regenerate();
 
         if ($response = $this->loggedOut($request)) {
             return $response;

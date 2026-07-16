@@ -118,7 +118,7 @@ class AccountController extends Controller
 
         $update2FaStatus = $this->admin()->update(['google2fa_status' => true]);
         if ($update2FaStatus) {
-            session()->put('admin_2fa', hash_encode($this->admin()->id));
+            session()->put('admin_2fa', ['guard' => 'admin', 'user_id' => $this->admin()->id, 'session_id' => session()->getId(), 'verified_at' => now()->toIso8601String()]);
             toastr()->success(translate('2FA Authentication has been enabled successfully'));
             return back();
         }
