@@ -10,6 +10,8 @@ use App\Models\ItemReview;
 use App\Models\KycVerification;
 use App\Models\BlogArticle;
 use App\Models\BlogCategory;
+use App\Models\Faq;
+use App\Models\HomeCategory;
 use App\Models\Page;
 use App\Models\Plan;
 use App\Models\Purchase;
@@ -23,6 +25,7 @@ use App\Models\TicketCategory;
 use App\Models\TicketReply;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
+use App\Models\Testimonial;
 use App\Models\UploadedFile;
 use App\Models\User;
 use App\Models\Withdrawal;
@@ -67,6 +70,7 @@ class DemoDatabaseSeeder extends Seeder
             $this->seedSupport();
             $this->seedKyc();
             $this->seedContent();
+            $this->seedHomepageContent();
         });
 
         $this->command?->info('Demo marketplace data is ready.');
@@ -169,6 +173,46 @@ class DemoDatabaseSeeder extends Seeder
                 ['key' => $key],
                 ['value' => json_encode($value, JSON_UNESCAPED_UNICODE)]
             );
+        }
+    }
+
+    private function seedHomepageContent(): void
+    {
+        foreach ([
+            ['name' => 'WordPress Themes', 'icon' => 'images/home-categories/w2KxPEK8FjNjbfs_1733598767.jpg', 'link' => '/categories/themes/wordpress', 'sort_id' => 1],
+            ['name' => 'PHP Scripts', 'icon' => 'images/home-categories/VukPsIdffapI0Ty_1733598772.jpg', 'link' => '/categories/code/php-scripts', 'sort_id' => 2],
+            ['name' => 'HTML5 Codes', 'icon' => 'images/home-categories/T9qm8Gaj3ZzsuRd_1733598777.jpg', 'link' => '/categories/code/html5', 'sort_id' => 3],
+            ['name' => 'Graphics', 'icon' => 'images/home-categories/UbBiYqbKpcNXrsS_1733598799.jpg', 'link' => '/categories/graphics', 'sort_id' => 4],
+        ] as $category) {
+            HomeCategory::updateOrCreate(['name' => $category['name']], $category);
+        }
+
+        foreach ([
+            ['name' => 'Explore Categories', 'alias' => 'categories', 'items_number' => null, 'cache_expiry_time' => 10, 'sort_id' => 1],
+            ['name' => 'Our Latest Items', 'alias' => 'latest_items', 'description' => 'Explore the latest creator storefront products and digital releases.', 'items_number' => 8, 'cache_expiry_time' => 60, 'sort_id' => 8],
+            ['name' => "FAQ's", 'alias' => 'faqs', 'description' => 'Answers to common questions about buying, selling, and creator storefronts.', 'items_number' => null, 'cache_expiry_time' => 30, 'sort_id' => 10],
+            ['name' => 'Testimonials', 'alias' => 'testimonials', 'description' => 'Discover what creators and buyers say about Diget.', 'items_number' => null, 'cache_expiry_time' => 1440, 'sort_id' => 11],
+        ] as $section) {
+            DB::table('home_sections')->updateOrInsert(
+                ['alias' => $section['alias']],
+                $section + ['status' => 1]
+            );
+        }
+
+        foreach ([
+            ['title' => 'What can I sell on Diget?', 'body' => '<p>Creators can sell digital products such as templates, plugins, scripts, graphics, and other downloadable resources.</p>', 'sort_id' => 1],
+            ['title' => 'How do buyers receive their files?', 'body' => '<p>After a successful purchase, buyers can access eligible downloads from their account library.</p>', 'sort_id' => 2],
+            ['title' => 'Can I create a public storefront?', 'body' => '<p>Yes. Approved creators receive a public storefront at <code>/@username</code> for sharing their profile and products.</p>', 'sort_id' => 3],
+            ['title' => 'How do I contact a creator?', 'body' => '<p>Use the message action on a creator storefront when contact is enabled.</p>', 'sort_id' => 4],
+        ] as $faq) {
+            Faq::updateOrCreate(['title' => $faq['title']], $faq);
+        }
+
+        foreach ([
+            ['name' => 'Emma Carter', 'avatar' => 'images/sections/testimonials/s1Qvpw5INDTo89B_1733598825.jpg', 'title' => 'Graphic Designer', 'body' => 'Diget gives creators a practical place to showcase and sell digital work.', 'sort_id' => 1],
+            ['name' => 'Amanda Evans', 'avatar' => 'images/sections/testimonials/mWN8YLCJBoDNFcT_1733598820.jpg', 'title' => 'Startup Founder', 'body' => 'The curated digital products helped us move from idea to launch faster.', 'sort_id' => 2],
+        ] as $testimonial) {
+            Testimonial::updateOrCreate(['name' => $testimonial['name']], $testimonial);
         }
     }
 
