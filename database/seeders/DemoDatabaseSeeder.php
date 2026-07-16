@@ -27,6 +27,7 @@ use App\Models\TicketReply;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
 use App\Models\Testimonial;
+use App\Models\Theme;
 use App\Models\UploadedFile;
 use App\Models\User;
 use App\Models\Withdrawal;
@@ -90,6 +91,16 @@ class DemoDatabaseSeeder extends Seeder
                 'credentials' => null,
                 'updated_at' => now(),
                 'created_at' => now(),
+            ]
+        );
+
+        Theme::updateOrCreate(
+            ['alias' => 'basic'],
+            [
+                'name' => 'Basic',
+                'version' => '1.0',
+                'preview_image' => 'themes/basic/images/preview.jpg',
+                'description' => 'A clean, modern theme for the Diget creator storefront platform.',
             ]
         );
 
@@ -172,6 +183,9 @@ class DemoDatabaseSeeder extends Seeder
             'language' => ['code' => 'en', 'direction' => 'ltr'],
             'maintenance' => ['status' => 0, 'title' => 'Under Maintenance', 'body' => '', 'icon' => null],
             'premium' => ['status' => 0, 'terms_link' => '/premium-terms'],
+            'social_links' => ['facebook' => '/', 'x' => '/', 'youtube' => '/', 'linkedin' => '/', 'instagram' => '/', 'pinterest' => '/'],
+            'links' => ['terms_of_use_link' => '/terms-of-use', 'author_terms_link' => '/author-terms', 'referral_terms_link' => '/referral-program-terms', 'licenses_terms_link' => '/licenses-terms'],
+            'seo' => ['title' => 'Diget Creator Storefronts', 'description' => 'Create a polished storefront for digital products.', 'keywords' => 'digital products, creator storefronts, templates'],
         ] as $key => $value) {
             DB::table('settings')->updateOrInsert(
                 ['key' => $key],

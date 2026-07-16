@@ -39,6 +39,9 @@ class DemoDatabaseSeederTest extends TestCase
         $this->assertFileExists(storage_path('app/demo/items/laravel-saas-starter-kit.zip'));
         $this->assertDatabaseHas('pages', ['slug' => 'about']);
         $this->assertDatabaseHas('blog_articles', ['slug' => 'demo-creator-guide-1']);
+        $this->assertDatabaseHas('themes', ['alias' => 'basic']);
+        $this->assertDatabaseHas('settings', ['key' => 'social_links']);
+        $this->assertDatabaseHas('settings', ['key' => 'links']);
     }
 
     private function demoCounts(): array

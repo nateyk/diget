@@ -58,7 +58,7 @@
             <div class="card-header">{{ translate('Social Media Links') }}</div>
             <div class="card-body p-4">
                 <div class="row g-3">
-                    @foreach (@$settings->social_links as $socialLinkKey => $socialLink)
+                    @foreach (data_get($settings, 'social_links', []) as $socialLinkKey => $socialLink)
                         <div class="col-lg-4">
                             <label class="form-label">
                                 {{ translate(ucfirst(str_replace('_', ' ', $socialLinkKey))) }}</label>
@@ -73,7 +73,7 @@
             <div class="card-header">{{ translate('Links') }}</div>
             <div class="card-body p-4">
                 <div class="row g-3">
-                    @foreach (@$settings->links as $key => $link)
+                    @foreach (data_get($settings, 'links', []) as $key => $link)
                         <div class="col-lg-4">
                             <label class="form-label"> {{ translate(ucfirst(str_replace('_', ' ', $key))) }}</label>
                             <input type="text" name="links[{{ $key }}]" class="form-control"
@@ -110,7 +110,7 @@
             <div class="card-header">{{ translate('Actions') }}</div>
             <div class="card-body p-4">
                 <div class="row g-3">
-                    @foreach (@$settings->actions as $key => $value)
+                    @foreach (data_get($settings, 'actions', []) as $key => $value)
                         <div class="col-lg-3">
                             <label class="form-label"> {{ translate(ucfirst(str_replace('_', ' ', $key))) }}</label>
                             <input type="checkbox" name="actions[{{ $key }}]" data-toggle="toggle"
