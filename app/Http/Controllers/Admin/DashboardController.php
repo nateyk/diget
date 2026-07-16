@@ -62,7 +62,7 @@ class DashboardController extends Controller
         $counters['total_users'] = User::user()->count();
         $counters['total_authors'] = User::author()->count();
 
-        if (licenseType(2) && settings('premium')->status) {
+        if (licenseType(2) && (bool) data_get(settings('premium'), 'status', false)) {
             $counters['premium_free_subscriptions'] = Subscription::whereHas('plan', function ($query) {
                 $query->free();
             })->count();

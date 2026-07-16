@@ -168,6 +168,7 @@ class DemoDatabaseSeeder extends Seeder
             ],
             'language' => ['code' => 'en', 'direction' => 'ltr'],
             'maintenance' => ['status' => 0, 'title' => 'Under Maintenance', 'body' => '', 'icon' => null],
+            'premium' => ['status' => 0, 'terms_link' => '/premium-terms'],
         ] as $key => $value) {
             DB::table('settings')->updateOrInsert(
                 ['key' => $key],
