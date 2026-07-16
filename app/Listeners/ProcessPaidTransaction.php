@@ -11,23 +11,31 @@ use App\Jobs\SendPaymentConfirmationNotification;
 use App\Models\AuthorTax;
 use App\Models\Sale;
 use App\Models\Statement;
+use App\Models\Transaction;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class ProcessPaidTransaction
 {
     public function handle(TransactionPaid $event)
     {
-        $trx = $event->transaction;
-
-        try {
-            if ($trx->isPaid()) {
-                dispatch(new SendPaymentConfirmationNotification($trx));
-                $method = 'handle' . Str::studly($trx->type) . 'Transaction';
-                $this->{$method}($trx);
+        DB::transaction(function () use ($event) {
+            $trx = Transaction::query()->whereKey($event->transaction->getKey())->lockForUpdate()->first();
+            if (!$trx || !$trx->isPaid() || $trx->fulfilled_at) {
+                return;
             }
-        } catch (Exception $e) {
-            \Log::info($e->getMessage());
-        }
+
+            $this->fulfil($trx);
+            $trx->fulfilled_at = now();
+            $trx->save();
+        }, 3);
+    }
+
+    public function fulfil($trx): void
+    {
+        $method = 'handle' . Str::studly($trx->type) . 'Transaction';
+        $this->{$method}($trx);
+        dispatch(new SendPaymentConfirmationNotification($trx))->afterCommit();
     }
 
     private function handlePurchaseTransaction($trx)

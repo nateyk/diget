@@ -125,6 +125,7 @@ class Transaction extends Model
         'plan_id',
         'status',
         'cancellation_reason',
+        'fulfilled_at',
     ];
 
     protected $with = [
@@ -134,6 +135,7 @@ class Transaction extends Model
     protected $casts = [
         'tax' => 'object',
         'support' => 'object',
+        'fulfilled_at' => 'datetime',
     ];
 
     public static function getStatusOptions()
