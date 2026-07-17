@@ -189,13 +189,19 @@
 
             if (navbarMenu && navbarMenuBtn) {
                 navbarMenuBtn.onclick = () => {
-                    navbarMenu.classList.add("show");
-                    document.body.classList.add("overflow-hidden");
+                    const isOpen = navbarMenu.classList.toggle("show");
+                    navbarMenuBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
                 };
-                navbarMenuClose.onclick = navbarMenuOverlay.onclick = () => {
+                const closeNavbarMenu = () => {
                     navbarMenu.classList.remove("show");
-                    document.body.classList.remove("overflow-hidden");
+                    navbarMenuBtn.setAttribute("aria-expanded", "false");
                 };
+                if (navbarMenuClose) {
+                    navbarMenuClose.onclick = closeNavbarMenu;
+                }
+                if (navbarMenuOverlay) {
+                    navbarMenuOverlay.onclick = closeNavbarMenu;
+                }
             }
         });
     }

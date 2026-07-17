@@ -24,11 +24,6 @@
             <div class="nav-bar-menu ms-auto">
                 <div class="overlay"></div>
                 <div class="nav-bar-menu-inner">
-                    <div class="nav-bar-menu-header">
-                        <button class="nav-bar-menu-close ms-auto">
-                            <i class="fa fa-times"></i>
-                        </button>
-                    </div>
                     <div class="nav-bar-links">
                         @foreach ($topNavLinks as $topNavLink)
                             @if ($topNavLink->children->count() > 0)
@@ -104,10 +99,10 @@
                 @auth
                     @include('themes.basic.partials.user-menu', ['menu_class' => 'ms-3 me-0'])
                 @endauth
-                <div class="nav-bar-menu-btn ms-3">
-                    <i class="fa-solid fa-bars fa-lg"></i>
-                </div>
             </div>
+            <button type="button" class="nav-bar-menu-btn ms-3" aria-label="Toggle navigation" aria-expanded="false">
+                <i class="fa-solid fa-bars fa-lg"></i>
+            </button>
         </div>
     </div>
 </div>
