@@ -3780,7 +3780,7 @@
     .nav-bar .nav-bar-container {
         min-height: 52px;
         padding: 6px 10px;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
     }
 
     .nav-bar .nav-bar-actions {
@@ -3801,36 +3801,34 @@
     }
 
     .nav-bar .nav-bar-menu {
-        position: absolute;
-        top: calc(100% + 8px);
-        right: 0;
-        left: 0;
-        z-index: 1030;
-        width: auto;
+        display: grid;
+        grid-template-rows: 0fr;
+        position: static;
+        top: auto;
+        right: auto;
+        left: auto;
+        order: 4;
+        flex: 0 0 100%;
+        width: 100%;
+        height: auto;
         margin: 0 !important;
-        padding: 10px;
-        overflow: visible;
-        border: var(--ui-border-soft);
-        border-radius: var(--ui-card-radius);
-        background-color: var(--navbar1_background_color);
-        box-shadow: var(--ui-compact-shadow);
-        max-height: calc(100dvh - 76px);
-        overflow-y: auto;
+        padding: 0;
+        overflow: hidden;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
         opacity: 0;
         pointer-events: none;
         visibility: hidden;
-        transform: translateY(-6px);
-        transition: opacity .16s ease, transform .16s ease, visibility .16s ease;
+        transform: none;
+        transition: grid-template-rows .18s ease, opacity .14s ease, visibility .14s ease;
     }
 
     .nav-bar .nav-bar-menu-btn {
         order: 3;
         margin-left: 8px !important;
         margin-right: 0 !important;
-    }
-
-    .nav-bar .nav-bar-menu .overlay {
-        display: none;
     }
 
     .nav-bar .nav-bar-menu-inner,
@@ -3844,8 +3842,9 @@
         height: auto;
         max-height: none;
         margin: 0;
-        padding: 0 2px 2px;
-        overflow: visible;
+        min-height: 0;
+        padding: 0 2px;
+        overflow: hidden;
         border: 0;
         border-radius: 0;
         background-color: transparent;
@@ -3855,15 +3854,25 @@
     }
 
     .nav-bar .nav-bar-menu .nav-bar-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        padding-top: 0;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        padding-top: 8px;
         border-top: 0;
     }
 
+    .nav-bar .nav-bar-menu .link,
+    .nav-bar .nav-bar-menu .drop-down {
+        grid-column: 1 / -1;
+        margin: 0;
+    }
+
+    .nav-bar .nav-bar-menu .link {
+        padding: 8px 10px;
+    }
+
     .nav-bar .nav-bar-menu .link-btn {
-        flex: 1 1 calc(50% - 5px);
+        min-width: 0;
         margin: 0 !important;
     }
 
@@ -3872,10 +3881,11 @@
     }
 
     .nav-bar .nav-bar-menu.show {
+        grid-template-rows: 1fr;
+        padding-bottom: 2px;
         visibility: visible;
         opacity: 1;
         pointer-events: auto;
-        transform: translateY(0);
     }
 }
 

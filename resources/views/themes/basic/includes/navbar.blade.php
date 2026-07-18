@@ -5,7 +5,6 @@
                 <span class="brand-wordmark">{{ ucfirst(config('app.name', 'Diget')) }}</span>
             </a>
             <div class="nav-bar-menu ms-auto" id="primary-navigation">
-                <div class="overlay"></div>
                 <div class="nav-bar-menu-inner">
                     <div class="nav-bar-links">
                         @foreach ($topNavLinks as $topNavLink)

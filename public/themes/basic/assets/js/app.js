@@ -228,8 +228,7 @@
         navbar.forEach((el) => {
             let navbarMenu = el.querySelector(".nav-bar-menu"),
                 navbarMenuBtn = el.querySelector(".nav-bar-menu-btn"),
-                navbarMenuClose = el.querySelector(".nav-bar-menu-close"),
-                navbarMenuOverlay = navbarMenu.querySelector(".overlay");
+                navbarMenuClose = el.querySelector(".nav-bar-menu-close");
 
             if (navbarMenu && navbarMenuBtn) {
                 const closeNavbarMenu = (restoreFocus = false) => {
@@ -248,9 +247,11 @@
                 if (navbarMenuClose) {
                     navbarMenuClose.onclick = () => closeNavbarMenu(true);
                 }
-                if (navbarMenuOverlay) {
-                    navbarMenuOverlay.onclick = closeNavbarMenu;
-                }
+                navbarMenu.addEventListener("click", (event) => {
+                    if (event.target.closest("a")) {
+                        closeNavbarMenu();
+                    }
+                });
                 document.addEventListener("click", (event) => {
                     if (navbarMenu.classList.contains("show") && !el.contains(event.target)) {
                         closeNavbarMenu();
