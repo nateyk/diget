@@ -9,6 +9,8 @@
     ]);
     $socialLinks = $user->profile_social_links;
     $publishedItemsCount = $items->total();
+    $showSales = $user->total_sales > 0;
+    $showReviews = $user->total_reviews > 0;
     $storefrontLink = $user->getProfileLink();
 @endphp
 @section('title', $user->getName() . ' (@' . $user->username . ')')
@@ -34,16 +36,19 @@
                             @endif
                         </div>
                         <div class="creator-storefront-heading text-muted small">{{ $profileHeading }}</div>
+                        <div class="creator-storefront-username text-muted small">{{ '@' . $user->username }}</div>
                     </div>
                 </div>
 
                 <div class="creator-storefront-actions">
                     <livewire:follow-button :user="$user" />
-                    <button type="button" class="btn btn-outline-secondary btn-padding"
-                        data-bs-toggle="modal" data-bs-target="#storefrontContactModal"
-                        aria-label="{{ translate('Message') }}">
-                        <i class="bi bi-chat-left-text"></i>
-                    </button>
+                    @if ($user->profile_contact_email)
+                        <button type="button" class="btn btn-outline-secondary btn-padding"
+                            data-bs-toggle="modal" data-bs-target="#storefrontContactModal"
+                            aria-label="{{ translate('Message') }}">
+                            <i class="bi bi-chat-left-text"></i>
+                        </button>
+                    @endif
                     <button type="button" class="btn btn-outline-secondary btn-padding"
                         data-bs-toggle="modal" data-bs-target="#storefrontShareModal"
                         aria-label="{{ translate('Share') }}">
@@ -60,38 +65,47 @@
                     'class' => 'creator-storefront-socials socials',
                 ])
 
-                <div class="creator-storefront-stats">
-                    <div>
-                        <strong>{{ numberFormat($publishedItemsCount) }}</strong>
-                        <span>{{ translate('Products') }}</span>
+                @if ($publishedItemsCount || $showSales || $showReviews)
+                    <div class="creator-storefront-stats">
+                        @if ($publishedItemsCount)
+                            <div>
+                                <strong>{{ numberFormat($publishedItemsCount) }}</strong>
+                                <span>{{ translate('Products') }}</span>
+                            </div>
+                        @endif
+                        @if ($showSales)
+                            <div>
+                                <strong>{{ numberFormat($user->total_sales) }}</strong>
+                                <span>{{ translate('Sales') }}</span>
+                            </div>
+                        @endif
+                        @if ($showReviews)
+                            <div>
+                                <strong>{{ number_format($user->avg_reviews, 1) }}</strong>
+                                <span>{{ translate($user->total_reviews == 1 ? '1 review' : ':count reviews', [
+                                    'count' => numberFormat($user->total_reviews),
+                                ]) }}</span>
+                            </div>
+                        @endif
                     </div>
-                    <div>
-                        <strong>{{ numberFormat($user->total_sales) }}</strong>
-                        <span>{{ translate('Sales') }}</span>
-                    </div>
-                    <div>
-                        <strong>{{ $user->avg_reviews > 0 ? number_format($user->avg_reviews, 1) : '0.0' }}</strong>
-                        <span>{{ translate($user->total_reviews == 1 ? '1 review' : ':count reviews', [
-                            'count' => numberFormat($user->total_reviews),
-                        ]) }}</span>
-                    </div>
-                </div>
+                @endif
             </div>
         </aside>
 
         <main class="creator-storefront-main">
             <div class="creator-storefront-main-header">
-                <div class="creator-storefront-tabs">
-                    <a href="#storefrontPortfolio" class="active"
-                        data-storefront-tab="portfolio">
+                <div class="creator-storefront-tabs" role="tablist" aria-label="{{ translate('Storefront content') }}">
+                    <button type="button" class="active" role="tab" aria-selected="true"
+                        aria-controls="storefrontPortfolio" data-storefront-tab="portfolio">
                         {{ translate('Products') }}
                         <span>{{ numberFormat($publishedItemsCount) }}</span>
-                    </a>
-                    <a href="#storefrontAbout" data-storefront-tab="about">{{ translate('About') }}</a>
+                    </button>
+                    <button type="button" role="tab" aria-selected="false" aria-controls="storefrontAbout"
+                        data-storefront-tab="about">{{ translate('About') }}</button>
                 </div>
             </div>
 
-            <div id="storefrontPortfolio" class="creator-storefront-panel" data-storefront-panel="portfolio">
+            <div id="storefrontPortfolio" class="creator-storefront-panel" data-storefront-panel="portfolio" role="tabpanel">
                 <div class="creator-storefront-items">
                     @forelse ($items as $item)
                         @include('themes.basic.partials.item', [
@@ -114,7 +128,7 @@
                 {{ $items->links() }}
             </div>
 
-            <div id="storefrontAbout" class="creator-storefront-panel" data-storefront-panel="about" hidden>
+            <div id="storefrontAbout" class="creator-storefront-panel" data-storefront-panel="about" role="tabpanel" hidden>
                 <div class="creator-storefront-about">
                     <h3>{{ translate('About') }}</h3>
                     @if ($user->profile_heading)
@@ -239,7 +253,9 @@
 
         const showStorefrontPanel = (panelName, updateMobile = true) => {
             storefrontTabs.forEach((tab) => {
-                tab.classList.toggle('active', tab.dataset.storefrontTab === panelName);
+                const isActive = tab.dataset.storefrontTab === panelName;
+                tab.classList.toggle('active', isActive);
+                tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
             });
 
             storefrontPanels.forEach((panel) => {

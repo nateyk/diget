@@ -44,6 +44,7 @@ class UiDemoSeeder extends Seeder
         $this->writeAssets();
 
         DB::transaction(function (): void {
+            $this->seedRuntimePrerequisites();
             $this->seedCategories();
             $this->seedUsers();
             $this->seedProducts();
@@ -54,6 +55,68 @@ class UiDemoSeeder extends Seeder
         $this->clearPublicCaches();
 
         $this->command?->info('Local UI demo records are ready: 3 creators, 10 products, and 5 categories.');
+    }
+
+    private function seedRuntimePrerequisites(): void
+    {
+        DB::table('storage_providers')->insertOrIgnore(
+            [
+                'name' => 'Local',
+                'alias' => 'local',
+                'processor' => 'App\\Http\\Controllers\\Storage\\LocalController',
+                'credentials' => null,
+                'updated_at' => now(),
+                'created_at' => now(),
+            ],
+        );
+
+        foreach ([
+            'actions' => [
+                'registration' => true,
+                'email_verification' => false,
+                'force_ssl' => false,
+            ],
+            'currency' => [
+                'code' => 'USD',
+                'symbol' => '$',
+                'position' => 1,
+            ],
+            'general' => [
+                'site_name' => 'Diget',
+                'site_url' => '',
+                'date_format' => '10',
+                'timezone' => 'UTC',
+                'contact_email' => null,
+            ],
+            'item' => [
+                'reviews_status' => true,
+                'comments_status' => false,
+                'changelogs_status' => false,
+                'buy_now_button' => true,
+                'free_item_option' => true,
+                'free_item_total_downloads' => true,
+                'free_items_require_login' => false,
+                'external_file_link_option' => true,
+                'discount_status' => true,
+            ],
+            'profile' => [
+                'default_avatar' => 'images/profiles/default/fymG7nwhBiXI12c_1733601562.png',
+                'default_cover' => 'images/profiles/default/bjhPVvmXixCNqAH_1733601554.png',
+            ],
+            'seo' => [
+                'title' => 'Diget',
+                'description' => 'Creator storefronts for digital products.',
+                'keywords' => 'creator, storefront, digital products',
+            ],
+            'social_links' => [],
+            'links' => [],
+            'smtp' => ['status' => true],
+        ] as $key => $value) {
+            DB::table('settings')->insertOrIgnore([
+                'key' => $key,
+                'value' => json_encode($value, JSON_UNESCAPED_UNICODE),
+            ]);
+        }
     }
 
     private function seedCategories(): void

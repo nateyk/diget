@@ -1,8 +1,14 @@
-@php($showCreator = $show_creator ?? true)
-<article class="item {{ $item_classes ?? '' }}">
+@php
+    $showCreator = $show_creator ?? true;
+    $isDiscounted = $item->isOnDiscount();
+@endphp
+<article class="item product-card {{ $item_classes ?? '' }}">
     <div class="item-header">
+        @if ($isDiscounted)
+            <span class="item-badge" aria-label="{{ translate('On sale') }}">{{ translate('Sale') }}</span>
+        @endif
         @if ($item->isPreviewFileTypeImage())
-            <a href="{{ $item->getLink() }}">
+            <a href="{{ $item->getLink() }}" aria-label="{{ translate('View :name', ['name' => $item->name]) }}">
                 <img class="item-img" src="{{ $item->getPreviewImageLink() }}" alt="{{ $item->name }}" />
             </a>
         @elseif($item->isPreviewFileTypeVideo())
@@ -68,7 +74,7 @@
                     <div class="item-price">
                         @if ($item->isFree())
                             <span class="item-price-number">{{ translate('Free') }}</span>
-                        @elseif ($item->isOnDiscount())
+                        @elseif ($isDiscounted)
                             <span class="item-price-through">{{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}</span>
                             <span class="item-price-number">{{ getAmount($item->price->regular, 2, '.', '', true) }}</span>
                         @else
@@ -89,10 +95,12 @@
                         </div>
                     @endif
                 </div>
-                <a href="{{ $item->getLink() }}" class="small fw-semibold text-dark text-nowrap">
+                <div class="ms-auto">
+                    <a href="{{ $item->getLink() }}" class="small fw-semibold text-dark text-nowrap">
                     {{ translate('View product') }}
                     <i class="fa fa-arrow-right fa-rtl ms-1"></i>
-                </a>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
