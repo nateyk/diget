@@ -1,19 +1,5 @@
 @php
     $idSuffix = $idSuffix ?? '';
-    $optionFilters = [
-        ['name' => 'free', 'value' => 'true', 'label' => translate('Free')],
-        ['name' => 'on_sale', 'value' => 'true', 'label' => translate('On Sale')],
-        ['name' => 'best_selling', 'value' => 'true', 'label' => translate('Best Selling')],
-        ['name' => 'trending', 'value' => 'true', 'label' => translate('Trending')],
-        ['name' => 'featured', 'value' => 'true', 'label' => translate('Featured')],
-    ];
-
-    if (licenseType(2) && @$settings->premium->status) {
-        array_splice($optionFilters, 1, 0, [
-            ['name' => 'premium', 'value' => 'true', 'label' => translate('Premium')],
-        ]);
-    }
-
     $dateFilters = [
         ['value' => '', 'label' => translate('Any time')],
         ['value' => 'this_month', 'label' => translate('This month')],
@@ -26,23 +12,6 @@
 <div class="discover-filters-header">
     {{ translate('Filters') }}
 </div>
-
-<details class="discover-filter-section">
-    <summary>
-        <span>{{ translate('Options') }}</span>
-        <i class="fa fa-chevron-right"></i>
-    </summary>
-    <div class="discover-filter-body">
-        @foreach ($optionFilters as $key => $filter)
-            @php($inputId = 'filter' . ucfirst($filter['name']) . $idSuffix . $key)
-            <label class="discover-filter-option" for="{{ $inputId }}">
-                <span>{{ $filter['label'] }}</span>
-                <input class="form-check-input search-param" type="checkbox" name="{{ $filter['name'] }}"
-                    value="{{ $filter['value'] }}" id="{{ $inputId }}">
-            </label>
-        @endforeach
-    </div>
-</details>
 
 @if (isset($category) && $category->categoryOptions->count() > 0)
     @foreach ($category->categoryOptions as $categoryOptionIndex => $categoryOption)

@@ -85,15 +85,6 @@
                             <div class="row g-2">
                                 <div class="col">
                                     <div class="row g-2">
-                                        @if ($item->demo_link)
-                                            <div class="col-auto">
-                                                <a href="{{ $item->getDemoLink() }}" target="_blank"
-                                                    class="btn btn-outline-secondary btn-md px-3">
-                                                    <i class="fa-solid fa-up-right-from-square"></i>
-                                                    <span class="ms-1">{{ translate('Live Preview') }}</span>
-                                                </a>
-                                            </div>
-                                        @endif
                                         <div class="col-auto">
                                             <livewire:item.favorite-button :item="$item" />
                                         </div>
@@ -125,7 +116,7 @@
                                             <input type="hidden" name="item_id" value="{{ $item->id }}">
                                             <input type="hidden" name="license_type" value="1">
                                             <button class="btn btn-primary btn-md px-3" @disabled(authUser() && authUser()->id == $item->author_id)>
-                                                <i class="fa fa-bolt me-2"></i>
+                                                <i class="fa-solid fa-bag-shopping me-2"></i>
                                                 <span>{{ getAmount($item->price->regular, 2, '.', '', true) }}</span>
                                             </button>
                                         </form>
@@ -200,27 +191,6 @@
                                         </div>
                                     </div>
                                 @endif
-                                @if (licenseType(2) && $item->isPremium())
-                                    <div class="item-badge item-badge-premium">
-                                        <i class="fa-solid fa-crown me-1"></i>
-                                        {{ translate('Premium') }}
-                                    </div>
-                                @elseif ($item->isFree())
-                                    <div class="item-badge item-badge-free">
-                                        <i class="fa-regular fa-heart me-1"></i>
-                                        {{ translate('Free') }}
-                                    </div>
-                                @elseif ($item->isOnDiscount())
-                                    <div class="item-badge item-badge-sale">
-                                        <i class="fa-solid fa-tag me-1"></i>
-                                        {{ translate('On Sale') }}
-                                    </div>
-                                @elseif ($item->isTrending())
-                                    <div class="item-badge item-badge-trending">
-                                        <i class="fa-solid fa-bolt me-1"></i>
-                                        {{ translate('Trending') }}
-                                    </div>
-                                @endif
                             </div>
                         </div>
                         <div class="tabs-custom">
@@ -280,9 +250,9 @@
                                             <div class="mb-3">
                                                 <i class="fa-solid fa-download text-primary fa-3x"></i>
                                             </div>
-                                            <h3 class="mb-3">{{ translate('Premium download') }}</h3>
+                                            <h3 class="mb-3">{{ translate('Included in your plan') }}</h3>
                                             <p class="mb-0">
-                                                {{ translate('You are subscribed to a premium plan. You can download this item directly.') }}
+                                                {{ translate('Your current plan includes access to this product.') }}
                                             </p>
                                         </div>
                                         @if ($item->isMainFileExternal())
@@ -321,13 +291,13 @@
                                             <div class="mb-3">
                                                 <i class="fa-solid fa-crown text-premium fa-3x"></i>
                                             </div>
-                                            <h3 class="mb-3">{{ translate('Get unlimited downloads') }}</h3>
+                                            <h3 class="mb-3">{{ translate('Available with membership') }}</h3>
                                             <p class="mb-0">
-                                                {{ translate('Subscribe to access unlimited downloads of themes, videos, graphics, plugins, and more premium assets for your creative needs.') }}
+                                                {{ translate('Choose a membership plan to access this product and other member benefits.') }}
                                             </p>
                                         </div>
                                         <a href="{{ route('premium.index') }}"
-                                            class="btn btn-premium btn-md w-100">{{ translate('Subscribe to download') }}</a>
+                                            class="btn btn-premium btn-md w-100">{{ translate('View membership') }}</a>
                                         @if (@$settings->premium->terms_link)
                                             <div class="text-center mt-3">
                                                 <a href="{{ @$settings->premium->terms_link }}" class="text-premium"
@@ -345,7 +315,7 @@
                                 <div class="card-v-header border-bottom py-3 px-3">
                                     <div class="row row-cols-auto align-items-center justify-content-between g-2">
                                         <div class="col">
-                                            <h5 class="mb-0">{{ translate('Free Item') }}</h5>
+                                            <h5 class="mb-0">{{ translate('Free download') }}</h5>
                                         </div>
                                         @if (@$settings->links->free_items_policy_link)
                                             <div class="col small">
@@ -359,8 +329,8 @@
                                 </div>
                                 <div class="card-v-body p-3">
                                     <p class="text-muted">
-                                        {{ translate('The author :author has offered the item for free, you can now download it.', [
-                                            'author' => strtolower($item->author->username),
+                                        {{ translate('Shared free by @:creator. Download it directly to your device.', [
+                                            'creator' => strtolower($item->author->username),
                                         ]) }}
                                     </p>
                                     @if ($item->isMainFileExternal())
@@ -401,7 +371,7 @@
                                 <div class="card-v-header border-bottom py-3 px-3">
                                     <div class="row row-cols-auto align-items-center justify-content-between g-2">
                                         <div class="col">
-                                            <h5 class="mb-0">{{ translate('Purchase') }}</h5>
+                                            <h5 class="mb-0">{{ translate('Get this product') }}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -428,49 +398,23 @@
                                                 @endif
                                             </div>
                                             <p class="small text-muted mb-0">
-                                                {{ translate('One-time purchase with access in your library.') }}
+                                                {{ translate('One-time payment. Access the product from your library after checkout.') }}
                                             </p>
                                         </div>
                                         <button class="btn btn-primary btn-md w-100" @disabled(authUser() && authUser()->id == $item->author_id)>
-                                            <i class="fa fa-bolt me-1"></i>
-                                            {{ translate('Buy Now') }}
+                                            <i class="fa-solid fa-bag-shopping me-1"></i>
+                                            {{ translate('Purchase') }}
                                         </button>
                                     </form>
                                     <div class="list border-top pt-3 mt-3">
                                         <div class="list-item small text-muted">
                                             <i class="fa fa-check text-primary me-1"></i>
-                                            {{ translate('Quality checked by :website_name', ['website_name' => @$settings->general->site_name]) }}
+                                            {{ translate('Secure checkout') }}
                                         </div>
                                         <div class="list-item small text-muted">
                                             <i class="fa fa-check text-primary me-1"></i>
-                                            {{ translate('Full Documentation') }}
+                                            {{ translate('Available in your purchase library') }}
                                         </div>
-                                        <div class="list-item small text-muted">
-                                            <i class="fa fa-check text-primary me-1"></i>
-                                            {{ translate('Future updates') }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                        @php
-                            $featuredItemBadge = featuredItemBadge();
-                        @endphp
-                        @if ($featuredItemBadge && $item->wasFeatured())
-                            <div class="card-v border item-detail-card p-3 mt-3">
-                                <div class="row alig-items-center g-3">
-                                    <div class="col-auto">
-                                        <img src="{{ $featuredItemBadge->getImageLink() }}"
-                                            alt="{{ $featuredItemBadge->name }}"
-                                            title="{{ $featuredItemBadge->name }}" width="50px" height="50px">
-                                    </div>
-                                    <div class="col">
-                                        <h5 class="mb-1">{{ translate('Featured Item') }}</h5>
-                                        <p class="mb-0">
-                                            {{ translate('This item was featured on :website_name', [
-                                                'website_name' => @$settings->general->site_name,
-                                            ]) }}
-                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -491,10 +435,9 @@
                                             </a>
                                         </div>
                                         <div class="col">
-                                            <a href="{{ $author->getProfileLink() }}"
-                                                class="d-block text-dark fs-5 mb-1">
+                                            <a href="{{ $author->getProfileLink() }}" class="d-block text-dark mb-1">
                                                 <h5 class="mb-0">
-                                                    {{ $author->username }}
+                                                    {{ $author->getName() }}
                                                     @if ($author->isBanned())
                                                         <span class="badge bg-danger fw-light ms-2">
                                                             <i class="fa-solid fa-ban me-1"></i>
@@ -503,10 +446,8 @@
                                                     @endif
                                                 </h5>
                                             </a>
-                                            <p class="mb-0 fs-6">
-                                                <span class="text-muted small">
-                                                    {{ translate('Member since :date', ['date' => dateFormat($author->created_at, 'M Y')]) }}
-                                                </span>
+                                            <p class="mb-0 text-muted small">
+                                                {{ '@' . $author->username }}
                                             </p>
                                         </div>
                                     </div>
@@ -530,11 +471,11 @@
                             </div>
                             <a href="{{ $author->getProfileLink() }}"
                                 class="btn btn-outline-secondary w-100 mt-3">
-                                {{ translate('View Storefront') }}
+                                {{ translate('Visit storefront') }}
                             </a>
                         </div>
                         <div class="card-v border item-detail-card item-detail-meta-card p-3 mt-3">
-                            <h5 class="mb-3">{{ translate('Item details') }}</h5>
+                            <h5 class="mb-3">{{ translate('Product details') }}</h5>
                             <div class="small">
                                 @if ($item->last_update_at)
                                     <div class="d-flex justify-content-between border-bottom item-detail-meta-row">
@@ -614,7 +555,6 @@
             </div>
         </div>
     </section>
-    <x-ad alias="item_page_center" @class('container my-4') />
     @if ($authorItems->count() > 0)
         <div class="section section-start">
             <div class="container">
@@ -624,14 +564,14 @@
                         <div class="col">
                             <div class="section-title mb-0">
                                 <h2 class="section-title-text">
-                                    {{ translate(":username's items", ['username' => $author->username]) }}
+                                    {{ translate('More from @:username', ['username' => $author->username]) }}
                                 </h2>
                                 <div class="section-title-divider"></div>
                             </div>
                         </div>
                         <div class="col d-none d-lg-block">
                             <a href="{{ $author->getPortfolioLink() }}">
-                                {{ translate('View More') }}
+                                {{ translate('Visit storefront') }}
                                 <i class="fa fa-chevron-right fa-rtl fa-sm ms-2"></i>
                             </a>
                         </div>
@@ -650,48 +590,7 @@
                     </div>
                     <div class="text-center mt-5 d-block d-lg-none">
                         <a href="{{ $author->getPortfolioLink() }}" class="btn btn-primary btn-md btn-icon">
-                            {{ translate('View More') }}
-                            <i class="fa fa-arrow-right fa-rtl ms-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
-    @if ($similarItems->count() > 0)
-        <div class="section section-start">
-            <div class="container">
-                <div class="section-header">
-                    <div
-                        class="row row-cols-auto align-items-center justify-content-center justify-content-lg-between g-3">
-                        <div class="col">
-                            <div class="section-title mb-0">
-                                <h2 class="section-title-text">{{ translate('Similar items') }}</h2>
-                                <div class="section-title-divider"></div>
-                            </div>
-                        </div>
-                        <div class="col d-none d-lg-block">
-                            <a href="{{ $item->category->getLink() }}">
-                                {{ translate('View More') }}
-                                <i class="fa fa-chevron-right fa-rtl fa-sm ms-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="section-body">
-                    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
-                        @foreach ($similarItems as $similarItem)
-                            <div class="col">
-                                @include('themes.basic.partials.item', [
-                                    'item' => $similarItem,
-                                    'item_classes' => 'border',
-                                ])
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="text-center mt-5 d-block d-lg-none">
-                        <a href="{{ $item->category->getLink() }}" class="btn btn-primary btn-md btn-icon">
-                            {{ translate('View More') }}
+                            {{ translate('Visit storefront') }}
                             <i class="fa fa-arrow-right fa-rtl ms-2"></i>
                         </a>
                     </div>

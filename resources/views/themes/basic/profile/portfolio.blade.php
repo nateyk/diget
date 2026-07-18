@@ -43,11 +43,12 @@
         </div>
         {{ $items->links() }}
     @else
-        <div class="card-v border card-bg text-center">
-            <div class="py-3">
-                <i class="fa-regular fa-file fa-lg"></i>
-                <p class="mb-0 mt-3">{{ translate('No Items found') }}</p>
-            </div>
-        </div>
+        @include('themes.basic.partials.public-empty-state', [
+            'icon' => 'fa-regular fa-file-lines',
+            'title' => translate('No portfolio entries yet'),
+            'description' => translate('This creator has not published products to their portfolio yet.'),
+            'actionUrl' => $user->getProfileLink(),
+            'actionLabel' => translate('View creator storefront'),
+        ])
     @endif
 @endsection

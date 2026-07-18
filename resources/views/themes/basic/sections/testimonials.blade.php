@@ -1,5 +1,8 @@
-@if ($testimonialsSection && $testimonials->count() > 0)
-    <div class="section section-start">
+@php
+    $trustedTestimonials = $testimonials->reject(fn ($testimonial) => str($testimonial->body)->lower()->contains(['marketbob', 'lorem ipsum']));
+@endphp
+@if ($testimonialsSection && $trustedTestimonials->count() > 0)
+    <div class="section section-start testimonials-section">
         <div class="container container-custom">
             <div class="section-header">
                 <div class="row row-cols-1 row-cols-lg-auto align-items-center justify-content-between g-3">
@@ -30,7 +33,7 @@
                 <div class="testimonials-swiper mt-3">
                     <div class="swiper testimonialsSwiper">
                         <div class="swiper-wrapper">
-                            @foreach ($testimonials as $testimonial)
+                            @foreach ($trustedTestimonials as $testimonial)
                                 <div class="swiper-slide" data-aos="zoom-in" data-aos-duration="1000">
                                     <div class="testimonial">
                                         <div class="testimonial-img">

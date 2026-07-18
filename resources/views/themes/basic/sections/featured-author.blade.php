@@ -2,13 +2,12 @@
     <div class="section section-start">
         <div class="container container-custom">
             <div class="section-body">
-                <div class="border border-dashed border-primary rounded-3 p-3" data-aos="fade-up" data-aos-duration="1000">
-                    <div class="card-v">
-                        <h1>{{ $featuredAuthorSection->name }}</h1>
+                <div class="card-v border p-4" data-aos="fade-up" data-aos-duration="1000">
+                        <h2 class="h4 mb-1">{{ translate('Creator spotlight') }}</h2>
                         @if ($featuredAuthorSection->description)
                             <p class="text-muted">{{ $featuredAuthorSection->description }}</p>
                         @endif
-                        <div class="my-5" data-aos="fade-left" data-aos-duration="1000">
+                        <div class="my-4" data-aos="fade-left" data-aos-duration="1000">
                             <div
                                 class="row row-cols-1 row-cols-md-auto text-center text-md-start align-items-center g-2">
                                 <div class="col">
@@ -37,7 +36,7 @@
                                             <div class="col">
                                                 <a href="{{ $featuredAuthor->getPortfolioLink() }}"
                                                     class="btn btn-primary">
-                                                    <span>{{ translate('View Portfolio') }}</span>
+                                                    <span>{{ translate('View storefront') }}</span>
                                                 </a>
                                             </div>
                                         @endif
@@ -49,7 +48,7 @@
                             </div>
                         </div>
                         @if ($featuredAuthor->items->count() > 0)
-                            <div class="row row-cols-md-2 row-cols-lg-3 row-cols-xxl-3 g-4">
+                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
                                 @foreach ($featuredAuthor->items as $featuredAuthorItem)
                                     <div class="col" data-aos="fade-up" data-aos-duration="1000">
                                         @include('themes.basic.partials.item', [
@@ -60,7 +59,6 @@
                                 @endforeach
                             </div>
                         @endif
-                    </div>
                 </div>
             </div>
         </div>

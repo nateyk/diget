@@ -33,7 +33,7 @@
                                     @endif
                                     <a href="{{ route('items.index', ['featured' => 'true']) }}"
                                         class="btn btn-primary btn-md w-100">
-                                        {{ translate('View All Featured Items') }}
+                                        {{ translate('View Products') }}
                                         <i class="fa fa-arrow-right fa-rtl ms-2"></i>
                                     </a>
                                 </div>

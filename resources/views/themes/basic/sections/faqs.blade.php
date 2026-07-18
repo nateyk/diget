@@ -1,4 +1,7 @@
-@if ($faqsSection && $faqs->count() > 0)
+@php
+    $trustedFaqs = $faqs->reject(fn ($faq) => str($faq->title . ' ' . strip_tags($faq->body))->lower()->contains('lorem ipsum'));
+@endphp
+@if ($faqsSection && $trustedFaqs->count() > 0)
     <div class="section">
         <div class="container container-custom">
             <div class="section-header">
@@ -16,7 +19,7 @@
                 <div class="accordion-custom">
                     <div class="accordion" id="accordion">
                         <div class="row row-cols-1 row-cols-xl-2 g-3">
-                            @foreach ($faqs as $faq)
+                            @foreach ($trustedFaqs as $faq)
                                 <div class="col" data-aos="fade-right"
                                     data-aos-duration="{{ ($loop->index + 1) * 100 }}">
                                     <div class="accordion-item">

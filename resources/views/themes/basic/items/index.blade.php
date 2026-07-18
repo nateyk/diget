@@ -7,14 +7,13 @@
 @section('header_v4', true)
 @section('body_class', 'items-index-page')
 @section('content')
-    <x-ad alias="search_page_top" @class('items-index-ad mb-3') />
     <div class="items-index-toolbar row g-2 align-items-center mb-3">
         <div class="col">
             <h5 class="mb-0">
                 @if (request()->query->count() > 0)
-                    {{ translate('Your search results') }}
+                    {{ translate('Products matching your search') }}
                 @else
-                    {{ translate('All Items') }}
+                    {{ translate('All products') }}
                 @endif
             </h5>
         </div>
@@ -40,5 +39,4 @@
             ])
         </div>
     </div>
-    <x-ad alias="search_page_bottom" @class('mt-5') />
 @endsection

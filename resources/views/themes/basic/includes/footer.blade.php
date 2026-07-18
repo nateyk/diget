@@ -4,16 +4,32 @@
             @if (isAddonActive('newsletter'))
                 <livewire:newsletter.footer />
             @endif
-            @if ($themeSettings->footer->footer_about || $footerLinks->count() > 0)
+            @php
+                $footerLinks = $footerLinks->map(function ($footerLink) {
+                    $validChildren = $footerLink->children->filter(function ($child) {
+                        return filled($child->link) && str($child->link)->trim('/')->lower()->value() !== 'page-example';
+                    })->values();
+
+                    $footerLink->setRelation('children', $validChildren);
+
+                    return $footerLink;
+                })->filter(function ($footerLink) {
+                    return $footerLink->children->isNotEmpty() ||
+                        (filled($footerLink->link) && str($footerLink->link)->trim('/')->lower()->value() !== 'page-example');
+                });
+                $footerAbout = trim((string) $themeSettings->footer->footer_about_content);
+                $showFooterAbout = $themeSettings->footer->footer_about &&
+                    !str($footerAbout)->lower()->contains('lorem ipsum');
+            @endphp
+            @if ($showFooterAbout || $footerLinks->count() > 0)
                 <div class="row footer-main-row g-4">
-                    @if ($themeSettings->footer->footer_about)
+                    @if ($showFooterAbout)
                         <div class="col-12 col-lg-4">
                             <div class="footer-brand">
                                 <a href="{{ route('home') }}" class="logo h3 mb-3 fw-700">
-                                    <img src="{{ asset($themeSettings->footer->footer_logo) }}"
-                                        alt="{{ @$settings->general->site_name }}" />
+                                    <span class="brand-wordmark">{{ ucfirst(config('app.name', 'Diget')) }}</span>
                                 </a>
-                                <p class="footer-text">{{ $themeSettings->footer->footer_about_content }}</p>
+                                <p class="footer-text">{{ $footerAbout }}</p>
                                 @php
                                     $socialLinksSettings = $settings->social_links ?? (object) [];
                                     $socialFacebook = data_get($socialLinksSettings, 'facebook');
@@ -69,33 +85,10 @@
                                         @endif
                                     </div>
                                 @endif
-                                <div class="footer-counter-wrap mt-3">
-                                    <div class="row row-cols-auto align-items-center g-3">
-                                        <div class="col">
-                                            <div class="footer-counter">
-                                                <p class="footer-counter-text">
-                                                    {{ number_format($themeSettings->footer->footer_items_sold) }}</p>
-                                                <h6 class="footer-counter-title">
-                                                    {{ translate('Items Sold') }}
-                                                </h6>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="footer-counter">
-                                                <p class="footer-counter-text">
-                                                    {{ getAmount($themeSettings->footer->footer_authors_earnings, 0, '.', ',') }}
-                                                </p>
-                                                <h6 class="footer-counter-title">
-                                                    {{ translate('Authors Earnings') }}
-                                                </h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     @endif
-                    <div class="col-12 {{ $themeSettings->footer->footer_about ? 'col-lg-8' : '' }}">
+                    <div class="col-12 {{ $showFooterAbout ? 'col-lg-8' : '' }}">
                         <div class="row footer-links-grid row-cols-2 row-cols-sm-3 g-4">
                             @foreach ($footerLinks as $footerLink)
                                 @if ($footerLink->children->count() > 0)
@@ -136,7 +129,7 @@
                 <div class="col">
                     <p class="footer-copyright text-center small mb-0">
                         &copy; <span data-year></span>
-                        {{ @$settings->general->site_name }} - {{ translate('All rights reserved') }}.
+                        {{ ucfirst(config('app.name', 'Diget')) }} - {{ translate('All rights reserved') }}.
                     </p>
                 </div>
                 @if ($themeSettings->footer->footer_payment_methods)

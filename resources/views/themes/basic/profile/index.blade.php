@@ -63,7 +63,7 @@
                 <div class="creator-storefront-stats">
                     <div>
                         <strong>{{ numberFormat($publishedItemsCount) }}</strong>
-                        <span>{{ translate('Items') }}</span>
+                        <span>{{ translate('Products') }}</span>
                     </div>
                     <div>
                         <strong>{{ numberFormat($user->total_sales) }}</strong>
@@ -84,7 +84,7 @@
                 <div class="creator-storefront-tabs">
                     <a href="#storefrontPortfolio" class="active"
                         data-storefront-tab="portfolio">
-                        {{ translate('Portfolio') }}
+                        {{ translate('Products') }}
                         <span>{{ numberFormat($publishedItemsCount) }}</span>
                     </a>
                     <a href="#storefrontAbout" data-storefront-tab="about">{{ translate('About') }}</a>
@@ -97,11 +97,16 @@
                         @include('themes.basic.partials.item', [
                             'item' => $item,
                             'item_classes' => 'border creator-storefront-item',
+                            'show_creator' => false,
                         ])
                     @empty
-                        <div class="creator-storefront-empty">
-                            <i class="fa-regular fa-file-lines"></i>
-                            <p>{{ translate('No published items yet') }}</p>
+                        <div class="creator-storefront-empty public-empty-state card-v border">
+                            <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
+                            <h2 class="h5 mb-2">{{ translate('No products published yet') }}</h2>
+                            <p class="text-muted mb-3">{{ translate('Learn more about this creator and check back for future releases.') }}</p>
+                            <a href="#storefrontAbout" class="btn btn-outline-primary btn-md" data-storefront-tab="about">
+                                {{ translate('About this creator') }}
+                            </a>
                         </div>
                     @endforelse
                 </div>
@@ -133,9 +138,9 @@
                 <span>{{ translate('Profile') }}</span>
             </button>
             <button type="button" data-storefront-mobile-tab="portfolio"
-                aria-label="{{ translate('Mobile Items') }}">
+                aria-label="{{ translate('Mobile Products') }}">
                 <i class="fa-solid fa-cube"></i>
-                <span>{{ translate('Items') }}</span>
+                <span>{{ translate('Products') }}</span>
             </button>
             <button type="button" data-storefront-mobile-tab="about"
                 aria-label="{{ translate('Mobile About') }}">
@@ -225,7 +230,7 @@
     <script>
         "use strict";
 
-        const storefrontTabs = document.querySelectorAll('.creator-storefront-tabs [data-storefront-tab]');
+        const storefrontTabs = document.querySelectorAll('[data-storefront-tab]');
         const storefrontPanels = document.querySelectorAll('[data-storefront-panel]');
         const storefrontMobileTabs = document.querySelectorAll('[data-storefront-mobile-tab]');
         const storefrontMobilePanels = document.querySelectorAll('[data-storefront-mobile-panel]');
