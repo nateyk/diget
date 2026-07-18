@@ -59,7 +59,7 @@
             </form>
             <x-oauth-buttons />
         </div>
-        <div class="mt-4 text-center">{{ translate('You an account already?') }} <a href="{{ route('login') }}"
+        <div class="mt-4 text-center">{{ translate('Already have an account?') }} <a href="{{ route('login') }}"
                 class="text-primary">{{ translate('Sign In') }}</a>
         </div>
     </div>
