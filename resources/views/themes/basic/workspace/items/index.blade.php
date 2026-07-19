@@ -4,9 +4,9 @@
 @section('content')
     <div class="dashboard-card card-v p-0">
         @if ($items->count() > 0 || request()->input('search') || request()->input('category'))
-            <div class="table-search p-4">
+            <div class="table-search p-3">
                 <form action="{{ url()->current() }}" method="GET">
-                    <div class="row g-3 aligs-items-center">
+                    <div class="row g-3 align-items-center">
                         <div class="col-12 col-lg-6 col-xxl-7">
                             <input type="text" name="search" placeholder="{{ translate('Search...') }}"
                                 class="form-control form-control-md" value="{{ request('search') }}">
@@ -32,7 +32,7 @@
             </div>
             <div class="overflow-hidden">
                 <div class="table-container">
-                    <table class="dashboard-table table text-center table-borderless align-middle">
+                    <table class="dashboard-table workspace-data-table table text-center table-borderless align-middle">
                         <thead>
                             <tr>
                                 <th class="text-start">{{ translate('Details') }}</th>
@@ -134,21 +134,21 @@
                                     @if (@$settings->item->adding_require_review)
                                         <td>
                                             @if ($item->isPending())
-                                                <div class="badge bg-orange rounded-2 fw-light px-3 py-2">
+                                                <span class="badge workspace-status bg-orange rounded-2 fw-light px-3 py-2">
                                                     {{ $item->getStatusName() }}
-                                                </div>
+                                                </span>
                                             @elseif($item->isSoftRejected())
-                                                <div class="badge bg-purple rounded-2 fw-light px-3 py-2">
+                                                <span class="badge workspace-status bg-purple rounded-2 fw-light px-3 py-2">
                                                     {{ $item->getStatusName() }}
-                                                </div>
+                                                </span>
                                             @elseif($item->isResubmitted())
-                                                <div class="badge bg-blue rounded-2 fw-light px-3 py-2">
+                                                <span class="badge workspace-status bg-blue rounded-2 fw-light px-3 py-2">
                                                     {{ $item->getStatusName() }}
-                                                </div>
+                                                </span>
                                             @elseif($item->isApproved())
-                                                <div class="badge bg-green rounded-2 fw-light px-3 py-2">
+                                                <span class="badge workspace-status bg-green rounded-2 fw-light px-3 py-2">
                                                     {{ $item->getStatusName() }}
-                                                </div>
+                                                </span>
                                             @endif
                                         </td>
                                     @endif
@@ -157,7 +157,8 @@
                                             @if (!$item->isPending())
                                                 <div class="col">
                                                     <a href="{{ route('workspace.items.edit', $item->id) }}"
-                                                        class="btn btn-primary btn-padding">
+                                                        class="btn btn-outline-secondary btn-padding"
+                                                        aria-label="{{ translate('Edit item') }}" title="{{ translate('Edit item') }}">
                                                         <i class="fa-regular fa-pen-to-square"></i>
                                                     </a>
                                                 </div>
@@ -165,20 +166,23 @@
                                             @if ($item->isApproved())
                                                 <div class="col">
                                                     <a href="{{ route('workspace.items.statistics', $item->id) }}"
-                                                        class="btn btn-warning btn-padding">
+                                                        class="btn btn-outline-secondary btn-padding"
+                                                        aria-label="{{ translate('View statistics') }}" title="{{ translate('View statistics') }}">
                                                         <i class="fa-solid fa-chart-simple"></i>
                                                     </a>
                                                 </div>
                                                 <div class="col">
                                                     @if ($item->isMainFileExternal())
                                                         <a href="{{ $item->main_file }}" target="_blank"
-                                                            class="btn btn-dark btn-padding"><i
+                                                            class="btn btn-outline-secondary btn-padding"
+                                                            aria-label="{{ translate('Download item') }}" title="{{ translate('Download item') }}"><i
                                                                 class="fa fa-download"></i></a>
                                                     @else
                                                         <form action="{{ route('workspace.items.download', $item->id) }}"
                                                             method="POST">
                                                             @csrf
-                                                            <button class="btn btn-dark btn-padding"><i
+                                                            <button class="btn btn-outline-secondary btn-padding"
+                                                                aria-label="{{ translate('Download item') }}" title="{{ translate('Download item') }}"><i
                                                                     class="fa fa-download"></i></button>
                                                         </form>
                                                     @endif
@@ -189,7 +193,8 @@
                                                     method="POST">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button class="btn btn-danger btn-padding action-confirm">
+                                                    <button class="btn btn-outline-danger btn-padding action-confirm"
+                                                        aria-label="{{ translate('Delete item') }}" title="{{ translate('Delete item') }}">
                                                         <i class="far fa-trash-alt"></i>
                                                     </button>
                                                 </form>

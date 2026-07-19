@@ -51,7 +51,7 @@
                     {{ translate('Withdrawals') }}
                 </a>
                 <div class="drop-down-divider"></div>
-            @elseif($settings->actions->become_an_author)
+            @elseif(@$settings->actions->become_an_author)
                 <a href="{{ route('workspace.become-an-author') }}" class="drop-down-item">
                     <i class="fa-solid fa-box-open"></i>
                     {{ translate('Start Selling') }}

@@ -1,7 +1,8 @@
 <nav class="dashboard-nav">
-    <div class="dashboard-nav-btn dashboard-btn dashboard-toggle-btn">
+    <button type="button" class="dashboard-nav-btn dashboard-btn dashboard-toggle-btn"
+        aria-controls="workspaceSidebar" aria-expanded="false" aria-label="{{ translate('Toggle navigation') }}">
         <i class="fa fa-bars"></i>
-    </div>
+    </button>
     <a href="{{ route('home') }}" class="logo logo-sm logo-toggle ms-3">
         <img src="{{ asset($themeSettings->general->logo_dark) }}" alt="{{ @$settings->general->site_name }}" />
     </a>
@@ -15,7 +16,7 @@
                 <span>{{ translate('Share') }}</span>
             </button>
         @endif
-        @if ($settings->actions->become_an_author && !authUser()->isAuthor())
+        @if (@$settings->actions->become_an_author && !authUser()->isAuthor())
             <a href="{{ route('workspace.become-an-author') }}" class="link-btn d-none d-lg-inline ms-3">
                 <button class="btn btn-outline-primary">
                     {{ translate('Become an Author') }}

@@ -46,76 +46,7 @@
                     @endif
                 @endif
                 @if (!request()->routeIs('workspace.become-an-author'))
-                    <div class="mb-4">
-                        <div class="row g-3 justify-content-between align-items-center">
-                            <div class="col">
-                                <h3>@yield('title')</h3>
-                                @yield('breadcrumbs')
-                            </div>
-                            @if (request()->routeIs('workspace.dashboard'))
-                                <div class="col-auto">
-                                    @include('themes.basic.workspace.partials.period-select', [
-                                        'date' => authUser()->created_at,
-                                    ])
-                                </div>
-                            @endif
-                            @hasSection('back')
-                                <div class="col-auto">
-                                    <a href="@yield('back')" class="btn btn-outline-secondary btn-md">
-                                        <i class="fa-solid fa-arrow-left fa-rtl me-1"></i>
-                                        {{ translate('Back') }}
-                                    </a>
-                                </div>
-                            @endif
-                            @hasSection('create')
-                                <div class="col-auto">
-                                    <a href="@yield('create')" class="btn btn-primary btn-md">
-                                        <i class="fa fa-plus"></i>
-                                    </a>
-                                </div>
-                            @endif
-                            @if (request()->routeIs('workspace.items.index'))
-                                @if ($items->count() > 0 || request()->input('search') || request()->input('category'))
-                                    <div class="col-auto">
-                                        <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
-                                            data-bs-target="#addItemModel">
-                                            <i class="fa-regular fa-plus me-1"></i>
-                                            {{ translate('New Item') }}
-                                        </button>
-                                    </div>
-                                @endif
-                            @endif
-                            @if (request()->routeIs('workspace.transactions.show'))
-                                @if ($trx->isPaid())
-                                    <div class="col-auto">
-                                        <a href="{{ route('workspace.transactions.invoice', $trx->id) }}"
-                                            target="_blank" class="btn btn-primary btn-md">
-                                            <i class="fa-regular fa-file-lines me-1"></i>
-                                            {{ translate('Invoice') }}
-                                        </a>
-                                    </div>
-                                @endif
-                            @endif
-                            @if (request()->routeIs('workspace.withdrawals.index'))
-                                <div class="col-auto">
-                                    <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
-                                        data-bs-target="#withdrawModel">
-                                        <i class="fa-regular fa-paper-plane me-1"></i>
-                                        {{ translate('Withdraw') }}
-                                    </button>
-                                </div>
-                            @endif
-                            @if (@$settings->deposit->status && request()->routeIs('workspace.balance.index'))
-                                <div class="col-auto">
-                                    <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
-                                        data-bs-target="#depositModel">
-                                        <i class="fa-solid fa-circle-dollar-to-slot me-1"></i>
-                                        {{ translate('Deposit') }}
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
+                    @include('themes.basic.workspace.partials.page-header')
                     @yield('content')
                 @else
                     <div class="mt-4">

@@ -27,7 +27,7 @@
     </div>
     <div class="dashboard-card card-v p-0">
         @if ($referrals->count() > 0 || request()->input('search'))
-            <div class="table-search p-4">
+            <div class="table-search p-3">
                 <form action="{{ url()->current() }}" method="GET">
                     <div class="form-search">
                         <button class="icon">
@@ -40,7 +40,7 @@
             </div>
             <div class="overflow-hidden">
                 <div class="table-container">
-                    <table class="dashboard-table table text-start table-borderless">
+                    <table class="dashboard-table workspace-data-table table text-start table-borderless">
                         <thead>
                             <tr>
                                 <th>{{ translate('Username') }}</th>

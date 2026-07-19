@@ -162,6 +162,10 @@
         toggle.forEach(function(el, id) {
             const toggleTitle = el.querySelector(".toggle-title");
 
+            const updateToggleState = () => {
+                toggleTitle?.setAttribute("aria-expanded", String(el.classList.contains("active")));
+            };
+
             if (!toggleTitle) {
                 return;
             }
@@ -171,6 +175,7 @@
                     if (i !== id) {
                         toggle[i].classList.remove("active");
                         toggle[i].classList.remove("animated");
+                        toggle[i].querySelector(".toggle-title")?.setAttribute("aria-expanded", "false");
                     }
                 }
                 if (el.classList.contains("active")) {
@@ -182,7 +187,11 @@
                         el.classList.add("animated");
                     }, 0);
                 }
+
+                updateToggleState();
             });
+
+            updateToggleState();
         });
     }
 
@@ -417,14 +426,51 @@
     const dashboard = document.querySelector(".dashboard"),
         dashboardToggleBtn = document.querySelectorAll(".dashboard-toggle-btn");
     if (dashboard) {
+        const dashboardSidebar = dashboard.querySelector(".dashboard-sidebar"),
+            sidebarOverlay = dashboardSidebar?.querySelector(".overlay"),
+            isDesktopWorkspace = () => window.matchMedia("(min-width: 1200px)").matches,
+            updateDashboardNavigationState = () => {
+                const isOpen = isDesktopWorkspace() ? !dashboard.classList.contains("toggle") : dashboard.classList.contains("toggle");
+
+                dashboardToggleBtn.forEach((button) => {
+                    button.setAttribute("aria-expanded", String(isOpen));
+                });
+            },
+            closeDashboardNavigation = (shouldRestoreFocus = false) => {
+                if (isDesktopWorkspace() || !dashboard.classList.contains("toggle")) {
+                    return;
+                }
+
+                dashboard.classList.remove("toggle");
+                updateDashboardNavigationState();
+
+                if (shouldRestoreFocus) {
+                    dashboardToggleBtn[0]?.focus();
+                }
+            };
+
         dashboardToggleBtn.forEach((el) => {
             el.addEventListener("click", () => {
                 dashboard.classList.toggle("toggle");
+                updateDashboardNavigationState();
             });
         });
-        dashboard.querySelector(".dashboard-sidebar .overlay").addEventListener("click", () => {
-            dashboard.classList.remove("toggle");
+
+        sidebarOverlay?.addEventListener("click", () => {
+            closeDashboardNavigation(true);
         });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                closeDashboardNavigation(true);
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            updateDashboardNavigationState();
+        });
+
+        updateDashboardNavigationState();
     }
 
     const previewNav = document.querySelector(".preview-nav"),
