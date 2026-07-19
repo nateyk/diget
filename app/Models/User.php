@@ -15,11 +15,21 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
+
+    protected static function booted(): void
+    {
+        static::saved(function (self $user): void {
+            if ($user->wasChanged(['avatar', 'profile_cover', 'is_featured_author'])) {
+                Cache::forget('home_featured_author_cache_v2');
+            }
+        });
+    }
 
     const STATUS_BANNED = 0;
     const STATUS_ACTIVE = 1;
@@ -292,9 +302,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getAvatar()
     {
-        if ($this->avatar) {
+        if ($this->avatar && is_file(public_path(ltrim($this->avatar, '/')))) {
             return asset($this->avatar);
         }
+
         return asset(@settings('profile')->default_avatar);
     }
 
