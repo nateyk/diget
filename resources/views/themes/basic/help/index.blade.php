@@ -17,14 +17,14 @@
                                 @foreach ($category->articles as $article)
                                     <a href="{{ $article->getLink() }}" class="support-article-link fs-6">
                                         {{ $article->title }}
-                                        <i class="fa fa-chevron-right fa-sm fa-rtl"></i>
+                                        <i class="fa-solid fa-chevron-right fa-sm fa-rtl"></i>
                                     </a>
                                 @endforeach
                             </div>
                             <div class="support-category-actions mt-auto">
                                 <a href="{{ $category->getLink() }}">
                                     {{ translate('View more') }}
-                                    <i class="fa fa-arrow-right-long fa-rtl ms-2"></i>
+                                    <i class="fa-solid fa-arrow-right-long fa-rtl ms-2"></i>
                                 </a>
                             </div>
                         </div>

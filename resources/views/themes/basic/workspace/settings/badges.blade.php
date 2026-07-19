@@ -14,7 +14,7 @@
                         <div class="row g-3 align-items-center">
                             <div class="col-auto">
                                 <span class="sortable-list-handle text-muted">
-                                    <i class="fas fa-arrows-alt fa-lg"></i>
+                                    <i class="fa-solid fa-arrows-alt fa-lg"></i>
                                 </span>
                             </div>
                             <div class="col">

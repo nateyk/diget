@@ -4,7 +4,7 @@
             <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center 
             {{ request()->routeIs('admin.members.users.edit') ? 'active' : '' }}"
                 href="{{ route('admin.members.users.edit', $user->id) }}">
-                <span><i class="fa fa-edit me-2"></i>{{ translate('Account details') }}</span>
+                <span><i class="fa-solid fa-edit me-2"></i>{{ translate('Account details') }}</span>
                 <i class="fa-solid fa-chevron-right fa-rtl"></i>
             </a>
             <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center
@@ -16,7 +16,7 @@
             <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center 
             {{ request()->routeIs('admin.members.users.profile.index') ? 'active' : '' }}"
                 href="{{ route('admin.members.users.profile.index', $user->id) }}">
-                <span><i class="fa fa-user me-2"></i>{{ translate('Profile details') }}</span>
+                <span><i class="fa-solid fa-user me-2"></i>{{ translate('Profile details') }}</span>
                 <i class="fa-solid fa-chevron-right fa-rtl"></i>
             </a>
             @if ($user->isAuthor())
@@ -44,7 +44,7 @@
             <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center 
             {{ request()->routeIs('admin.members.users.password.index') ? 'active' : '' }}"
                 href="{{ route('admin.members.users.password.index', $user->id) }}">
-                <span><i class="fa fa-lock me-2"></i>{{ translate('Password') }}</span>
+                <span><i class="fa-solid fa-lock me-2"></i>{{ translate('Password') }}</span>
                 <i class="fa-solid fa-chevron-right fa-rtl"></i>
             </a>
             @if ($user->isAuthor())
@@ -52,7 +52,7 @@
                     <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center 
                     {{ request()->routeIs('admin.members.users.referrals') ? 'active' : '' }}"
                         href="{{ route('admin.members.users.referrals', $user->id) }}">
-                        <span><i class="fa fa-users me-2"></i>{{ translate('Referrals') }}</span>
+                        <span><i class="fa-solid fa-users me-2"></i>{{ translate('Referrals') }}</span>
                         <i class="fa-solid fa-chevron-right fa-rtl"></i>
                     </a>
                 @endif
@@ -66,7 +66,7 @@
             <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center 
             {{ request()->routeIs('admin.members.users.login-logs') ? 'active' : '' }}"
                 href="{{ route('admin.members.users.login-logs', $user->id) }}">
-                <span><i class="fa fa-key me-2"></i>{{ translate('Login Logs') }}</span>
+                <span><i class="fa-solid fa-key me-2"></i>{{ translate('Login Logs') }}</span>
                 <i class="fa-solid fa-chevron-right fa-rtl"></i>
             </a>
         </ul>

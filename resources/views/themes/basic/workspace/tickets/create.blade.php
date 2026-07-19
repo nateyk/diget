@@ -39,7 +39,7 @@
                             <div class="input-group">
                                 <input type="file" name="attachments[]" class="form-control form-control-md">
                                 <button id="addAttachment" class="btn btn-outline-secondary" type="button">
-                                    <i class="fa fa-plus"></i>
+                                    <i class="fa-solid fa-plus"></i>
                                 </button>
                             </div>
                         </div>

@@ -144,7 +144,7 @@
                                 <div class="col-auto">
                                     <a href="{{ route('admin.members.users.edit', $refund->author->id) }}"
                                         class="text-dark">
-                                        <i class="fa fa-user me-1"></i>
+                                        <i class="fa-solid fa-user me-1"></i>
                                         {{ $refund->author->username }}
                                     </a>
                                 </div>
@@ -199,7 +199,7 @@
                             <form action="{{ route('admin.records.refunds.destroy', $refund->id) }}" method="POST">
                                 @csrf @method('DELETE')
                                 <button class="btn btn-danger btn-lg w-100 action-confirm">
-                                    <i class="far fa-trash-alt me-1"></i>
+                                    <i class="fa-regular fa-trash-alt me-1"></i>
                                     {{ translate('Delete') }}
                                 </button>
                             </form>

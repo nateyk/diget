@@ -23,7 +23,7 @@
                                         @method('DELETE')
                                         @csrf
                                         <button class="action-confirm btn btn-sm btn-danger"><i
-                                                class="far fa-trash-alt"></i></button>
+                                                class="fa-regular fa-trash-alt"></i></button>
                                     </form>
                                 </div>
                             </div>
@@ -44,7 +44,7 @@
                                                         @method('DELETE')
                                                         @csrf
                                                         <button class="action-confirm btn btn-sm btn-danger"><i
-                                                                class="far fa-trash-alt"></i></button>
+                                                                class="fa-regular fa-trash-alt"></i></button>
                                                     </form>
                                                 </div>
                                             </div>

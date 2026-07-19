@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-12 col-lg-6 col-xl-{{ @$settings->referral->status ? 3 : 4 }}">
                     @include('themes.basic.workspace.partials.stat-card', [
-                        'icon' => 'fa fa-dollar',
+                        'icon' => 'fa-solid fa-dollar',
                         'label' => translate('Sales Earnings'),
                         'value' => getAmount($counters['sales_earnings']),
                     ])

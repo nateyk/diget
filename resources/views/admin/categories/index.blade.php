@@ -11,7 +11,7 @@
                             value="{{ request()->input('search') ?? '' }}">
                     </div>
                     <div class="col">
-                        <button class="btn btn-primary w-100"><i class="fa fa-search"></i></button>
+                        <button class="btn btn-primary w-100"><i class="fa-solid fa-search"></i></button>
                     </div>
                     <div class="col">
                         <a href="{{ url()->current() }}" class="btn btn-secondary w-100">{{ translate('Reset') }}</a>
@@ -38,7 +38,7 @@
                             <tr data-id="{{ $category->id }}">
                                 <td>
                                     <span class="sortable-table-handle me-2 text-muted">
-                                        <i class="fas fa-arrows-alt fa-lg"></i>
+                                        <i class="fa-solid fa-arrows-alt fa-lg"></i>
                                     </span>
                                 </td>
                                 <td>
@@ -58,12 +58,12 @@
                                     <div class="text-end">
                                         <button type="button" class="btn btn-sm rounded-3" data-bs-toggle="dropdown"
                                             aria-expanded="true">
-                                            <i class="fa fa-ellipsis-v fa-sm text-muted"></i>
+                                            <i class="fa-solid fa-ellipsis-v fa-sm text-muted"></i>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-sm-end" data-popper-placement="bottom-end">
                                             <li>
                                                 <a class="dropdown-item" href="{{ $category->getLink() }}" target="_blank">
-                                                    <i class="fa fa-eye me-2"></i>
+                                                    <i class="fa-solid fa-eye me-2"></i>
                                                     {{ translate('View') }}
                                                 </a>
                                             </li>
@@ -82,7 +82,7 @@
                                                     method="POST">
                                                     @csrf @method('DELETE')
                                                     <button class="action-confirm dropdown-item text-danger"><i
-                                                            class="far fa-trash-alt me-2"></i>{{ translate('Delete') }}</button>
+                                                            class="fa-regular fa-trash-alt me-2"></i>{{ translate('Delete') }}</button>
                                                 </form>
                                             </li>
                                         </ul>

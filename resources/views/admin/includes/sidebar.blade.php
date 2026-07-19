@@ -17,8 +17,8 @@
                 <div class="vironeer-sidebar-link  {{ request()->segment(2) == 'members' ? 'active' : '' }}"
                     data-dropdown>
                     <p class="vironeer-sidebar-link-title">
-                        <span><i class="fas fa-users"></i>{{ translate('Members') }}</span>
-                        <span class="arrow"><i class="fas fa-chevron-right fa-sm"></i></span>
+                        <span><i class="fa-solid fa-users"></i>{{ translate('Members') }}</span>
+                        <span class="arrow"><i class="fa-solid fa-chevron-right fa-sm"></i></span>
                     </p>
                     <div class="vironeer-sidebar-link-menu">
                         <a href="{{ route('admin.members.users.index') }}"
@@ -42,7 +42,7 @@
                         data-dropdown>
                         <p class="vironeer-sidebar-link-title">
                             <span><i class="fa-solid fa-crown"></i>{{ translate('Premium') }}</span>
-                            <span class="arrow"><i class="fas fa-chevron-right fa-sm"></i></span>
+                            <span class="arrow"><i class="fa-solid fa-chevron-right fa-sm"></i></span>
                         </p>
                         <div class="vironeer-sidebar-link-menu">
                             <a href="{{ route('admin.premium.settings.index') }}"
@@ -72,7 +72,7 @@
                                 {{ admcw($sidebar_counters['items_all'] + $sidebar_counters['items_updated']) }}
                             </span>
                         @endif
-                        <span class="arrow"><i class="fas fa-chevron-right fa-sm"></i></span>
+                        <span class="arrow"><i class="fa-solid fa-chevron-right fa-sm"></i></span>
                     </p>
                     <div class="vironeer-sidebar-link-menu">
                         <a href="{{ route('admin.items.index') }}"
@@ -101,7 +101,7 @@
                     data-dropdown>
                     <p class="vironeer-sidebar-link-title">
                         <span><i class="fa-solid fa-box-archive"></i>{{ translate('Records') }}</span>
-                        <span class="arrow"><i class="fas fa-chevron-right fa-sm"></i></span>
+                        <span class="arrow"><i class="fa-solid fa-chevron-right fa-sm"></i></span>
                     </p>
                     <div class="vironeer-sidebar-link-menu">
                         <a href="{{ route('admin.records.sales.index') }}"
@@ -186,7 +186,7 @@
                 <a href="{{ route('admin.ads.index') }}"
                     class="vironeer-sidebar-link {{ request()->segment(2) == 'ads' ? 'current' : '' }}">
                     <p class="vironeer-sidebar-link-title">
-                        <span><i class="fas fa-ad"></i>{{ translate('Advertisements') }}</span>
+                        <span><i class="fa-solid fa-ad"></i>{{ translate('Advertisements') }}</span>
                     </p>
                 </a>
             </div>
@@ -198,7 +198,7 @@
                         @if ($sidebar_counters['reports.item_comments'])
                             <span class="counter me-2">{{ admcw($sidebar_counters['reports.item_comments']) }}</span>
                         @endif
-                        <span class="arrow"><i class="fas fa-chevron-right fa-sm"></i></span>
+                        <span class="arrow"><i class="fa-solid fa-chevron-right fa-sm"></i></span>
                     </p>
                     <div class="vironeer-sidebar-link-menu">
                         <a href="{{ route('admin.reports.item-comments.index') }}"
@@ -217,7 +217,7 @@
                     data-dropdown>
                     <p class="vironeer-sidebar-link-title">
                         <span><i class="fa-solid fa-tags"></i>{{ translate('Categories') }}</span>
-                        <span class="arrow"><i class="fas fa-chevron-right fa-sm"></i></span>
+                        <span class="arrow"><i class="fa-solid fa-chevron-right fa-sm"></i></span>
                     </p>
                     <div class="vironeer-sidebar-link-menu">
                         <a href="{{ route('admin.categories.index') }}"
@@ -233,7 +233,7 @@
                         data-dropdown>
                         <p class="vironeer-sidebar-link-title">
                             <span><i class="fa-solid fa-inbox"></i>{{ translate('Tickets') }}</span>
-                            <span class="arrow"><i class="fas fa-chevron-right fa-sm"></i></span>
+                            <span class="arrow"><i class="fa-solid fa-chevron-right fa-sm"></i></span>
                         </p>
                         <div class="vironeer-sidebar-link-menu">
                             <a href="{{ route('admin.tickets.index') }}"
@@ -257,7 +257,7 @@
                         <p class="vironeer-sidebar-link-title">
                             <span><i class="fa-regular fa-circle-question"></i>{{ translate('Help Center') }}</span>
                             {!! addonBadge('help_center') !!}
-                            <span class="arrow"><i class="fas fa-chevron-right fa-sm"></i></span>
+                            <span class="arrow"><i class="fa-solid fa-chevron-right fa-sm"></i></span>
                         </p>
                         <div class="vironeer-sidebar-link-menu">
                             <a href="{{ route('admin.help.articles.index') }}"
@@ -278,8 +278,8 @@
                 <div class="vironeer-sidebar-link {{ request()->segment(2) == 'navigation' ? 'active' : '' }}"
                     data-dropdown>
                     <p class="vironeer-sidebar-link-title">
-                        <span><i class="fas fa-bars"></i>{{ translate('Navigation') }}</span>
-                        <span class="arrow"><i class="fas fa-chevron-right fa-sm"></i></span>
+                        <span><i class="fa-solid fa-bars"></i>{{ translate('Navigation') }}</span>
+                        <span class="arrow"><i class="fa-solid fa-chevron-right fa-sm"></i></span>
                     </p>
                     <div class="vironeer-sidebar-link-menu">
                         <a href="{{ route('admin.navigation.top-nav-links.index') }}"
@@ -300,11 +300,11 @@
                     <div class="vironeer-sidebar-link  {{ request()->segment(2) == 'blog' ? 'active' : '' }}"
                         data-dropdown>
                         <p class="vironeer-sidebar-link-title">
-                            <span class="w-100"><i class="fas fa-rss"></i>{{ translate('Blog') }}</span>
+                            <span class="w-100"><i class="fa-solid fa-rss"></i>{{ translate('Blog') }}</span>
                             @if ($sidebar_counters['blog_comments'])
                                 <span class="counter me-2">{{ admcw($sidebar_counters['blog_comments']) }}</span>
                             @endif
-                            <span class="arrow"><i class="fas fa-chevron-right fa-sm"></i></span>
+                            <span class="arrow"><i class="fa-solid fa-chevron-right fa-sm"></i></span>
                         </p>
                         <div class="vironeer-sidebar-link-menu">
                             <a href="{{ route('admin.blog.articles.index') }}"
@@ -332,7 +332,7 @@
                     data-dropdown>
                     <p class="vironeer-sidebar-link-title">
                         <span><i class="fa-solid fa-brush"></i>{{ translate('Appearance') }}</span>
-                        <span class="arrow"><i class="fas fa-chevron-right fa-sm"></i></span>
+                        <span class="arrow"><i class="fa-solid fa-chevron-right fa-sm"></i></span>
                     </p>
                     <div class="vironeer-sidebar-link-menu">
                         <a href="{{ route('admin.appearance.themes.index') }}"
@@ -347,7 +347,7 @@
                         <p class="vironeer-sidebar-link-title">
                             <span><i class="fa-solid fa-wand-magic-sparkles"></i>{{ translate('Faker') }}</span>
                             {!! addonBadge('faker') !!}
-                            <span class="arrow"><i class="fas fa-chevron-right fa-sm"></i></span>
+                            <span class="arrow"><i class="fa-solid fa-chevron-right fa-sm"></i></span>
                         </p>
                         <div class="vironeer-sidebar-link-menu">
                             <a href="{{ route('admin.faker.settings') }}"
@@ -369,7 +369,7 @@
                     data-dropdown>
                     <p class="vironeer-sidebar-link-title">
                         <span><i class="fa-solid fa-landmark"></i>{{ translate('Financial') }}</span>
-                        <span class="arrow"><i class="fas fa-chevron-right fa-sm"></i></span>
+                        <span class="arrow"><i class="fa-solid fa-chevron-right fa-sm"></i></span>
                     </p>
                     <div class="vironeer-sidebar-link-menu">
                         <a href="{{ route('admin.financial.settings') }}"
@@ -416,8 +416,8 @@
                 <div class="vironeer-sidebar-link {{ request()->segment(2) == 'settings' ? 'active' : '' }}"
                     data-dropdown>
                     <p class="vironeer-sidebar-link-title">
-                        <span><i class="fa fa-cog"></i>{{ translate('Settings') }}</span>
-                        <span class="arrow"><i class="fas fa-chevron-right fa-sm"></i></span>
+                        <span><i class="fa-solid fa-cog"></i>{{ translate('Settings') }}</span>
+                        <span class="arrow"><i class="fa-solid fa-chevron-right fa-sm"></i></span>
                     </p>
                     <div class="vironeer-sidebar-link-menu">
                         <a href="{{ route('admin.settings.general') }}"
@@ -542,8 +542,8 @@
                 <div class="vironeer-sidebar-link {{ request()->segment(2) == 'sections' ? 'active' : '' }}"
                     data-dropdown>
                     <p class="vironeer-sidebar-link-title">
-                        <span><i class="fas fa-layer-group"></i>{{ translate('Sections') }}</span>
-                        <span class="arrow"><i class="fas fa-chevron-right fa-sm"></i></span>
+                        <span><i class="fa-solid fa-layer-group"></i>{{ translate('Sections') }}</span>
+                        <span class="arrow"><i class="fa-solid fa-chevron-right fa-sm"></i></span>
                     </p>
                     <div class="vironeer-sidebar-link-menu">
                         <a href="{{ route('admin.sections.announcement.index') }}"
@@ -582,7 +582,7 @@
                     data-dropdown>
                     <p class="vironeer-sidebar-link-title">
                         <span><i class="fa-solid fa-server"></i>{{ translate('System') }}</span>
-                        <span class="arrow"><i class="fas fa-chevron-right fa-sm"></i></span>
+                        <span class="arrow"><i class="fa-solid fa-chevron-right fa-sm"></i></span>
                     </p>
                     <div class="vironeer-sidebar-link-menu">
                         <a href="{{ route('admin.system.info.index') }}"

@@ -20,7 +20,7 @@
                         <td>{{ $comment->id }}</td>
                         <td>
                             <a href="{{ route('admin.members.users.edit', $comment->user->id) }}" class="text-dark">
-                                <i class="fa fa-user me-2"></i>{{ $comment->user->getName() }}
+                                <i class="fa-solid fa-user me-2"></i>{{ $comment->user->getName() }}
                             </a>
                         </td>
                         <td>
@@ -39,12 +39,12 @@
                             <div class="text-end">
                                 <button type="button" class="btn btn-sm rounded-3" data-bs-toggle="dropdown"
                                     aria-expanded="true">
-                                    <i class="fa fa-ellipsis-v fa-sm text-muted"></i>
+                                    <i class="fa-solid fa-ellipsis-v fa-sm text-muted"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-sm-end" data-popper-placement="bottom-end">
                                     <li>
                                         <a class="vironeer-view-comment dropdown-item" data-id="{{ $comment->id }}"
-                                            href="#"><i class="fa fa-eye me-2"></i>{{ translate('View') }}</a>
+                                            href="#"><i class="fa-solid fa-eye me-2"></i>{{ translate('View') }}</a>
                                     </li>
                                     <li>
                                         <hr class="dropdown-divider" />
@@ -54,7 +54,7 @@
                                             method="POST">
                                             @csrf @method('DELETE')
                                             <button class="action-confirm dropdown-item text-danger"><i
-                                                    class="far fa-trash-alt me-2"></i>{{ translate('Delete') }}</button>
+                                                    class="fa-regular fa-trash-alt me-2"></i>{{ translate('Delete') }}</button>
                                         </form>
                                     </li>
                                 </ul>
@@ -79,12 +79,12 @@
                     <form id="deleteCommentForm" class="d-inline" action="#" method="POST">
                         @csrf @method('DELETE')
                         <button class="action-confirm btn btn-danger"><i
-                                class="far fa-trash-alt me-2"></i>{{ translate('Delete') }}</button>
+                                class="fa-regular fa-trash-alt me-2"></i>{{ translate('Delete') }}</button>
                     </form>
                     <form id="publishCommentForm" class="d-inline" action="#" method="POST">
                         @csrf
                         <button class="action-confirm publish-comment-btn btn btn-success"><i
-                                class="far fa-check-circle me-2"></i>{{ translate('Publish') }}</button>
+                                class="fa-regular fa-check-circle me-2"></i>{{ translate('Publish') }}</button>
                     </form>
                 </div>
             </div>

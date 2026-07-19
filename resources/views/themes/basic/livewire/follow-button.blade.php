@@ -2,30 +2,33 @@
     @if (authUser())
         @if ($user->id != authUser()->id)
             <button wire:click="followAction"
-                class="btn {{ authUser()->isFollowingUser($user->id) ? 'btn-custom' : 'btn-outline-custom' }} {{ $iconButton ? 'btn-padding' : '' }}">
+                class="btn {{ authUser()->isFollowingUser($user->id) ? 'btn-custom' : 'btn-outline-custom' }} {{ $iconButton ? 'btn-padding' : '' }}"
+                aria-label="{{ authUser()->isFollowingUser($user->id) ? translate('Following') : translate('Follow') }}">
                 @if (authUser()->isFollowingUser($user->id))
-                    <i class="bi bi-person-check-fill"></i>
+                    <i class="fa-solid fa-user-check"></i>
                     @if (!$iconButton)
                         <span class="ms-1">{{ translate('Following') }}</span>
                     @endif
                 @else
-                    <i class="bi bi-person-plus-fill"></i>
+                    <i class="fa-solid fa-user-plus"></i>
                     @if (!$iconButton)
                         <span class="ms-1">{{ translate('Follow') }}</span>
                     @endif
                 @endif
             </button>
         @else
-            <button class="btn btn-outline-custom {{ $iconButton ? 'btn-padding' : '' }} disabled">
-                <i class="bi bi-person-plus-fill"></i>
+            <button class="btn btn-outline-custom {{ $iconButton ? 'btn-padding' : '' }} disabled"
+                aria-label="{{ translate('Follow') }}">
+                <i class="fa-solid fa-user-plus"></i>
                 @if (!$iconButton)
                     <span class="ms-1">{{ translate('Follow') }}</span>
                 @endif
             </button>
         @endif
     @else
-        <a href="{{ route('login') }}" class="btn btn-outline-custom {{ $iconButton ? 'btn-padding' : '' }}">
-            <i class="bi bi-person-plus-fill"></i>
+        <a href="{{ route('login') }}" class="btn btn-outline-custom {{ $iconButton ? 'btn-padding' : '' }}"
+            aria-label="{{ translate('Follow') }}">
+            <i class="fa-solid fa-user-plus"></i>
             @if (!$iconButton)
                 <span class="ms-1">{{ translate('Follow') }}</span>
             @endif

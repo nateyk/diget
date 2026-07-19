@@ -28,8 +28,8 @@
                                                 data-bs-toggle="collapse" data-bs-target="#collapse{{ $faq->id }}"
                                                 aria-expanded="false" aria-controls="collapse{{ $faq->id }}">
                                                 <div class="accordion-button-icon">
-                                                    <i class="fa fa-plus"></i>
-                                                    <i class="fa fa-minus"></i>
+                                                    <i class="fa-solid fa-plus"></i>
+                                                    <i class="fa-solid fa-minus"></i>
                                                 </div>
                                                 {{ $faq->title }}
                                             </button>

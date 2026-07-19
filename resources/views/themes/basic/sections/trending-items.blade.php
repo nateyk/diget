@@ -15,7 +15,7 @@
                     <div class="col d-none d-lg-block">
                         <a href="{{ route('items.index', ['trending' => 'true']) }}">
                             {{ translate('View All') }}
-                            <i class="fa fa-chevron-right fa-sm fa-rtl ms-2"></i>
+                            <i class="fa-solid fa-chevron-right fa-sm fa-rtl ms-2"></i>
                         </a>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                 <div class="text-center mt-5 d-block d-lg-none">
                     <a href="{{ route('items.index', ['trending' => 'true']) }}">
                         {{ translate('View All') }}
-                        <i class="fa fa-chevron-right fa-sm fa-rtl ms-2"></i>
+                        <i class="fa-solid fa-chevron-right fa-sm fa-rtl ms-2"></i>
                     </a>
                 </div>
             </div>

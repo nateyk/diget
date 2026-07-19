@@ -21,7 +21,7 @@
                             </select>
                         </div>
                         <div class="col">
-                            <button class="btn btn-primary w-100 btn-md"><i class="fa fa-search"></i></button>
+                            <button class="btn btn-primary w-100 btn-md"><i class="fa-solid fa-search"></i></button>
                         </div>
                         <div class="col">
                             <a href="{{ url()->current() }}" class="btn btn-outline-primary w-100 btn-md"><i
@@ -181,7 +181,7 @@
                                                     @if ($item->isMainFileExternal())
                                                         <a href="{{ $item->main_file }}" target="_blank"
                                                             class="dropdown-item">
-                                                            <i class="fa fa-download me-2"></i>
+                                                            <i class="fa-solid fa-download me-2"></i>
                                                             {{ translate('Download') }}
                                                         </a>
                                                     @else
@@ -189,7 +189,7 @@
                                                             method="POST">
                                                             @csrf
                                                             <button class="dropdown-item" type="submit">
-                                                                <i class="fa fa-download me-2"></i>
+                                                                <i class="fa-solid fa-download me-2"></i>
                                                                 {{ translate('Download') }}
                                                             </button>
                                                         </form>
@@ -202,7 +202,7 @@
                                                     @csrf
                                                     @method('DELETE')
                                                     <button class="dropdown-item text-danger action-confirm" type="submit">
-                                                        <i class="far fa-trash-alt me-2"></i>
+                                                        <i class="fa-regular fa-trash-alt me-2"></i>
                                                         {{ translate('Delete') }}
                                                     </button>
                                                 </form>
@@ -288,7 +288,7 @@
                                     <span data-category-picker-label>
                                         {{ $categories->first()->name ?? translate('Choose category') }}
                                     </span>
-                                    <i class="fa fa-angle-down ms-auto"></i>
+                                    <i class="fa-solid fa-angle-down ms-auto"></i>
                                 </button>
                                 <div class="drop-down-menu" data-category-picker-menu>
                                     @foreach ($categories as $category)

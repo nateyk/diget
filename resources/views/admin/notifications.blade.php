@@ -16,7 +16,7 @@
                     </div>
                     @if (!$notification->status)
                         <div class="flex-grow-2 ms-3">
-                            <span class="icon text-danger flashit"><i class="fas fa-circle"></i></span>
+                            <span class="icon text-danger flashit"><i class="fa-solid fa-circle"></i></span>
                         </div>
                     @endif
                 </a>
@@ -32,7 +32,7 @@
                     </div>
                     @if (!$notification->status)
                         <div class="flex-grow-2 ms-3">
-                            <span class="icon text-danger flashit"><i class="fas fa-circle"></i></span>
+                            <span class="icon text-danger flashit"><i class="fa-solid fa-circle"></i></span>
                         </div>
                     @endif
                 </div>

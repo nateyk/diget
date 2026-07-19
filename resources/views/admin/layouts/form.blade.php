@@ -20,12 +20,12 @@
                         @hasSection('back')
                             <div class="col-auto">
                                 <a href="@yield('back')" class="btn btn-secondary"><i
-                                        class="fas fa-arrow-left fa-rtl me-2"></i>{{ translate('Back') }}</a>
+                                        class="fa-solid fa-arrow-left fa-rtl me-2"></i>{{ translate('Back') }}</a>
                             </div>
                         @endif
                         @hasSection('create')
                             <div class="col-auto">
-                                <a href="@yield('create')" class="btn btn-dark"><i class="fa fa-plus"></i></a>
+                                <a href="@yield('create')" class="btn btn-dark"><i class="fa-solid fa-plus"></i></a>
                             </div>
                         @endif
                         <div class="col-auto">

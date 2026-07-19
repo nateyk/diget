@@ -15,7 +15,7 @@
                     <div class="col d-none d-lg-block">
                         <a href="{{ route('items.index', ['featured' => 'true']) }}">
                             {{ translate('View All') }}
-                            <i class="fa fa-chevron-right fa-sm fa-rtl ms-2"></i>
+                            <i class="fa-solid fa-chevron-right fa-sm fa-rtl ms-2"></i>
                         </a>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                                     <a href="{{ route('items.index', ['featured' => 'true']) }}"
                                         class="btn btn-primary btn-md w-100">
                                         {{ translate('View Products') }}
-                                        <i class="fa fa-arrow-right fa-rtl ms-2"></i>
+                                        <i class="fa-solid fa-arrow-right fa-rtl ms-2"></i>
                                     </a>
                                 </div>
                             </div>
@@ -53,7 +53,7 @@
                 <div class="text-center mt-5 d-block d-lg-none">
                     <a href="{{ route('items.index', ['featured' => 'true']) }}">
                         {{ translate('View All') }}
-                        <i class="fa fa-chevron-right fa-sm fa-rtl ms-2"></i>
+                        <i class="fa-solid fa-chevron-right fa-sm fa-rtl ms-2"></i>
                     </a>
                 </div>
             </div>

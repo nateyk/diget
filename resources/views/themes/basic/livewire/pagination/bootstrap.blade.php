@@ -6,7 +6,7 @@
                 <ul class="pagination">
                     @if ($paginator->onFirstPage())
                         <li class="page-item disabled" aria-disabled="true" aria-label="@translate('pagination.previous')">
-                            <span class="page-link" aria-hidden="true"><i class="fas fa-chevron-left"></i></span>
+                            <span class="page-link" aria-hidden="true"><i class="fa-solid fa-chevron-left"></i></span>
                         </li>
                     @else
                         <li class="page-item">
@@ -14,7 +14,7 @@
                                 dusk="previousPage{{ $paginator->getPageName() == 'page' ? '' : '.' . $paginator->getPageName() }}"
                                 class="page-link" wire:click="previousPage('{{ $paginator->getPageName() }}')"
                                 wire:loading.attr="disabled" rel="prev" aria-label="@translate('pagination.previous')"><i
-                                    class="fas fa-chevron-left"></i></button>
+                                    class="fa-solid fa-chevron-left"></i></button>
                         </li>
                     @endif
                     @foreach ($elements as $element)
@@ -44,11 +44,11 @@
                                 dusk="nextPage{{ $paginator->getPageName() == 'page' ? '' : '.' . $paginator->getPageName() }}"
                                 class="page-link" wire:click="nextPage('{{ $paginator->getPageName() }}')"
                                 wire:loading.attr="disabled" rel="next" aria-label="@translate('pagination.next')"><i
-                                    class="fas fa-chevron-right"></i></button>
+                                    class="fa-solid fa-chevron-right"></i></button>
                         </li>
                     @else
                         <li class="page-item disabled" aria-disabled="true" aria-label="@translate('pagination.next')">
-                            <span class="page-link" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
+                            <span class="page-link" aria-hidden="true"><i class="fa-solid fa-chevron-right"></i></span>
                         </li>
                     @endif
                 </ul>

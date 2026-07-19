@@ -21,7 +21,7 @@
                         value="wget -q -O /dev/null {{ @$settings->cronjob->key ? route('cronjob', ['key' => @$settings->cronjob->key]) : route('cronjob') }}"
                         readonly>
                     <button class="btn btn-primary btn-copy" type="button" data-clipboard-target="#cronInput"><i
-                            class="far fa-clone"></i></button>
+                            class="fa-regular fa-clone"></i></button>
                 </div>
                 <div class="input-text mt-2">
                     {{ translate('The cron job command must be set to run every minute') }} ( <code>* * * * *</code> ).

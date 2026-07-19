@@ -5,7 +5,7 @@
 @section('content')
     <div class="note note-warning d-flex">
         <div class="icon">
-            <i class="fas fa-exclamation-circle"></i>
+            <i class="fa-solid fa-exclamation-circle"></i>
         </div>
         <div>
             <div class="mb-1"><strong>{{ translate('Important!') }}</strong></div>
@@ -29,7 +29,7 @@
                             value="{{ request('search') ?? '' }}">
                     </div>
                     <div class="col">
-                        <button class="btn btn-primary w-100"><i class="fa fa-search"></i></button>
+                        <button class="btn btn-primary w-100"><i class="fa-solid fa-search"></i></button>
                     </div>
                     <div class="col">
                         <a href="{{ url()->current() }}" class="btn btn-secondary w-100">{{ translate('Reset') }}</a>
@@ -48,7 +48,7 @@
                                 <textarea class="vironeer-translate-key translate-fields form-control" rows="1" readonly>{{ $translate->key }}</textarea>
                             </div>
                             <div class="pe-3 ps-3 bd-highlight text-center text-success d-none d-lg-block"><i
-                                    class="fas fa-chevron-right"></i></div>
+                                    class="fa-solid fa-chevron-right"></i></div>
                             <div class="flex-grow-1 bd-highlight">
                                 <textarea name="translates[{{ $translate->id }}]" class="translate-fields form-control" rows="1">{{ $translate->value }}</textarea>
                             </div>

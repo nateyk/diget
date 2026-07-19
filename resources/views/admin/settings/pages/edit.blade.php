@@ -5,7 +5,7 @@
 @section('content')
     <div class="mb-3">
         <a class="btn btn-outline-secondary" href="{{ route('page', $page->slug) }}" target="_blank"><i
-                class="fa fa-eye me-2"></i>{{ translate('Preview') }}</a>
+                class="fa-solid fa-eye me-2"></i>{{ translate('Preview') }}</a>
     </div>
     <form id="vironeer-submited-form" action="{{ route('admin.settings.pages.update', $page->id) }}" method="POST">
         @csrf

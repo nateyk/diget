@@ -10,7 +10,7 @@
                     <img src="{{ $currentCurrency->getIconLink() }}" alt="{{ $currentCurrency->code }}">
                 </div>
                 <span class="me-2">{{ $currentCurrency->code }}</span>
-                <i class="fa fa-angle-down ms-auto"></i>
+                <i class="fa-solid fa-angle-down ms-auto"></i>
             </div>
             <div class="drop-down-menu drop-down-menu-sm {{ $group_classes ?? '' }}">
                 @foreach (currencies() as $currency)

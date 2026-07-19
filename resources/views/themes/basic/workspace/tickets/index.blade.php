@@ -24,7 +24,7 @@
                             </select>
                         </div>
                         <div class="col">
-                            <button class="btn btn-primary w-100 btn-md"><i class="fa fa-search"></i></button>
+                            <button class="btn btn-primary w-100 btn-md"><i class="fa-solid fa-search"></i></button>
                         </div>
                         <div class="col">
                             <a href="{{ url()->current() }}" class="btn btn-outline-primary w-100 btn-md"><i

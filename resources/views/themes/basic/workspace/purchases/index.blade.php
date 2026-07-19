@@ -8,7 +8,7 @@
                 <form action="{{ url()->current() }}" method="GET">
                     <div class="form-search">
                         <button class="icon">
-                            <i class="fa fa-search"></i>
+                            <i class="fa-solid fa-search"></i>
                         </button>
                         <input type="text" name="search" placeholder="{{ translate('Search...') }}"
                             class="form-control form-control-md" value="{{ request('search') }}">
@@ -380,7 +380,7 @@
                         <input id="purchaseCode" type="text" class="form-control form-control-md " value=""
                             readonly>
                         <button class="btn btn-primary btn-copy" data-clipboard-target="#purchaseCode"><i
-                                class="far fa-clone"></i></button>
+                                class="fa-regular fa-clone"></i></button>
                     </div>
                 </div>
             </div>

@@ -20,7 +20,7 @@
                         </select>
                     </div>
                     <div class="col">
-                        <button class="btn btn-primary w-100"><i class="fa fa-search"></i></button>
+                        <button class="btn btn-primary w-100"><i class="fa-solid fa-search"></i></button>
                     </div>
                     <div class="col">
                         <a href="{{ url()->current() }}" class="btn btn-secondary w-100">{{ translate('Reset') }}</a>
@@ -46,7 +46,7 @@
                             <tr data-id="{{ $paymentGateway->id }}">
                                 <td>
                                     <span class="sortable-table-handle me-2 text-muted">
-                                        <i class="fas fa-arrows-alt fa-lg"></i>
+                                        <i class="fa-solid fa-arrows-alt fa-lg"></i>
                                     </span>
                                 </td>
                                 <td>

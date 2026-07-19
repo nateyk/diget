@@ -20,7 +20,7 @@
                                 <p class="error-message">@yield('message')</p>
                             </div>
                             <a href="{{ url('/') }}" class="btn btn-primary rounded-0 px-4 py-2"><i
-                                    class="fa fa-home me-1"></i>{{ translate('Back to home') }}</a>
+                                    class="fa-solid fa-home me-1"></i>{{ translate('Back to home') }}</a>
                         </div>
                     </div>
                 </div>

@@ -16,7 +16,7 @@
     <div class="col-auto">
         <button class="btn btn-outline-secondary btn-md d-inline-flex d-xl-none" type="button"
             data-bs-toggle="offcanvas" data-bs-target="#searchFilters" aria-controls="searchFilters">
-            <i class="fa fa-filter me-1" aria-hidden="true"></i>
+            <i class="fa-solid fa-filter me-1" aria-hidden="true"></i>
             <span>{{ translate('Filters') }}</span>
             @if ($activeFiltersCount)
                 <span class="badge rounded-pill text-bg-secondary ms-1">{{ $activeFiltersCount }}</span>

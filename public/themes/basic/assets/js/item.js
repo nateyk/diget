@@ -27,7 +27,7 @@
                 picker.html(
                     '<button type="button" class="item-file-picker-btn">' +
                     '<span class="item-file-picker-label"></span>' +
-                    '<i class="fa fa-angle-down ms-auto"></i>' +
+                    '<i class="fa-solid fa-angle-down ms-auto"></i>' +
                     '</button>' +
                     '<div class="item-file-picker-menu"></div>'
                 );
@@ -298,12 +298,12 @@
                         '<div class="uploaded-file-icon">' + thumbnail + '</div>' +
                         '<div class="uploaded-file-info">' +
                         '<h6 class="uploaded-file-name">' +
-                        '<span class="success-mark"><i class="far fa-check-circle"></i></span>' + sliceString(response.name) +
+                        '<span class="success-mark"><i class="fa-regular fa-check-circle"></i></span>' + sliceString(response.name) +
                         '<small class="ms-1">(' + response.size + ')</small></h6>' +
                         '<p class="uploaded-file-time">' + response.time + '</p>' +
                         '</div>' +
                         '<button type="button" class="uploaded-file-remove" data-id="' + response.id + '" data-delete-link="' + response.delete_link + '">' +
-                        '<i class="fa fa-trash-alt"></i>' +
+                        '<i class="fa-solid fa-trash-alt"></i>' +
                         '</button>' +
                         '</div>');
                     loadUploadedFiles();
@@ -362,7 +362,7 @@
                     success: function(response) {
                         uploadedFileRemoveBtn.prop('false', true);
                         uploadedFileRemoveBtn.empty();
-                        uploadedFileRemoveBtn.append('<i class="fa fa-trash-alt"></i>');
+                        uploadedFileRemoveBtn.append('<i class="fa-solid fa-trash-alt"></i>');
                         if ($.isEmptyObject(response.error)) {
                             $('.uploaded-file-' + uploadedFileId).remove();
                             loadUploadedFiles();
@@ -375,7 +375,7 @@
                     error: function(request, status, error) {
                         uploadedFileRemoveBtn.prop('false', true);
                         uploadedFileRemoveBtn.empty();
-                        uploadedFileRemoveBtn.append('<i class="fa fa-trash-alt"></i>');
+                        uploadedFileRemoveBtn.append('<i class="fa-solid fa-trash-alt"></i>');
                         toastr.error(error);
                     }
                 });

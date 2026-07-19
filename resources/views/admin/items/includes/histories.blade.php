@@ -61,7 +61,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-outline-danger action-confirm btn-sm">
-                                    <i class="far fa-trash-alt me-1"></i>
+                                    <i class="fa-regular fa-trash-alt me-1"></i>
                                     {{ translate('Delete') }}
                                 </button>
                             </form>

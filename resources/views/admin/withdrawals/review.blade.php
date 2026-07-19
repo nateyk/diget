@@ -18,7 +18,7 @@
                         <th>{{ translate('Author') }}</th>
                         <td>
                             <a href="{{ route('admin.members.users.edit', $withdrawal->author->id) }}" class="text-dark"><i
-                                    class="fa fa-user me-2"></i>{{ $withdrawal->author->username }}</a>
+                                    class="fa-solid fa-user me-2"></i>{{ $withdrawal->author->username }}</a>
                         </td>
                     </tr>
                     <tr>

@@ -48,7 +48,7 @@
                                 accept=".jpg,.jpeg,.png,.svg" class="form-control" hidden>
                             <button data-id="0" type="button"
                                 class="attach-image-button btn btn-secondary btn-lg w-100 mb-2"><i
-                                    class="fas fa-camera me-2"></i>{{ translate('Choose ID Front Image') }}</button>
+                                    class="fa-solid fa-camera me-2"></i>{{ translate('Choose ID Front Image') }}</button>
                             <small class="text-muted">{{ translate('Supported (JPEG, JPG, PNG, SVG)') }}</small>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                                 accept=".jpg,.jpeg,.png,.svg" class="form-control" hidden>
                             <button data-id="1" type="button"
                                 class="attach-image-button btn btn-secondary btn-lg w-100 mb-2"><i
-                                    class="fas fa-camera me-2"></i>{{ translate('Choose ID Back Image') }}</button>
+                                    class="fa-solid fa-camera me-2"></i>{{ translate('Choose ID Back Image') }}</button>
                             <small class="text-muted">{{ translate('Supported (JPEG, JPG, PNG, SVG)') }}</small>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
                                 accept=".jpg,.jpeg,.png,.svg" class="form-control" hidden>
                             <button data-id="4" type="button"
                                 class="attach-image-button btn btn-secondary btn-lg w-100 mb-2"><i
-                                    class="fas fa-camera me-2"></i>{{ translate('Choose ID Passport Image') }}</button>
+                                    class="fa-solid fa-camera me-2"></i>{{ translate('Choose ID Passport Image') }}</button>
                             <small class="text-muted">{{ translate('Supported (JPEG, JPG, PNG, SVG)') }}</small>
                         </div>
                     </div>
@@ -96,7 +96,7 @@
                                 accept=".jpg,.jpeg,.png,.svg" class="form-control" hidden>
                             <button data-id="2" type="button"
                                 class="attach-image-button btn btn-secondary btn-lg w-100 mb-2"><i
-                                    class="fas fa-camera me-2"></i>{{ translate('Choose Selfie Image') }}</button>
+                                    class="fa-solid fa-camera me-2"></i>{{ translate('Choose Selfie Image') }}</button>
                             <small class="text-muted">{{ translate('Supported (JPEG, JPG, PNG, SVG)') }}</small>
                         </div>
                     </div>

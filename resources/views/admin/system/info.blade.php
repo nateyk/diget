@@ -5,7 +5,7 @@
 @section('content')
     <div class="card mb-4">
         <div class="card-header bg-primary text-white border-bottom-0"><i
-                class="fas fa-folder me-2"></i>{{ translate('Application') }}</div>
+                class="fa-solid fa-folder me-2"></i>{{ translate('Application') }}</div>
         <ul class="custom-list-group system list-group list-group-flush">
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <strong>{{ translate('Name') }}</strong>
@@ -27,7 +27,7 @@
     </div>
     <div class="card mb-4">
         <div class="card-header bg-lg-5 text-white border-bottom-0"><i
-                class="fas fa-server me-2"></i>{{ translate('Server Details') }}</div>
+                class="fa-solid fa-server me-2"></i>{{ translate('Server Details') }}</div>
         <ul class="custom-list-group system list-group list-group-flush">
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <strong>{{ translate('Software') }}</strong>
@@ -57,30 +57,30 @@
     </div>
     <div class="card">
         <div class="card-header bg-lg-5 text-white border-bottom-0"><i
-                class="fas fa-database me-2"></i>{{ translate('System Cache') }}</div>
+                class="fa-solid fa-database me-2"></i>{{ translate('System Cache') }}</div>
         <ul class="custom-list-group system list-group list-group-flush">
             <li class="list-group-item">
-                <i class="far fa-check-circle me-2 text-success"></i>
+                <i class="fa-regular fa-check-circle me-2 text-success"></i>
                 <span>{{ translate('Compiled views will be cleared') }}</span>
             </li>
             <li class="list-group-item">
-                <i class="far fa-check-circle me-2 text-success"></i>
+                <i class="fa-regular fa-check-circle me-2 text-success"></i>
                 <span>{{ translate('Application cache will be cleared') }}</span>
             </li>
             <li class="list-group-item">
-                <i class="far fa-check-circle me-2 text-success"></i>
+                <i class="fa-regular fa-check-circle me-2 text-success"></i>
                 <span>{{ translate('Route cache will be cleared') }}</span>
             </li>
             <li class="list-group-item">
-                <i class="far fa-check-circle me-2 text-success"></i>
+                <i class="fa-regular fa-check-circle me-2 text-success"></i>
                 <span>{{ translate('Configuration cache will be cleared') }}</span>
             </li>
             <li class="list-group-item">
-                <i class="far fa-check-circle me-2 text-success"></i>
+                <i class="fa-regular fa-check-circle me-2 text-success"></i>
                 <span>{{ translate('All Other Caches will be cleared') }}</span>
             </li>
             <li class="list-group-item">
-                <i class="far fa-check-circle me-2 text-success"></i>
+                <i class="fa-regular fa-check-circle me-2 text-success"></i>
                 <span>{{ translate('Error logs file will be cleared') }}</span>
             </li>
             <li class="list-group-item p-0"></li>

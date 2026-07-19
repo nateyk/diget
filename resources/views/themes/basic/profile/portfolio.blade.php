@@ -14,7 +14,7 @@
                         <form action="{{ url()->current() }}" method="GET">
                             <div class="form-search form-search-reverse">
                                 <button class="icon">
-                                    <i class="fa fa-search"></i>
+                                    <i class="fa-solid fa-search"></i>
                                 </button>
                                 <input type="text" name="search" placeholder="{{ translate('Search...') }}"
                                     class="form-control" value="{{ request('search') }}">

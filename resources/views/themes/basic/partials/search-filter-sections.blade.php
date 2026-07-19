@@ -18,7 +18,7 @@
         <details class="discover-filter-section">
             <summary>
                 <span>{{ $categoryOption->name }}</span>
-                <i class="fa fa-chevron-right"></i>
+                <i class="fa-solid fa-chevron-right"></i>
             </summary>
             <div class="discover-filter-body">
                 @foreach ($categoryOption->options as $optionIndex => $value)
@@ -40,7 +40,7 @@
 <details class="discover-filter-section">
     <summary>
         <span>{{ translate('Price') }}</span>
-        <i class="fa fa-chevron-right"></i>
+        <i class="fa-solid fa-chevron-right"></i>
     </summary>
     <div class="discover-filter-body">
         <div class="discover-filter-price">
@@ -50,7 +50,7 @@
                 placeholder="{{ translate('max') }}" value="{{ request()->input('max_price') }}" />
             <button id="{{ $priceButtonId }}" class="btn btn-primary btn-md btn-padding search-by-price"
                 aria-label="{{ translate('Apply price') }}">
-                <i class="fa fa-arrow-right fa-rtl"></i>
+                <i class="fa-solid fa-arrow-right fa-rtl"></i>
             </button>
         </div>
     </div>
@@ -60,7 +60,7 @@
     <details class="discover-filter-section">
         <summary>
             <span>{{ translate('Rating') }}</span>
-            <i class="fa fa-chevron-right"></i>
+            <i class="fa-solid fa-chevron-right"></i>
         </summary>
         <div class="discover-filter-body">
             <label class="discover-filter-option" for="ratingAll{{ $idSuffix }}">
@@ -88,7 +88,7 @@
 <details class="discover-filter-section">
     <summary>
         <span>{{ translate('Date Added') }}</span>
-        <i class="fa fa-chevron-right"></i>
+        <i class="fa-solid fa-chevron-right"></i>
     </summary>
     <div class="discover-filter-body">
         @foreach ($dateFilters as $key => $filter)

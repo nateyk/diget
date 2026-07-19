@@ -1,7 +1,7 @@
 <nav class="dashboard-nav">
     <button type="button" class="dashboard-nav-btn dashboard-btn dashboard-toggle-btn"
         aria-controls="workspaceSidebar" aria-expanded="false" aria-label="{{ translate('Toggle navigation') }}">
-        <i class="fa fa-bars"></i>
+        <i class="fa-solid fa-bars"></i>
     </button>
     <a href="{{ route('home') }}" class="logo logo-sm logo-toggle ms-3">
         <img src="{{ asset($themeSettings->general->logo_dark) }}" alt="{{ @$settings->general->site_name }}" />
@@ -12,7 +12,7 @@
             @php($dashboardStorefrontLink = authUser()->getProfileLink())
             <button type="button" class="btn btn-outline-secondary dashboard-storefront-share ms-3"
                 data-bs-toggle="modal" data-bs-target="#dashboardStorefrontShareModal">
-                <i class="bi bi-share me-1"></i>
+                <i class="fa-solid fa-share-nodes me-1"></i>
                 <span>{{ translate('Share') }}</span>
             </button>
         @endif

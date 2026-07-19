@@ -61,7 +61,7 @@
                                             </div>
                                         @endif
                                         <div class="col">
-                                            <i class="fa fa-cart-shopping me-1"></i>
+                                            <i class="fa-solid fa-cart-shopping me-1"></i>
                                             <span>{{ translate($item->total_sales > 1 ? ':count Sales' : ':count Sale', [
                                                 'count' => number_format($item->total_sales),
                                             ]) }}</span>
@@ -95,7 +95,7 @@
                                         @if ($item->isMainFileExternal())
                                             <a href="{{ route('items.free.download.external', hash_encode($item->id)) }}"
                                                 target="_blank" class="btn btn-primary btn-md px-3">
-                                                <i class="fa fa-download"></i>
+                                                <i class="fa-solid fa-download"></i>
                                             </a>
                                         @else
                                             <form action="{{ route('items.free.download', hash_encode($item->id)) }}"
@@ -140,7 +140,7 @@
                                         <div class="item-swiper mt-3">
                                             <div class="swiper-actions">
                                                 <div id="itemSwiperPrev" class="swiper-button-prev">
-                                                    <i class="fa fa-chevron-left fa-rtl"></i>
+                                                    <i class="fa-solid fa-chevron-left fa-rtl"></i>
                                                 </div>
                                             </div>
                                             <div class="swiper itemSwiper">
@@ -158,7 +158,7 @@
                                             </div>
                                             <div class="swiper-actions">
                                                 <div id="itemSwiperNext" class="swiper-button-next">
-                                                    <i class="fa fa-chevron-right fa-rtl"></i>
+                                                    <i class="fa-solid fa-chevron-right fa-rtl"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -175,12 +175,12 @@
                                             <div class="item-audio-actions md">
                                                 <button class="play-button btn btn-primary btn-md px-2">
                                                     <div class="play-button-icon">
-                                                        <i class="fas fa-play"></i>
+                                                        <i class="fa-solid fa-play"></i>
                                                     </div>
                                                 </button>
                                                 <button class="pause-button btn btn-primary btn-md px-2 d-none">
                                                     <div class="play-button-icon">
-                                                        <i class="fas fa-pause"></i>
+                                                        <i class="fa-solid fa-pause"></i>
                                                     </div>
                                                 </button>
                                             </div>
@@ -321,7 +321,7 @@
                                             <div class="col small">
                                                 <a href="{{ @$settings->links->free_items_policy_link }}">
                                                     <span>{{ translate('Free items policy') }}</span>
-                                                    <i class="fa fa-chevron-right fa-rtl ms-1 fa-sm"></i>
+                                                    <i class="fa-solid fa-chevron-right fa-rtl ms-1 fa-sm"></i>
                                                 </a>
                                             </div>
                                         @endif
@@ -336,7 +336,7 @@
                                     @if ($item->isMainFileExternal())
                                         <a href="{{ route('items.free.download.external', hash_encode($item->id)) }}"
                                             target="_blank" class="btn btn-primary btn-md w-100">
-                                            <i class="fa fa-download me-1"></i>
+                                            <i class="fa-solid fa-download me-1"></i>
                                             {{ translate('Download') }}
                                         </a>
                                     @else
@@ -408,11 +408,11 @@
                                     </form>
                                     <div class="list border-top pt-3 mt-3">
                                         <div class="list-item small text-muted">
-                                            <i class="fa fa-check text-primary me-1"></i>
+                                            <i class="fa-solid fa-check text-primary me-1"></i>
                                             {{ translate('Secure checkout') }}
                                         </div>
                                         <div class="list-item small text-muted">
-                                            <i class="fa fa-check text-primary me-1"></i>
+                                            <i class="fa-solid fa-check text-primary me-1"></i>
                                             {{ translate('Available in your purchase library') }}
                                         </div>
                                     </div>
@@ -572,7 +572,7 @@
                         <div class="col d-none d-lg-block">
                             <a href="{{ $author->getPortfolioLink() }}">
                                 {{ translate('Visit storefront') }}
-                                <i class="fa fa-chevron-right fa-rtl fa-sm ms-2"></i>
+                                <i class="fa-solid fa-chevron-right fa-rtl fa-sm ms-2"></i>
                             </a>
                         </div>
                     </div>
@@ -591,7 +591,7 @@
                     <div class="text-center mt-5 d-block d-lg-none">
                         <a href="{{ $author->getPortfolioLink() }}" class="btn btn-primary btn-md btn-icon">
                             {{ translate('Visit storefront') }}
-                            <i class="fa fa-arrow-right fa-rtl ms-2"></i>
+                            <i class="fa-solid fa-arrow-right fa-rtl ms-2"></i>
                         </a>
                     </div>
                 </div>

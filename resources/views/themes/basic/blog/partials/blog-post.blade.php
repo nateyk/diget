@@ -15,7 +15,7 @@
                     </div>
                 </div>
                 <div class="col d-flex align-items-center text-muted small">
-                    <i class="far fa-calendar me-2"></i>
+                    <i class="fa-regular fa-calendar me-2"></i>
                     <span>{{ dateFormat($blogArticle->created_at) }}</span>
                 </div>
             </div>

@@ -17,7 +17,7 @@
                         </div>
                         <div class="dashboard-balance-icon">
                             <a href="{{ route('workspace.balance.index') }}">
-                                <i class="fa fa-wallet"></i>
+                                <i class="fa-solid fa-wallet"></i>
                             </a>
                         </div>
                     </div>
@@ -111,14 +111,14 @@
                         <div
                             class="dashboard-sidebar-link {{ request()->routeIs('workspace.settings.*') ? 'current' : '' }}">
                             <a href="{{ route('workspace.settings.index') }}" class="dashboard-sidebar-link-title">
-                                <i class="fa fa-cog"></i>
+                                <i class="fa-solid fa-cog"></i>
                                 <span>{{ translate('Settings') }}</span>
                             </a>
                         </div>
                         <div class="dashboard-sidebar-link">
                             <a href="#" class="dashboard-sidebar-link-title"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="fa fa-power-off"></i>
+                                <i class="fa-solid fa-power-off"></i>
                                 <span> {{ translate('Logout') }}</span>
                             </a>
                         </div>

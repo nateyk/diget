@@ -1,6 +1,6 @@
 <header class="vironeer-page-header">
     <div class="vironeer-sibebar-icon me-auto">
-        <i class="fa fa-bars fa-lg"></i>
+        <i class="fa-solid fa-bars fa-lg"></i>
     </div>
     <div class="row row-cols-auto g-3">
         @if (isAddonActive('license_verification_tool'))
@@ -26,7 +26,7 @@
     </div>
     <div class="vironeer-notifications ms-2" data-dropdown-v2>
         <div class="vironeer-notifications-title">
-            <i class="far fa-bell"></i>
+            <i class="fa-regular fa-bell"></i>
             <div class="counter">{{ $navbarNotifications['unread'] > 9 ? '9+' : $navbarNotifications['unread'] }}</div>
         </div>
         <div class="vironeer-notifications-menu">
@@ -56,7 +56,7 @@
                                     class="vironeer-notification-title mb-0 d-flex justify-content-between align-items-center">
                                     <span>{{ $navbarNotification->title }}</span>
                                     @if (!$navbarNotification->status)
-                                        <span class="unread flashit"><i class="fas fa-circle"></i></span>
+                                        <span class="unread flashit"><i class="fa-solid fa-circle"></i></span>
                                     @endif
                                 </p>
                                 <p class="vironeer-notification-text mb-0">
@@ -74,7 +74,7 @@
                                     class="vironeer-notification-title mb-0 d-flex justify-content-between align-items-center">
                                     <span>{{ $navbarNotification->title }}</span>
                                     @if (!$navbarNotification->status)
-                                        <span class="unread flashit"><i class="fas fa-circle"></i></span>
+                                        <span class="unread flashit"><i class="fa-solid fa-circle"></i></span>
                                     @endif
                                 </p>
                                 <p class="vironeer-notification-text mb-0">
@@ -114,7 +114,7 @@
             <li>
                 <a class="dropdown-item text-danger" href="#"
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <i class="fas fa-sign-out-alt me-2"></i>
+                    <i class="fa-solid fa-sign-out-alt me-2"></i>
                     {{ translate('Logout') }}
                 </a>
             </li>

@@ -98,13 +98,13 @@
                     <div class="col">
                         @if ($item->isMainFileExternal())
                             <a href="{{ $item->main_file }}" target="_blank" class="btn btn-primary btn-md w-100">
-                                <i class="fa fa-download me-2"></i>
+                                <i class="fa-solid fa-download me-2"></i>
                                 {{ translate('Download') }}</a>
                         @else
                             <form action="{{ route('workspace.items.download', $item->id) }}" method="POST">
                                 @csrf
                                 <button class="btn btn-primary btn-md w-100">
-                                    <i class="fa fa-download me-2"></i>
+                                    <i class="fa-solid fa-download me-2"></i>
                                     {{ translate('Download') }}
                                 </button>
                             </form>

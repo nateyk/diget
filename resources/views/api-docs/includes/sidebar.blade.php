@@ -1,6 +1,6 @@
 <aside class="sidebar">
     <div class="sidebar-toggle-btn">
-        <i class="fa fa-chevron-right"></i>
+        <i class="fa-solid fa-chevron-right"></i>
     </div>
     <div class="sidebar-inner">
         <div class="mb-5">

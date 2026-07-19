@@ -46,7 +46,7 @@
                                 <div class="input-group">
                                     <input type="text" name="options[]" class="form-control form-control-lg" required>
                                     <button id="addCategoryOption" class="btn btn-primary px-3" type="button">
-                                        <i class="fa fa-plus"></i>
+                                        <i class="fa-solid fa-plus"></i>
                                     </button>
                                 </div>
                             </div>

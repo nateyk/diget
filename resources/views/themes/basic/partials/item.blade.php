@@ -23,7 +23,7 @@
                             <i class="fa-solid fa-volume-xmark muted"></i>
                         </div>
                         <div class="item-video-full item-video-action">
-                            <i class="fa fa-expand"></i>
+                            <i class="fa-solid fa-expand"></i>
                         </div>
                     </div>
                     <div class="item-video-progress"><span></span></div>
@@ -35,10 +35,10 @@
                 <div class="item-audio-wave">
                     <div class="item-audio-actions">
                         <button class="play-button btn btn-primary btn-sm px-2" aria-label="{{ translate('Play preview') }}">
-                            <span class="play-button-icon"><i class="fas fa-play"></i></span>
+                            <span class="play-button-icon"><i class="fa-solid fa-play"></i></span>
                         </button>
                         <button class="pause-button btn btn-primary btn-sm px-2 d-none" aria-label="{{ translate('Pause preview') }}">
-                            <span class="play-button-icon"><i class="fas fa-pause"></i></span>
+                            <span class="play-button-icon"><i class="fa-solid fa-pause"></i></span>
                         </button>
                     </div>
                     <div class="waveform" data-url="{{ $item->getPreviewLink() }}" data-waveheight="50"></div>
@@ -98,7 +98,7 @@
                 <div class="ms-auto">
                     <a href="{{ $item->getLink() }}" class="small fw-semibold text-dark text-nowrap">
                     {{ translate('View product') }}
-                    <i class="fa fa-arrow-right fa-rtl ms-1"></i>
+                    <i class="fa-solid fa-arrow-right fa-rtl ms-1"></i>
                     </a>
                 </div>
             </div>

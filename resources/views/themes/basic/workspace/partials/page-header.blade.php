@@ -20,7 +20,7 @@
 
         @hasSection('create')
             <a href="@yield('create')" class="btn btn-primary btn-md">
-                <i class="fa fa-plus me-1"></i>
+                <i class="fa-solid fa-plus me-1"></i>
                 @yield('create_label', translate('Create'))
             </a>
         @endif

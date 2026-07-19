@@ -3,7 +3,7 @@
 @endphp
 <div class="period-select">
     <div class="period-select-icon">
-        <i class="fa fa-calendar-alt"></i>
+        <i class="fa-solid fa-calendar-alt"></i>
     </div>
     <select id="period-select" class="form-select radius w-auto">
         @foreach ($dates as $date)

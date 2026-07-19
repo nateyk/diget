@@ -14,7 +14,7 @@
                     value="{{ authUser()->getReferralLink() }}" readonly>
                 <button type="button" class="btn btn-primary btn-md btn-copy" id="input-group-button-right"
                     data-clipboard-target="#refLink">
-                    <i class="far fa-clone"></i>
+                    <i class="fa-regular fa-clone"></i>
                     <span class="d-none d-lg-inline ms-2">
                         {{ translate('Copy') }}
                     </span>
@@ -31,7 +31,7 @@
                 <form action="{{ url()->current() }}" method="GET">
                     <div class="form-search">
                         <button class="icon">
-                            <i class="fa fa-search"></i>
+                            <i class="fa-solid fa-search"></i>
                         </button>
                         <input type="text" name="search" placeholder="{{ translate('Search...') }}"
                             class="form-control form-control-md" value="{{ request('search') }}">

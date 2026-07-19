@@ -16,7 +16,6 @@
     },
     "dependencies": {
         "@ckeditor/ckeditor5-dev-translations": "^39.6.1",
-        "bootstrap-icons": "^1.13.1",
         "ckeditor5": "^48.3.0"
     }
 }

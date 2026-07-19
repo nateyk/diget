@@ -12,7 +12,7 @@
                                 <div class="drop-down" data-dropdown data-dropdown-position="top">
                                     <button type="button" class="drop-down-btn">
                                         <span class="me-2">{{ $topNavLink->name }}</span>
-                                        <i class="fa fa-angle-down ms-auto"></i>
+                                        <i class="fa-solid fa-angle-down ms-auto"></i>
                                     </button>
                                     <div class="drop-down-menu drop-down-menu-md drop-down-menu-end">
                                         @foreach ($topNavLink->children as $child)

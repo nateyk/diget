@@ -18,7 +18,7 @@
                                     </div>
                                 </div>
                                 <div class="col d-flex align-items-center text-muted small">
-                                    <i class="far fa-calendar me-2"></i>
+                                    <i class="fa-regular fa-calendar me-2"></i>
                                     <span>{{ dateFormat($blogArticle->created_at) }}</span>
                                 </div>
                             </div>
@@ -39,7 +39,7 @@
                         ])
                         <div class="comments">
                             <h5 class="comments-title">
-                                <i class="far fa-comments me-2"></i>{{ translate('Comments') }}
+                                <i class="fa-regular fa-comments me-2"></i>{{ translate('Comments') }}
                                 ({{ $blogArticleComments->count() }})
                             </h5>
                             @forelse ($blogArticleComments as $blogArticleComment)
@@ -61,7 +61,7 @@
                                                     </h6>
                                                 </a>
                                                 <time class="comment-time small text-muted">
-                                                    <i class="far fa-calendar me-1"></i>
+                                                    <i class="fa-regular fa-calendar me-1"></i>
                                                     {{ dateFormat($blogArticleComment->created_at) }}
                                                 </time>
                                             </div>

@@ -100,7 +100,7 @@
                         <button type="button" class="drop-down-btn form-control form-control-md"
                             data-profile-social-picker-btn>
                             <span data-profile-social-picker-label>{{ translate('Choose a platform') }}</span>
-                            <i class="fa fa-angle-down ms-auto"></i>
+                            <i class="fa-solid fa-angle-down ms-auto"></i>
                         </button>
                         <div class="drop-down-menu" data-profile-social-picker-menu>
                             <button type="button" class="drop-down-item" data-profile-social-option=""
@@ -121,7 +121,7 @@
                 <div class="col-12 col-md-auto">
                     <button type="button" class="btn btn-outline-secondary btn-md w-100"
                         data-profile-social-add>
-                        <i class="fa fa-plus me-1"></i>
+                        <i class="fa-solid fa-plus me-1"></i>
                         {{ translate('Add') }}
                     </button>
                 </div>
@@ -152,7 +152,7 @@
                                 <button type="button" class="btn btn-outline-secondary btn-md btn-padding"
                                     data-profile-social-remove
                                     aria-label="{{ translate('Remove') }}">
-                                    <i class="fa fa-times"></i>
+                                    <i class="fa-solid fa-times"></i>
                                 </button>
                             </div>
                         </div>
@@ -183,7 +183,7 @@
                     <div class="col-auto">
                         <button type="button" class="btn btn-outline-secondary btn-md btn-padding"
                             data-profile-social-remove aria-label="{{ translate('Remove') }}">
-                            <i class="fa fa-times"></i>
+                            <i class="fa-solid fa-times"></i>
                         </button>
                     </div>
                 </div>

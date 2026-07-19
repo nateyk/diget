@@ -46,13 +46,13 @@
                         <button type="button" class="btn btn-outline-secondary btn-padding"
                             data-bs-toggle="modal" data-bs-target="#storefrontContactModal"
                             aria-label="{{ translate('Message') }}">
-                            <i class="bi bi-chat-left-text"></i>
+                            <i class="fa-regular fa-message"></i>
                         </button>
                     @endif
                     <button type="button" class="btn btn-outline-secondary btn-padding"
                         data-bs-toggle="modal" data-bs-target="#storefrontShareModal"
                         aria-label="{{ translate('Share') }}">
-                        <i class="bi bi-share"></i>
+                        <i class="fa-solid fa-share-nodes"></i>
                     </button>
                 </div>
 

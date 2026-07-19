@@ -7,7 +7,7 @@
         </a>
         <a href="{{ route('workspace.settings.profile') }}"
             class="settings-link {{ request()->routeIs('workspace.settings.profile') ? 'active' : '' }}">
-            <i class="fa fa-user me-1"></i>
+            <i class="fa-solid fa-user me-1"></i>
             {{ translate('Profile') }}
         </a>
         @if (authUser()->isAuthor())
@@ -38,7 +38,7 @@
         @endif
         <a href="{{ route('workspace.settings.password') }}"
             class="settings-link {{ request()->routeIs('workspace.settings.password') ? 'active' : '' }}">
-            <i class="fa fa-lock me-1"></i>
+            <i class="fa-solid fa-lock me-1"></i>
             {{ translate('Password') }}
         </a>
         <a href="{{ route('workspace.settings.2fa') }}"

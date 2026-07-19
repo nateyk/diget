@@ -81,7 +81,8 @@ class CreatorStorefrontUiTest extends TestCase
         $this->assertStringContainsString('profile_socials.platforms', $socialLinksPartial);
         $this->assertStringContainsString('take(config(\'profile_socials.max_links\', 7))', $socialLinksPartial);
         $this->assertStringContainsString('class="social-btn {{ $socialPlatforms[$platform][\'class\'] }}"', $socialLinksPartial);
-        $this->assertStringContainsString('bi {{ $socialPlatforms[$platform][\'icon\'] }}', $socialLinksPartial);
+        $this->assertStringContainsString('class="{{ $socialPlatforms[$platform][\'icon\'] }}"', $socialLinksPartial);
+        $this->assertStringNotContainsString('bi {{ $socialPlatforms[$platform][\'icon\'] }}', $socialLinksPartial);
         $this->assertStringContainsString('$cardDescription = trim($user->profile_card_description ?? \'\')', $indexView);
         $this->assertStringNotContainsString('Str::words($profileDescription, 100', $indexView);
         $this->assertStringContainsString('creator-storefront-bio', $indexView);

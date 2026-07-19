@@ -44,7 +44,7 @@
                             <div class="text-center mt-5">
                                 <a href="{{ route('items.index') }}" class="btn btn-outline-primary btn-md">
                                     {{ translate('Explore all products') }}
-                                    <i class="fa fa-arrow-right fa-rtl ms-2"></i>
+                                    <i class="fa-solid fa-arrow-right fa-rtl ms-2"></i>
                                 </a>
                             </div>
                         @else
@@ -72,7 +72,7 @@
                                 <div class="text-center mt-5">
                                     <a href="{{ $category->getLink() }}" class="btn btn-outline-primary btn-md">
                                         {{ translate('Explore category') }}
-                                        <i class="fa fa-arrow-right fa-rtl ms-2"></i>
+                                        <i class="fa-solid fa-arrow-right fa-rtl ms-2"></i>
                                     </a>
                                 </div>
                             @else

@@ -36,7 +36,7 @@
                                         value="{{ demo($user->email) }}" required>
                                     <button class="btn btn-dark" type="button" data-bs-toggle="modal"
                                         data-bs-target="#sendMailModal"><i
-                                            class="far fa-paper-plane me-2"></i>{{ translate('Send Email') }}</button>
+                                            class="fa-regular fa-paper-plane me-2"></i>{{ translate('Send Email') }}</button>
                                 </div>
                             </div>
                             <div class="col-lg-12">

@@ -70,7 +70,7 @@
                                                                 class="d-block text-muted bg-light p-3 border rounded-2 h-100">
                                                                 <div class="row align-items-center g-2">
                                                                     <div class="col-auto">
-                                                                        <i class="fa fa-file-alt fa-lg"></i>
+                                                                        <i class="fa-solid fa-file-alt fa-lg"></i>
                                                                     </div>
                                                                     <div class="col">
                                                                         <h6 class="mb-0">
@@ -78,7 +78,7 @@
                                                                         </h6>
                                                                     </div>
                                                                     <div class="col-auto">
-                                                                        <i class="fa fa-download"></i>
+                                                                        <i class="fa-solid fa-download"></i>
                                                                     </div>
                                                                 </div>
                                                             </a>
@@ -113,7 +113,7 @@
                                                         class="form-control form-control-md">
                                                     <button id="addAttachment" class="btn btn-outline-secondary"
                                                         type="button">
-                                                        <i class="fa fa-plus"></i>
+                                                        <i class="fa-solid fa-plus"></i>
                                                     </button>
                                                 </div>
                                             </div>

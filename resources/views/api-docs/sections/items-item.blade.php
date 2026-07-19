@@ -14,7 +14,7 @@
     <h4 class="mb-3">{{ translate('Endpoint') }}</h4>
     <div class="code mb-3">
         <div class="copy">
-            <i class="far fa-clone"></i>
+            <i class="fa-regular fa-clone"></i>
         </div>
         <code>
             <pre class="mb-0"><div class="method get">{{ translate('GET') }}</div><div class="endpoint copy-data">{{ route('api.items.item') }}</div></pre>

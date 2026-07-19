@@ -36,7 +36,7 @@
     @else
         <div class="card-v border card-bg text-center">
             <div class="py-3">
-                <i class="far fa-star fa-lg"></i>
+                <i class="fa-regular fa-star fa-lg"></i>
                 <p class="mb-0 mt-3">{{ translate('No reviews found') }}</p>
             </div>
         </div>

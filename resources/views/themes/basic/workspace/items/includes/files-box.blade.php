@@ -15,14 +15,14 @@
                     </div>
                     <div class="uploaded-file-info">
                         <h6 class="uploaded-file-name"><span class="success-mark"><i
-                                    class="far fa-check-circle"></i></span>{{ $uploadedFile->getShortName() }}
+                                    class="fa-regular fa-check-circle"></i></span>{{ $uploadedFile->getShortName() }}
                             <small class="ms-1">({{ $uploadedFile->getSize() }})</small>
                         </h6>
                         <p class="uploaded-file-time">{{ $uploadedFile->created_at->diffforhumans() }}</p>
                     </div>
                     <button class="uploaded-file-remove" data-id="{{ hash_encode($uploadedFile->id) }}"
                         data-delete-link="{{ route('workspace.items.files.delete', [hash_encode($category->id), hash_encode($uploadedFile->id)]) }}">
-                        <i class="fa fa-trash-alt"></i>
+                        <i class="fa-solid fa-trash-alt"></i>
                     </button>
                 </div>
             @endforeach
@@ -45,10 +45,10 @@
                                         <div class="dz-details-info">
                                             <div class="dz-filename">
                                                 <div class="dz-success-mark">
-                                                    <span><i class="far fa-check-circle"></i></span>
+                                                    <span><i class="fa-regular fa-check-circle"></i></span>
                                                 </div>
                                                 <div class="dz-error-mark">
-                                                    <span><i class="far fa-times-circle"></i></span>
+                                                    <span><i class="fa-regular fa-times-circle"></i></span>
                                                 </div>
                                                 <span data-dz-name></span>
                                                 <div class="dz-size ms-1"></div>
@@ -56,7 +56,7 @@
                                             <div class="dz-upload-percentage"></div>
                                         </div>
                                         <a class="dz-remove" data-dz-remove>
-                                            <i class="fas fa-times fa-lg"></i>
+                                            <i class="fa-solid fa-times fa-lg"></i>
                                         </a>
                                     </div>
                                     <div class="dz-progress">
@@ -72,7 +72,7 @@
                 <div class="dropzone-drag" data-dz-click>
                     <div class="dropzone-drag-inner">
                         <div class="dropzone-drag-icon">
-                            <i class="fas fa-plus fa-lg"></i>
+                            <i class="fa-solid fa-plus fa-lg"></i>
                         </div>
                         <div>
                             <h6 class="dropzone-drag-title">
