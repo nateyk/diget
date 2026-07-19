@@ -56,4 +56,15 @@ class WorkspaceExperienceTest extends TestCase
             ->assertOk()
             ->assertSee('No purchases match the current search.');
     }
+
+    public function test_creator_items_use_one_labeled_action_menu_per_row(): void
+    {
+        $creator = User::query()->where('username', 'nahomdeveloper')->firstOrFail();
+
+        $this->actingAs($creator)
+            ->get(route('workspace.items.index'))
+            ->assertOk()
+            ->assertSee('aria-label="Item actions"', false)
+            ->assertSee('dropdown-menu-end', false);
+    }
 }

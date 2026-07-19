@@ -153,52 +153,61 @@
                                         </td>
                                     @endif
                                     <td class="text-center">
-                                        <div class="row row-cols-auto justify-content-center align-items-center g-2">
+                                        <div class="dropdown custom-drop d-inline-block text-start">
+                                            <button type="button" class="btn btn-outline-secondary btn-padding"
+                                                data-bs-toggle="dropdown" aria-expanded="false"
+                                                aria-label="{{ translate('Item actions') }}" title="{{ translate('Item actions') }}">
+                                                <i class="fa-solid fa-ellipsis"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
                                             @if (!$item->isPending())
-                                                <div class="col">
+                                                <li>
                                                     <a href="{{ route('workspace.items.edit', $item->id) }}"
-                                                        class="btn btn-outline-secondary btn-padding"
-                                                        aria-label="{{ translate('Edit item') }}" title="{{ translate('Edit item') }}">
-                                                        <i class="fa-regular fa-pen-to-square"></i>
+                                                        class="dropdown-item">
+                                                        <i class="fa-regular fa-pen-to-square me-2"></i>
+                                                        {{ translate('Edit') }}
                                                     </a>
-                                                </div>
+                                                </li>
                                             @endif
                                             @if ($item->isApproved())
-                                                <div class="col">
+                                                <li>
                                                     <a href="{{ route('workspace.items.statistics', $item->id) }}"
-                                                        class="btn btn-outline-secondary btn-padding"
-                                                        aria-label="{{ translate('View statistics') }}" title="{{ translate('View statistics') }}">
-                                                        <i class="fa-solid fa-chart-simple"></i>
+                                                        class="dropdown-item">
+                                                        <i class="fa-solid fa-chart-simple me-2"></i>
+                                                        {{ translate('Statistics') }}
                                                     </a>
-                                                </div>
-                                                <div class="col">
+                                                </li>
+                                                <li>
                                                     @if ($item->isMainFileExternal())
                                                         <a href="{{ $item->main_file }}" target="_blank"
-                                                            class="btn btn-outline-secondary btn-padding"
-                                                            aria-label="{{ translate('Download item') }}" title="{{ translate('Download item') }}"><i
-                                                                class="fa fa-download"></i></a>
+                                                            class="dropdown-item">
+                                                            <i class="fa fa-download me-2"></i>
+                                                            {{ translate('Download') }}
+                                                        </a>
                                                     @else
                                                         <form action="{{ route('workspace.items.download', $item->id) }}"
                                                             method="POST">
                                                             @csrf
-                                                            <button class="btn btn-outline-secondary btn-padding"
-                                                                aria-label="{{ translate('Download item') }}" title="{{ translate('Download item') }}"><i
-                                                                    class="fa fa-download"></i></button>
+                                                            <button class="dropdown-item" type="submit">
+                                                                <i class="fa fa-download me-2"></i>
+                                                                {{ translate('Download') }}
+                                                            </button>
                                                         </form>
                                                     @endif
-                                                </div>
+                                                </li>
                                             @endif
-                                            <div class="col">
-                                                <form action="{{ route('workspace.items.destroy', $item->id) }}"
-                                                    method="POST">
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <form action="{{ route('workspace.items.destroy', $item->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button class="btn btn-outline-danger btn-padding action-confirm"
-                                                        aria-label="{{ translate('Delete item') }}" title="{{ translate('Delete item') }}">
-                                                        <i class="far fa-trash-alt"></i>
+                                                    <button class="dropdown-item text-danger action-confirm" type="submit">
+                                                        <i class="far fa-trash-alt me-2"></i>
+                                                        {{ translate('Delete') }}
                                                     </button>
                                                 </form>
-                                            </div>
+                                            </li>
+                                            </ul>
                                         </div>
                                     </td>
                                 </tr>
