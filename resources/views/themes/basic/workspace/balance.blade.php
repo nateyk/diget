@@ -91,11 +91,10 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="7" class="text-center">
-                                        <div class="text-muted p-4">{{ translate('No data found') }}</div>
-                                    </td>
-                                </tr>
+                                @include('themes.basic.workspace.partials.table-empty-row', [
+                                    'colspan' => authUser()->isAuthor() ? 7 : 4,
+                                    'message' => translate('No statements match the selected dates.'),
+                                ])
                             @endforelse
                         </tbody>
                     </table>

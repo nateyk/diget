@@ -46,4 +46,14 @@ class WorkspaceExperienceTest extends TestCase
             ->get(route('workspace.dashboard'))
             ->assertForbidden();
     }
+
+    public function test_purchase_search_uses_a_contextual_empty_state(): void
+    {
+        $buyer = User::query()->where('username', 'buyerdemo')->firstOrFail();
+
+        $this->actingAs($buyer)
+            ->get(route('workspace.purchases.index', ['search' => 'no-matching-purchase']))
+            ->assertOk()
+            ->assertSee('No purchases match the current search.');
+    }
 }

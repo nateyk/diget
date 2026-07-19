@@ -56,11 +56,10 @@
                                     <td class="text-center">{{ getAmount($referral->earnings) }}</td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="3" class="text-center">
-                                        <div class="text-muted p-4">{{ translate('No data found') }}</div>
-                                    </td>
-                                </tr>
+                                @include('themes.basic.workspace.partials.table-empty-row', [
+                                    'colspan' => 3,
+                                    'message' => translate('No referrals match the selected period.'),
+                                ])
                             @endforelse
                         </tbody>
                     </table>

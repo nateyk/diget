@@ -203,11 +203,10 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="5" class="text-center">
-                                        <div class="text-muted p-4">{{ translate('No data found') }}</div>
-                                    </td>
-                                </tr>
+                                @include('themes.basic.workspace.partials.table-empty-row', [
+                                    'colspan' => @$settings->item->adding_require_review ? 5 : 4,
+                                    'message' => translate('No products match the current search.'),
+                                ])
                             @endforelse
                         </tbody>
                     </table>

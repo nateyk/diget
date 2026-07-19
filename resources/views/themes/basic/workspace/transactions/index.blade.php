@@ -110,11 +110,10 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="9" class="text-center">
-                                        <div class="text-muted p-4">{{ translate('No data found') }}</div>
-                                    </td>
-                                </tr>
+                                @include('themes.basic.workspace.partials.table-empty-row', [
+                                    'colspan' => 9,
+                                    'message' => translate('No transactions match the current filters.'),
+                                ])
                             @endforelse
                         </tbody>
                     </table>

@@ -103,11 +103,10 @@
                                     <td class="text-center">{{ dateFormat($withdrawal->created_at) }}</td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="8" class="text-center">
-                                        <div class="text-muted p-4">{{ translate('No data found') }}</div>
-                                    </td>
-                                </tr>
+                                @include('themes.basic.workspace.partials.table-empty-row', [
+                                    'colspan' => 6,
+                                    'message' => translate('No withdrawal requests match the current filters.'),
+                                ])
                             @endforelse
                         </tbody>
                     </table>

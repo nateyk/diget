@@ -158,11 +158,10 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="6" class="text-center">
-                                        <div class="text-muted p-4">{{ translate('No data found') }}</div>
-                                    </td>
-                                </tr>
+                                @include('themes.basic.workspace.partials.table-empty-row', [
+                                    'colspan' => @$settings->item->support_status ? 5 : 4,
+                                    'message' => translate('No purchases match the current search.'),
+                                ])
                             @endforelse
                         </tbody>
                     </table>
