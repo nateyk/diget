@@ -1,4 +1,4 @@
-<aside id="workspaceSidebar" class="dashboard-sidebar" aria-label="{{ translate('Workspace navigation') }}">
+<aside id="workspaceSidebar" class="dashboard-sidebar workspace-sidebar" aria-label="{{ translate('Workspace navigation') }}">
     <button type="button" class="overlay" aria-label="{{ translate('Close navigation') }}"></button>
     <div class="dashboard-sidebar-container">
         <div class="dashboard-sidebar-header">
@@ -21,9 +21,8 @@
                             </a>
                         </div>
                     </div>
+                    <nav class="dashboard-sidebar-links" aria-label="{{ translate('Workspace navigation') }}">
                     @if (authUser()->isAuthor())
-                        <div class="dashboard-sidebar-links">
-                            <p class="dashboard-sidebar-links-title">{{ translate('Creator') }}</p>
                             <div
                                 class="dashboard-sidebar-link {{ request()->routeIs('workspace.dashboard') ? 'current' : '' }}">
                                 <a href="{{ route('workspace.dashboard') }}" class="dashboard-sidebar-link-title">
@@ -73,10 +72,7 @@
                                     </div>
                                 </div>
                             @endif
-                        </div>
                     @endif
-                    <div class="dashboard-sidebar-links">
-                        <p class="dashboard-sidebar-links-title">{{ translate('Account') }}</p>
                         <div
                             class="dashboard-sidebar-link {{ request()->routeIs('workspace.purchases.*') ? 'current' : '' }}">
                             <a href="{{ route('workspace.purchases.index') }}" class="dashboard-sidebar-link-title">
@@ -119,8 +115,6 @@
                                 <span>{{ translate('Settings') }}</span>
                             </a>
                         </div>
-                    </div>
-                    <div class="dashboard-sidebar-links dashboard-sidebar-links-logout">
                         <div class="dashboard-sidebar-link">
                             <a href="#" class="dashboard-sidebar-link-title"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -128,7 +122,7 @@
                                 <span> {{ translate('Logout') }}</span>
                             </a>
                         </div>
-                    </div>
+                    </nav>
                 </div>
             </div>
         </div>

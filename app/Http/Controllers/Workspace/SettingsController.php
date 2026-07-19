@@ -9,6 +9,7 @@ use App\Models\Badge;
 use App\Models\KycVerification;
 use App\Models\UserBadge;
 use App\Models\WithdrawalMethod;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -112,7 +113,7 @@ class SettingsController extends Controller
 
             $profilesPath = 'images/profiles/' . strtolower(hash_encode($user->id)) . '/';
 
-            if ($request->has('avatar')) {
+            if ($request->hasFile('avatar')) {
                 $avatar = $request->file('avatar');
                 if (!checkImageSize($avatar, '120x120')) {
                     toastr()->error(translate('Avatar image must be 120x120px'));
@@ -123,7 +124,7 @@ class SettingsController extends Controller
                 $avatar = $user->avatar;
             }
 
-            if ($request->has('profile_cover')) {
+            if ($request->hasFile('profile_cover')) {
                 $profileCover = $request->file('profile_cover');
                 if (!checkImageSize($profileCover, '1200x500')) {
                     toastr()->error(translate('Profile cover image must be 1200x500px'));

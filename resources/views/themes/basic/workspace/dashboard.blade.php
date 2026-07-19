@@ -66,7 +66,7 @@
                 <div class="dashboard-chart-card dashboard-card card-v workspace-panel h-100">
                     <h2 class="workspace-panel-title">{{ translate('Purchasing Countries') }}</h2>
                     <div class="dashboard-chart">
-                        <div class="chart" id="countries-chart" class="w-100"></div>
+                        <div class="chart w-100" id="countries-chart"></div>
                     </div>
                 </div>
             </div>

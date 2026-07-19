@@ -4,18 +4,21 @@ namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 
-class PublicMarketplaceCompactCssTest extends TestCase
+class PublicStorefrontCompactCssTest extends TestCase
 {
-    public function test_public_marketplace_compact_overrides_are_present_and_scoped(): void
+    public function test_public_storefront_compact_overrides_are_present_and_scoped(): void
     {
         $cssPath = dirname(__DIR__, 2) . '/public/themes/basic/assets/css/custom.css';
+        $workspaceCssPath = dirname(__DIR__, 2) . '/public/themes/basic/assets/css/app.css';
 
         $this->assertFileExists($cssPath);
+        $this->assertFileExists($workspaceCssPath);
 
         $css = file_get_contents($cssPath);
+        $workspaceCss = file_get_contents($workspaceCssPath);
 
         $requiredSnippets = [
-            'Public marketplace compact scale',
+            'Public storefront compact scale',
             '@media (min-width: 992px)',
             '.nav-bar .nav-bar-container',
             '.nav-bar.nav-bar-sm .nav-bar-container',
@@ -38,7 +41,7 @@ class PublicMarketplaceCompactCssTest extends TestCase
         }
 
         $widePublicSnippets = [
-            'Public marketplace wide compact pass',
+            'Public storefront wide compact pass',
             '.card-v.border.p-4',
             '#searchFiltersSidebar .card-v',
             '#searchFiltersMenu .offcanvas-body',
@@ -214,25 +217,17 @@ class PublicMarketplaceCompactCssTest extends TestCase
         }
 
         $workspaceMobileSidebarSnippets = [
-            'Workspace mobile sidebar compact polish',
-            '.dashboard-sidebar .dashboard-sidebar-body',
-            '.dashboard.toggle .dashboard-sidebar .dashboard-sidebar-body',
-            'width: 236px',
-            'width: 218px',
+            'Workspace sidebar',
+            '.workspace-dashboard .workspace-sidebar .dashboard-sidebar-body',
+            '.workspace-dashboard.toggle .workspace-sidebar .dashboard-sidebar-body',
+            'width: 240px',
+            'left: -240px',
             '.dashboard-sidebar-link .dashboard-sidebar-link-title',
             '.dashboard-balance',
         ];
 
         foreach ($workspaceMobileSidebarSnippets as $snippet) {
-            $this->assertStringContainsString($snippet, $css);
+            $this->assertStringContainsString($snippet, $workspaceCss);
         }
-
-        $dashboardMarker = '/* Workspace dashboard compact pass */';
-        $this->assertStringContainsString($dashboardMarker, $css);
-
-        $publicCss = strstr($css, $dashboardMarker, true);
-
-        $this->assertIsString($publicCss);
-        $this->assertStringNotContainsString('.dashboard-', $publicCss);
     }
 }

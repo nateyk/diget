@@ -790,31 +790,6 @@
     }
 }
 
-/* Workspace dashboard compact pass */
-@media (min-width: 1200px) {
-    .dashboard-sidebar {
-        width: 210px;
-    }
-
-    .dashboard-sidebar .dashboard-sidebar-body {
-        width: 210px;
-    }
-
-    .dashboard.toggle .dashboard-sidebar {
-        left: -210px;
-    }
-
-    .dashboard-body {
-        width: calc(100% - 210px);
-        margin-inline-start: 210px;
-    }
-
-    .dashboard-nav {
-        left: 210px;
-        width: calc(100% - 210px);
-    }
-}
-
 @media (min-width: 992px) {
     .dashboard-sidebar .dashboard-sidebar-header {
         height: 60px;
@@ -1292,31 +1267,6 @@
 
     .dashboard-footer {
         padding: 11px 14px;
-    }
-}
-
-/* Workspace dashboard dense refinement */
-@media (min-width: 1200px) {
-    .dashboard-sidebar {
-        width: 190px;
-    }
-
-    .dashboard-sidebar .dashboard-sidebar-body {
-        width: 190px;
-    }
-
-    .dashboard.toggle .dashboard-sidebar {
-        left: -190px;
-    }
-
-    .dashboard-body {
-        width: calc(100% - 190px);
-        margin-inline-start: 190px;
-    }
-
-    .dashboard-nav {
-        left: 190px;
-        width: calc(100% - 190px);
     }
 }
 

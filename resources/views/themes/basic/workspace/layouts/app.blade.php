@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <div class="dashboard">
+    <div class="dashboard workspace-dashboard">
         @include('themes.basic.workspace.includes.sidebar')
         <div class="dashboard-body">
             @include('themes.basic.workspace.includes.navbar')

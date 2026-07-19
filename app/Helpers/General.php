@@ -30,6 +30,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 use Mews\Purifier\Facades\Purifier;
 use Spatie\Newsletter\Facades\Newsletter;
 
@@ -202,11 +204,11 @@ function imageUpload($image, $location, $size = null, $specificName = null, $old
     }
     $filename = generateUniqueFileName($image, $specificName);
     if (!empty($size)) {
-        $image = Image::make($image);
+        $image = (new ImageManager(new Driver()))->read($image);
         $width = $image->width();
         $height = $image->height();
         $newSize = explode('x', strtolower($size));
-        if ($newSize[0] != $width && $newSize[1] != $height) {
+        if ($newSize[0] != $width || $newSize[1] != $height) {
             $image->resize($newSize[0], $newSize[1]);
         }
         $image->save(public_path($location . $filename));
@@ -582,13 +584,10 @@ function formatBytes($bytes, $precision = 2)
 function checkImageSize($image, $size)
 {
     $size = explode('x', strtolower($size));
-    $image = Image::make($image);
-    $width = Image::make($image)->width();
-    $height = Image::make($image)->height();
-    if ($width != $size[0] && $height != $size[1]) {
-        return false;
-    }
-    return true;
+    $image = (new ImageManager(new Driver()))->read($image);
+
+    return (int) $image->width() === (int) $size[0]
+        && (int) $image->height() === (int) $size[1];
 }
 
 function homeSection($alias)

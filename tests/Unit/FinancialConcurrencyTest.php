@@ -166,6 +166,18 @@ class FinancialConcurrencyTest extends TestCase
 
     private function runWorkers(array $operations): array
     {
+        $connectionName = config('database.default');
+        $connection = config("database.connections.{$connectionName}");
+        $environment = [
+            'APP_ENV' => 'testing',
+            'DB_CONNECTION' => $connectionName,
+            'DB_HOST' => $connection['host'] ?? null,
+            'DB_PORT' => $connection['port'] ?? null,
+            'DB_DATABASE' => $connection['database'] ?? null,
+            'DB_USERNAME' => $connection['username'] ?? null,
+            'DB_PASSWORD' => $connection['password'] ?? null,
+        ];
+
         $processes = [];
         foreach ($operations as $operation) {
             $process = new Process([
@@ -174,7 +186,7 @@ class FinancialConcurrencyTest extends TestCase
                 (string) $operation[0],
                 '',
                 ...array_map('strval', array_slice($operation, 1)),
-            ], base_path(), ['APP_ENV' => 'testing']);
+            ], base_path(), $environment);
             $process->start();
             $processes[] = $process;
         }

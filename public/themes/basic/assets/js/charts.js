@@ -106,19 +106,36 @@
     let countriesChart = document.getElementById('countries-chart');
     if (countriesChart) {
         google.charts.load('current', { 'packages': ['geochart'] });
-        google.charts.setOnLoadCallback(drawRegionsMap);
+        let geoChart;
+        let geoChartResizeTimeout;
 
         function drawRegionsMap() {
             var data = google.visualization.arrayToDataTable(chartsConfig.geo.data);
+            var width = Math.floor(countriesChart.getBoundingClientRect().width);
+
+            if (!width) {
+                return;
+            }
+
             var options = {
+                width: width,
+                height: window.matchMedia('(max-width: 767.98px)').matches ? 220 : 260,
                 colorAxis: {
                     colors: [
                         config.colors.primary_color,
                     ]
                 },
             };
-            var geoChart = new google.visualization.GeoChart(countriesChart);
+
+            geoChart = geoChart || new google.visualization.GeoChart(countriesChart);
             geoChart.draw(data, options);
         }
+
+        google.charts.setOnLoadCallback(drawRegionsMap);
+
+        window.addEventListener('resize', function() {
+            clearTimeout(geoChartResizeTimeout);
+            geoChartResizeTimeout = setTimeout(drawRegionsMap, 120);
+        });
     }
 })(jQuery);

@@ -28,6 +28,9 @@ class WorkspaceExperienceTest extends TestCase
             ->assertOk()
             ->assertSee('workspace-page-header', false)
             ->assertSee('workspace-stat-card', false)
+            ->assertSee('workspace-sidebar', false)
+            ->assertSee('aria-label="Workspace navigation"', false)
+            ->assertDontSee('dashboard-sidebar-links-title', false)
             ->assertSee('aria-controls="workspaceSidebar"', false)
             ->assertSee('Total Sales');
     }
