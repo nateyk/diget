@@ -38,12 +38,12 @@
                     <table class="dashboard-table workspace-data-table table text-start table-borderless">
                         <thead>
                             <tr>
-                                <th>{{ translate('Ticket ID') }}</th>
-                                <th class="text-start">{{ translate('Subject') }}</th>
-                                <th class="text-center">{{ translate('Category') }}</th>
-                                <th class="text-center">{{ translate('Status') }}</th>
-                                <th>{{ translate('Created Date') }}</th>
-                                <th class="text-center">{{ translate('Action') }}</th>
+                                <th scope="col">{{ translate('Ticket ID') }}</th>
+                                <th scope="col" class="text-start">{{ translate('Subject') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Category') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Status') }}</th>
+                                <th scope="col">{{ translate('Created Date') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Action') }}</th>
                             </tr>
                         </thead>
                         <tbody>

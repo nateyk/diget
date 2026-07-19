@@ -40,7 +40,8 @@ class WorkspaceExperienceTest extends TestCase
             ->get(route('workspace.purchases.index'))
             ->assertOk()
             ->assertSee('Purchases')
-            ->assertSee('workspace-data-table', false);
+            ->assertSee('workspace-data-table', false)
+            ->assertSee('<th scope="col">', false);
 
         $this->actingAs($buyer)
             ->get(route('workspace.dashboard'))

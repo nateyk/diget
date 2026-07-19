@@ -20,13 +20,13 @@
                     <table class="dashboard-table workspace-data-table table text-start table-borderless">
                         <thead>
                             <tr>
-                                <th>{{ translate('ID') }}</th>
-                                <th>{{ translate('Details') }}</th>
+                                <th scope="col">{{ translate('ID') }}</th>
+                                <th scope="col">{{ translate('Details') }}</th>
                                 @if (@$settings->item->support_status)
-                                    <th class="text-center">{{ translate('Support Expiry Date') }}</th>
+                                    <th scope="col" class="text-center">{{ translate('Support Expiry Date') }}</th>
                                 @endif
-                                <th class="text-center">{{ translate('Purchase Date') }}</th>
-                                <th class="text-center">{{ translate('Action') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Purchase Date') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Action') }}</th>
                             </tr>
                         </thead>
                         <tbody>

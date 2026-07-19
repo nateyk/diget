@@ -38,12 +38,12 @@
                     <table class="dashboard-table workspace-data-table table text-start table-borderless">
                         <thead>
                             <tr>
-                                <th>{{ translate('ID') }}</th>
-                                <th>{{ translate('Purchased Item') }}</th>
-                                <th class="text-center">{{ translate('Price') }}</th>
-                                <th class="text-center">{{ translate('Status') }}</th>
-                                <th class="text-center">{{ translate('Date') }}</th>
-                                <th class="text-center">{{ translate('Action') }}</th>
+                                <th scope="col">{{ translate('ID') }}</th>
+                                <th scope="col">{{ translate('Purchased Item') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Price') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Status') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Date') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Action') }}</th>
                             </tr>
                         </thead>
                         <tbody>

@@ -43,9 +43,9 @@
                     <table class="dashboard-table workspace-data-table table text-start table-borderless">
                         <thead>
                             <tr>
-                                <th>{{ translate('Username') }}</th>
-                                <th>{{ translate('Date') }}</th>
-                                <th class="text-center">{{ translate('Earnings') }}</th>
+                                <th scope="col">{{ translate('Username') }}</th>
+                                <th scope="col">{{ translate('Date') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Earnings') }}</th>
                             </tr>
                         </thead>
                         <tbody class="text-muted">

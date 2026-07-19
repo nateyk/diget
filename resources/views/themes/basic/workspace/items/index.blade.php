@@ -35,13 +35,13 @@
                     <table class="dashboard-table workspace-data-table table text-center table-borderless align-middle">
                         <thead>
                             <tr>
-                                <th class="text-start">{{ translate('Details') }}</th>
-                                <th class="text-start">{{ translate('Price') }}</th>
-                                <th>{{ translate('Published Date') }}</th>
+                                <th scope="col" class="text-start">{{ translate('Details') }}</th>
+                                <th scope="col" class="text-start">{{ translate('Price') }}</th>
+                                <th scope="col">{{ translate('Published Date') }}</th>
                                 @if (@$settings->item->adding_require_review)
-                                    <th>{{ translate('Status') }}</th>
+                                    <th scope="col">{{ translate('Status') }}</th>
                                 @endif
-                                <th class="text-center">{{ translate('Action') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Action') }}</th>
                             </tr>
                         </thead>
                         <tbody>

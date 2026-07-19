@@ -56,15 +56,15 @@
                     <table class="dashboard-table workspace-data-table table text-start table-borderless">
                         <thead>
                             <tr>
-                                <th>{{ translate('ID') }}</th>
-                                <th>{{ translate('Details') }}</th>
+                                <th scope="col">{{ translate('ID') }}</th>
+                                <th scope="col">{{ translate('Details') }}</th>
                                 @if (authUser()->isAuthor())
-                                    <th class="text-center">{{ translate('Amount') }}</th>
-                                    <th class="text-center">{{ translate('Buyer fee') }}</th>
-                                    <th class="text-center">{{ translate('Author fee') }}</th>
+                                    <th scope="col" class="text-center">{{ translate('Amount') }}</th>
+                                    <th scope="col" class="text-center">{{ translate('Buyer fee') }}</th>
+                                    <th scope="col" class="text-center">{{ translate('Author fee') }}</th>
                                 @endif
-                                <th class="text-center">{{ translate('Total') }}</th>
-                                <th class="text-center">{{ translate('Date') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Total') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Date') }}</th>
                             </tr>
                         </thead>
                         <tbody>

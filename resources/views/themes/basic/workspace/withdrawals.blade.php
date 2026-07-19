@@ -60,12 +60,12 @@
                     <table class="dashboard-table workspace-data-table table text-start table-borderless">
                         <thead>
                             <tr>
-                                <th>{{ translate('ID') }}</th>
-                                <th class="text-center">{{ translate('Amount') }}</th>
-                                <th class="text-center">{{ translate('Method') }}</th>
-                                <th class="text-center">{{ translate('Account') }}</th>
-                                <th class="text-center">{{ translate('Status') }}</th>
-                                <th class="text-center">{{ translate('Date') }}</th>
+                                <th scope="col">{{ translate('ID') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Amount') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Method') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Account') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Status') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Date') }}</th>
                             </tr>
                         </thead>
                         <tbody class="text-muted">
