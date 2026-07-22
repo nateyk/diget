@@ -20,7 +20,7 @@
                             </div>
                             <div class="col-auto">
                                 <button id="selectFileBtn" type="button" class="btn btn-secondary"><i
-                                        class="fas fa-camera me-2"></i>{{ translate('Choose Image') }}</button>
+                                        class="fa-solid fa-camera me-2"></i>{{ translate('Choose Image') }}</button>
                                 <input id="selectedFileInput" type="file" name="avatar"
                                     accept="image/png, image/jpg, image/jpeg" hidden>
                             </div>
@@ -48,7 +48,7 @@
                                         value="{{ demo($reviewer->email) }}" required>
                                     <button class="btn btn-dark" type="button" data-bs-toggle="modal"
                                         data-bs-target="#sendMailModal"><i
-                                            class="far fa-paper-plane me-2"></i>{{ translate('Send Email') }}</button>
+                                            class="fa-regular fa-paper-plane me-2"></i>{{ translate('Send Email') }}</button>
                                 </div>
                             </div>
                             <div class="col-lg-12">

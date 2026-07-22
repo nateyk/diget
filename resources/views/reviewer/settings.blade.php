@@ -14,7 +14,7 @@
                     </div>
                     <div class="col-auto">
                         <button id="selectFileBtn" type="button" class="btn btn-outline-secondary btn-sm"><i
-                                class="fas fa-camera me-2"></i>{{ translate('Choose Image') }}</button>
+                                class="fa-solid fa-camera me-2"></i>{{ translate('Choose Image') }}</button>
                         <input id="selectedFileInput" type="file" name="avatar"
                             accept="image/png, image/jpg, image/jpeg" hidden>
                     </div>
@@ -100,7 +100,7 @@
                                 <input id="input-secret" type="text" class="form-control form-control-md"
                                     value="{{ $reviewer->google2fa_secret }}" readonly>
                                 <button class="btn btn-outline-primary btn-copy" data-clipboard-target="#input-secret"><i
-                                        class="far fa-clone"></i></button>
+                                        class="fa-regular fa-clone"></i></button>
                             </div>
                             <button class="btn btn-primary btn-md w-100" data-bs-toggle="modal"
                                 data-bs-target="#enable2FAModal">{{ translate('Enable 2FA Authentication') }}</button>

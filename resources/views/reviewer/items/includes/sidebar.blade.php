@@ -50,7 +50,7 @@
                 </div>
                 <div class="col-auto">
                     <a href="{{ $item->author->getProfileLink() }}" target="_blank" class="text-dark">
-                        <i class="fa fa-user me-1"></i>
+                        <i class="fa-solid fa-user me-1"></i>
                         <span>{{ $item->author->username }}</span>
                     </a>
                 </div>

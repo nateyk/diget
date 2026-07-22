@@ -13,8 +13,8 @@
             <div class="auth-card {{ $isRegisterPage ? 'auth-card-register' : 'auth-card-simple' }}">
                 @if ($isRegisterPage)
                     <aside class="auth-side">
-                        <a href="{{ route('home') }}" class="auth-side-logo" aria-label="{{ @$settings->general->site_name }}">
-                            <img src="{{ asset($themeSettings->general->logo_light) }}" alt="{{ @$settings->general->site_name }}">
+                        <a href="{{ route('home') }}" class="auth-side-logo" aria-label="{{ ucfirst(config('app.name', 'Diget')) }}">
+                            <span class="brand-wordmark">{{ ucfirst(config('app.name', 'Diget')) }}</span>
                         </a>
                         <div>
                             <h1>{{ translate('Build your creator storefront.') }}</h1>
@@ -23,8 +23,8 @@
                     </aside>
                 @endif
                 <main class="auth-content">
-                    <a href="{{ route('home') }}" class="auth-logo" aria-label="{{ @$settings->general->site_name }}">
-                        <img src="{{ asset($themeSettings->general->logo_dark) }}" alt="{{ @$settings->general->site_name }}">
+                    <a href="{{ route('home') }}" class="auth-logo" aria-label="{{ ucfirst(config('app.name', 'Diget')) }}">
+                        <span class="brand-wordmark">{{ ucfirst(config('app.name', 'Diget')) }}</span>
                     </a>
                     <div class="section-body">
                         @yield('content')

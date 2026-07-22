@@ -48,7 +48,7 @@
                                                 <div class="col-12 col-lg-6 col-xl-12">
                                                     <a href="{{ adminUrl($addon->action) }}"
                                                         class="btn btn-secondary w-100"><i
-                                                            class="fa fa-cog me-2"></i>{{ translate('Settings') }}</a>
+                                                            class="fa-solid fa-cog me-2"></i>{{ translate('Settings') }}</a>
                                                 </div>
                                             @endif
                                         </div>

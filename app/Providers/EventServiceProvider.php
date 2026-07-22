@@ -17,6 +17,8 @@ use App\Events\TicketReplyCreated;
 use App\Events\TransactionPaid;
 use App\Events\TransactionPending;
 use App\Events\WithdrawalSubmitted;
+use App\Events\UsernameChanged;
+use App\Listeners\InvalidateUsernameCaches;
 use App\Listeners\ProcessAcceptedRefund;
 use App\Listeners\ProcessApprovedItem;
 use App\Listeners\ProcessCancelledSale;
@@ -44,6 +46,7 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
+        UsernameChanged::class => [InvalidateUsernameCaches::class],
         Registered::class => [SendEmailVerificationNotification::class, ProcessReferralRegistration::class],
         KycVerificationPending::class => [ProcessPendingKycVerification::class],
         TicketCreated::class => [ProcessTicketCreation::class],

@@ -1,5 +1,5 @@
 @if (@$settings->actions->gdpr_cookie && !request()->hasCookie('gdpr_cookie'))
-    <div class="cookies">
+    <aside class="cookies" role="region" aria-label="{{ translate('Cookie notice') }}" aria-live="polite">
         <div class="cookies-img">
             <svg enable-background="new 0 0 80 80" height="80" viewBox="0 0 512 512" width="80"
                 fill="{{ $themeSettings->colors->primary_color }}" xmlns="http://www.w3.org/2000/svg">
@@ -35,17 +35,19 @@
                 </g>
             </svg>
         </div>
-        <p class="cookies-text text-center my-3">
-            {{ translate('We use cookies to personalize your experience. By continuing to visit this website you agree to our use of cookies') }}
-        </p>
-        <div class="d-flex justify-content-center">
-            <button id="acceptCookie" class="btn btn-primary px-5">{{ translate('Got it') }}</button>
+        <div class="cookies-content">
+            <p class="cookies-text">
+                {{ translate('We use cookies to personalize your experience. By continuing to visit this website you agree to our use of cookies.') }}
+            </p>
+            <div class="cookies-actions">
+                <button id="acceptCookie" class="btn btn-primary">{{ translate('Accept') }}</button>
             @if (@settings('links')->gdpr_cookie_policy_link)
-                <a class="btn btn-outline-primary btn-md px-5 ms-3"
-                    href="{{ @settings('links')->gdpr_cookie_policy_link }}">{{ translate('More') }}</a>
+                    <a class="btn btn-outline-secondary"
+                        href="{{ @settings('links')->gdpr_cookie_policy_link }}">{{ translate('Learn more') }}</a>
             @endif
+            </div>
         </div>
-    </div>
+    </aside>
 @endif
 
 @php($googleAnalytics = extension('google_analytics'))

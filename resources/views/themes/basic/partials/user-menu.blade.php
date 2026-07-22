@@ -2,7 +2,7 @@
     <div class="drop-down-btn">
         <img src="{{ authUser()->getAvatar() }}" alt="{{ authUser()->getName() }}" class="user-img">
         <span class="user-name">{{ authUser()->getName() }}</span>
-        <i class="fa fa-angle-down ms-2"></i>
+        <i class="fa-solid fa-angle-down ms-2"></i>
     </div>
     <div class="drop-down-menu">
         @if (authUser()->isDataCompleted())
@@ -33,7 +33,7 @@
                 {{ translate('Transactions') }}
             </a>
             <a href="{{ route('workspace.settings.index') }}" class="drop-down-item">
-                <i class="fa fa-cog"></i>
+                <i class="fa-solid fa-cog"></i>
                 {{ translate('Settings') }}
             </a>
             <div class="drop-down-divider"></div>
@@ -51,7 +51,7 @@
                     {{ translate('Withdrawals') }}
                 </a>
                 <div class="drop-down-divider"></div>
-            @elseif($settings->actions->become_an_author)
+            @elseif(@$settings->actions->become_an_author)
                 <a href="{{ route('workspace.become-an-author') }}" class="drop-down-item">
                     <i class="fa-solid fa-box-open"></i>
                     {{ translate('Start Selling') }}
@@ -61,7 +61,7 @@
         @endif
         <a href="#" class="drop-down-item text-danger"
             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            <i class="fa fa-power-off"></i>
+            <i class="fa-solid fa-power-off"></i>
             {{ translate('Logout') }}
         </a>
     </div>

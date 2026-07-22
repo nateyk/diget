@@ -20,12 +20,12 @@
                         @hasSection('back')
                             <div class="col-auto">
                                 <a href="@yield('back')" class="btn btn-secondary"><i
-                                        class="fas fa-arrow-left fa-rtl me-2"></i>{{ translate('Back') }}</a>
+                                        class="fa-solid fa-arrow-left fa-rtl me-2"></i>{{ translate('Back') }}</a>
                             </div>
                         @endif
                         @hasSection('create')
                             <div class="col-auto">
-                                <a href="@yield('create')" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                                <a href="@yield('create')" class="btn btn-primary"><i class="fa-solid fa-plus"></i></a>
                             </div>
                         @endif
                         @hasSection('item_view')
@@ -42,7 +42,7 @@
                             <div class="col-auto">
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#addModal">
-                                    <i class="fa fa-plus"></i>
+                                    <i class="fa-solid fa-plus"></i>
                                 </button>
                             </div>
                         @endif
@@ -50,7 +50,7 @@
                             <div class="col-auto">
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#uploadModal">
-                                    <i class="fa fa-upload me-2"></i>@yield('upload_modal')
+                                    <i class="fa-solid fa-upload me-2"></i>@yield('upload_modal')
                                 </button>
                             </div>
                         @endif
@@ -81,7 +81,7 @@
                             <div class="col-auto">
                                 <a href="{{ config('system.author.profile') }}" target="_blank"
                                     class="btn btn-secondary"><i
-                                        class="far fa-question-circle me-2"></i>{{ translate('Get Help') }}</a>
+                                        class="fa-regular fa-question-circle me-2"></i>{{ translate('Get Help') }}</a>
                             </div>
                         @endif
                     </div>

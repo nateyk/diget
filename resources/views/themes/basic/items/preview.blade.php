@@ -40,13 +40,13 @@
                     </div>
                 </div>
                 <a href="{{ $item->getLink() }}" class="btn btn-primary">
-                    <i class="fa fa-bolt d-inline d-lg-none"></i>
+                    <i class="fa-solid fa-bolt d-inline d-lg-none"></i>
                     <span class="d-none d-lg-inline">{{ translate('Buy Now') }}</span>
                 </a>
             </div>
         </div>
         <div class="preview-btn">
-            <i class="fa fa-angle-up"></i>
+            <i class="fa-solid fa-angle-up"></i>
         </div>
     </div>
     <div class="preview-body">

@@ -42,7 +42,7 @@
                             <input id="randomPasswordInput" type="text" class="form-control form-control-lg"
                                 name="password" required>
                             <button class="btn btn-secondary btn-copy" type="button"
-                                data-clipboard-target="#randomPasswordInput"><i class="far fa-clone"></i></button>
+                                data-clipboard-target="#randomPasswordInput"><i class="fa-regular fa-clone"></i></button>
                             <button id="randomPasswordBtn" class="btn btn-secondary" type="button"><i
                                     class="fa-solid fa-rotate me-2"></i>{{ translate('Generate') }}</button>
                         </div>

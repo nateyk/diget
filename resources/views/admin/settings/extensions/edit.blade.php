@@ -30,7 +30,7 @@
         @if ($extension->instructions)
             <div class="card mb-4">
                 <div class="card-header">
-                    <i class="far fa-question-circle me-2"></i>
+                    <i class="fa-regular fa-question-circle me-2"></i>
                     {{ translate('Instructions') }}
                 </div>
                 <div class="card-body">
@@ -40,7 +40,7 @@
         @endif
         <div class="card mb-4">
             <div class="card-header">
-                <i class="fa fa-cog me-2"></i>
+                <i class="fa-solid fa-cog me-2"></i>
                 {{ translate('Settings') }}
             </div>
             <div class="card-body">

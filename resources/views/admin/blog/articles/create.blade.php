@@ -35,7 +35,7 @@
                                 <img id="filePreview" src="#" class="rounded-3 w-100" height="160px">
                             </div>
                             <button id="selectFileBtn" type="button" class="btn btn-secondary mb-2"><i
-                                    class="fas fa-camera me-2"></i>{{ translate('Choose Image') }}</button>
+                                    class="fa-solid fa-camera me-2"></i>{{ translate('Choose Image') }}</button>
                             <input id="selectedFileInput" type="file" name="image" accept=".png, .jpg, .jpeg, .webp"
                                 hidden required>
                             <small class="text-muted d-block">{{ translate('Allowed (PNG, JPG, JPEG, WEBP)') }}</small>

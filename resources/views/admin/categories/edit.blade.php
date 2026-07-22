@@ -6,7 +6,7 @@
 @section('content')
     <div class="mb-3">
         <a class="btn btn-outline-secondary" href="{{ $category->getLink() }}" target="_blank"><i
-                class="fa fa-eye me-2"></i>{{ translate('View') }}</a>
+                class="fa-solid fa-eye me-2"></i>{{ translate('View') }}</a>
     </div>
     <form id="vironeer-submited-form" action="{{ route('admin.categories.update', $category->id) }}" method="POST">
         @csrf

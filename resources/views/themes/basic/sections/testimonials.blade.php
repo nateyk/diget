@@ -1,5 +1,8 @@
-@if ($testimonialsSection && $testimonials->count() > 0)
-    <div class="section section-start">
+@php
+    $trustedTestimonials = $testimonials->reject(fn ($testimonial) => str($testimonial->body)->lower()->contains(['marketbob', 'lorem ipsum']));
+@endphp
+@if ($testimonialsSection && $trustedTestimonials->count() > 0)
+    <div class="section section-start testimonials-section">
         <div class="container container-custom">
             <div class="section-header">
                 <div class="row row-cols-1 row-cols-lg-auto align-items-center justify-content-between g-3">
@@ -16,10 +19,10 @@
                         <div class="d-flex justify-content-center">
                             <div class="testimonials-swiper-actions">
                                 <div id="testimonialsSwiperPrev" class="swiper-button-prev">
-                                    <i class="fa fa-chevron-left fa-rtl"></i>
+                                    <i class="fa-solid fa-chevron-left fa-rtl"></i>
                                 </div>
                                 <div id="testimonialsSwiperNext" class="swiper-button-next">
-                                    <i class="fa fa-chevron-right fa-rtl"></i>
+                                    <i class="fa-solid fa-chevron-right fa-rtl"></i>
                                 </div>
                             </div>
                         </div>
@@ -30,7 +33,7 @@
                 <div class="testimonials-swiper mt-3">
                     <div class="swiper testimonialsSwiper">
                         <div class="swiper-wrapper">
-                            @foreach ($testimonials as $testimonial)
+                            @foreach ($trustedTestimonials as $testimonial)
                                 <div class="swiper-slide" data-aos="zoom-in" data-aos-duration="1000">
                                     <div class="testimonial">
                                         <div class="testimonial-img">

@@ -1,7 +1,14 @@
-<div class="item {{ $item_classes ?? '' }}">
+@php
+    $showCreator = $show_creator ?? true;
+    $isDiscounted = $item->isOnDiscount();
+@endphp
+<article class="item product-card {{ $item_classes ?? '' }}">
     <div class="item-header">
+        @if ($isDiscounted)
+            <span class="item-badge" aria-label="{{ translate('On sale') }}">{{ translate('Sale') }}</span>
+        @endif
         @if ($item->isPreviewFileTypeImage())
-            <a href="{{ $item->getLink() }}">
+            <a href="{{ $item->getLink() }}" aria-label="{{ translate('View :name', ['name' => $item->name]) }}">
                 <img class="item-img" src="{{ $item->getPreviewImageLink() }}" alt="{{ $item->name }}" />
             </a>
         @elseif($item->isPreviewFileTypeVideo())
@@ -12,18 +19,14 @@
                     </video>
                     <div class="item-video-actions d-flex align-items-center justify-content-between gap-1">
                         <div class="item-video-volume item-video-action">
-                            <i class="fa-solid fa-volume-high" class="unmuted"></i>
-                            <i class="fa-solid fa-volume-xmark" class="muted"></i>
+                            <i class="fa-solid fa-volume-high unmuted"></i>
+                            <i class="fa-solid fa-volume-xmark muted"></i>
                         </div>
-                        <div class="d-flex align-items-center gap-1">
-                            <div class="item-video-full item-video-action">
-                                <i class="fa fa-expand"></i>
-                            </div>
+                        <div class="item-video-full item-video-action">
+                            <i class="fa-solid fa-expand"></i>
                         </div>
                     </div>
-                    <div class="item-video-progress">
-                        <span></span>
-                    </div>
+                    <div class="item-video-progress"><span></span></div>
                 </div>
             </a>
         @elseif($item->isPreviewFileTypeAudio())
@@ -31,15 +34,11 @@
                 <a href="{{ $item->getLink() }}" class="item-audio-link opacity-100"></a>
                 <div class="item-audio-wave">
                     <div class="item-audio-actions">
-                        <button class="play-button btn btn-primary btn-sm px-2">
-                            <div class="play-button-icon">
-                                <i class="fas fa-play"></i>
-                            </div>
+                        <button class="play-button btn btn-primary btn-sm px-2" aria-label="{{ translate('Play preview') }}">
+                            <span class="play-button-icon"><i class="fa-solid fa-play"></i></span>
                         </button>
-                        <button class="pause-button btn btn-primary btn-sm px-2 d-none">
-                            <div class="play-button-icon">
-                                <i class="fas fa-pause"></i>
-                            </div>
+                        <button class="pause-button btn btn-primary btn-sm px-2 d-none" aria-label="{{ translate('Pause preview') }}">
+                            <span class="play-button-icon"><i class="fa-solid fa-pause"></i></span>
                         </button>
                     </div>
                     <div class="waveform" data-url="{{ $item->getPreviewLink() }}" data-waveheight="50"></div>
@@ -47,125 +46,62 @@
                 </div>
             </div>
         @endif
-        @if (licenseType(2) && @$settings->premium->status && $item->isPremium())
-            <div class="item-badge item-badge-premium">
-                <i class="fa-solid fa-crown me-1"></i>
-                {{ translate('Premium') }}
-            </div>
-        @elseif ($item->isFree())
-            <div class="item-badge item-badge-free">
-                <i class="fa-regular fa-heart me-1"></i>
-                {{ translate('Free') }}
-            </div>
-        @elseif ($item->isOnDiscount())
-            <div class="item-badge item-badge-sale">
-                <i class="fa-solid fa-tag me-1"></i>
-                {{ translate('On Sale') }}
-            </div>
-        @elseif ($item->isTrending())
-            <div class="item-badge item-badge-trending">
-                <i class="fa-solid fa-bolt me-1"></i>
-                {{ translate('Trending') }}
-            </div>
-        @endif
     </div>
     <div class="item-body">
         <a class="item-title" href="{{ $item->getLink() }}">{{ $item->name }}</a>
-        <p class="item-text">
-            {!! translate('By :username in :category', [
-                'username' => "<a href={$item->author->getProfileLink()}>{$item->author->username}</a>",
-                'category' => "<a href={$item->category->getLink()}>{$item->category->name}</a>",
-            ]) !!}
-        </p>
+
+        @if ($showCreator)
+            <p class="item-text">
+                {{ translate('By') }}
+                <a href="{{ $item->author->getProfileLink() }}">{{ '@' . $item->author->username }}</a>
+            </p>
+        @endif
+
         @if ($settings->item->reviews_status && $item->hasReviews())
             <div class="item-ratings">
                 <div class="row row-cols-auto align-items-center g-2">
-                    @include('themes.basic.partials.rating-stars', [
-                        'stars' => $item->avg_reviews,
-                    ])
+                    @include('themes.basic.partials.rating-stars', ['stars' => $item->avg_reviews])
                     <div class="col">
-                        <span class="text-muted small">
-                            ({{ numberFormat($item->total_reviews) }})
-                        </span>
+                        <span class="text-muted small">({{ numberFormat($item->total_reviews) }})</span>
                     </div>
                 </div>
             </div>
         @endif
+
         <div class="item-purchase">
-            <div class="row row-cols-auto align-items-center justify-content-between g-3">
-                <div class="col">
-                    @if ($item->isFree())
-                        <div class="item-price">
+            <div class="d-flex align-items-end justify-content-between gap-3">
+                <div>
+                    <div class="item-price">
+                        @if ($item->isFree())
                             <span class="item-price-number">{{ translate('Free') }}</span>
-                        </div>
-                    @else
-                        <div class="item-price">
-                            @if ($item->isOnDiscount())
-                                <span class="item-price-through">
-                                    {{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}
-                                </span>
-                                <span class="item-price-number">
-                                    {{ getAmount($item->price->regular, 2, '.', '', true) }}
-                                </span>
-                            @else
-                                <span class="item-price-number">
-                                    {{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}
-                                </span>
-                            @endif
-                        </div>
-                    @endif
+                        @elseif ($isDiscounted)
+                            <span class="item-price-through">{{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}</span>
+                            <span class="item-price-number">{{ getAmount($item->price->regular, 2, '.', '', true) }}</span>
+                        @else
+                            <span class="item-price-number">{{ getAmount($item->getRegularPrice(), 2, '.', '', true) }}</span>
+                        @endif
+                    </div>
                     @if ($item->isPurchasingEnabled() && $item->hasSales())
                         <div class="item-sales">
-                            <i class="fa fa-chart-line me-1"></i>
-                            {{ translate($item->total_sales > 1 ? ':count Sales' : ':count Sale', ['count' => numberFormat($item->total_sales)]) }}
+                            {{ translate($item->total_sales > 1 ? ':count sales' : ':count sale', [
+                                'count' => numberFormat($item->total_sales),
+                            ]) }}
                         </div>
-                    @elseif(@$settings->item->free_item_total_downloads && $item->free_downloads > 1)
+                    @elseif(@$settings->item->free_item_total_downloads && $item->free_downloads > 0)
                         <div class="item-sales">
-                            <i class="fa fa-download me-1"></i>
-                            {{ translate($item->free_downloads > 1 ? ':count Downloads' : ':count Download', ['count' => numberFormat($item->free_downloads)]) }}
+                            {{ translate($item->free_downloads > 1 ? ':count downloads' : ':count download', [
+                                'count' => numberFormat($item->free_downloads),
+                            ]) }}
                         </div>
                     @endif
                 </div>
-                <div class="col">
-                    <div class="row row-cols-auto g-2">
-                        @if ($item->isFree())
-                            <div class="col">
-                                @if ($item->isMainFileExternal())
-                                    <a href="{{ route('items.free.download.external', hash_encode($item->id)) }}"
-                                        target="_blank" class="btn btn-outline-primary btn-md btn-padding">
-                                        <i class="fa fa-download"></i>
-                                    </a>
-                                @else
-                                    <form action="{{ route('items.free.download', hash_encode($item->id)) }}"
-                                        method="POST">
-                                        @csrf
-                                        <button class="btn btn-outline-primary btn-md btn-padding"><i
-                                                class="fa-solid fa-download"></i></button>
-                                    </form>
-                                @endif
-                            </div>
-                        @else
-                            <div class="col">
-                                <form action="{{ route('items.buy-now', [$item->slug, $item->id]) }}"
-                                    method="POST">
-                                    @csrf
-                                    <input type="hidden" name="item_id" value="{{ $item->id }}">
-                                    <input type="hidden" name="license_type" value="1">
-                                    <button class="btn btn-outline-primary btn-md btn-padding"
-                                        @disabled(authUser() && authUser()->id == $item->author_id)>
-                                        <i class="fa-solid fa-bolt"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        @endif
-                        <div class="col">
-                            <a href="{{ $item->getLink() }}" class="btn btn-outline-secondary btn-md btn-padding">
-                                <i class="far fa-eye"></i>
-                            </a>
-                        </div>
-                    </div>
+                <div class="ms-auto">
+                    <a href="{{ $item->getLink() }}" class="small fw-semibold text-dark text-nowrap">
+                    {{ translate('View product') }}
+                    <i class="fa-solid fa-arrow-right fa-rtl ms-1"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</article>

@@ -31,7 +31,7 @@
         @if ($oauthProvider->instructions)
             <div class="card mb-4">
                 <div class="card-header">
-                    <i class="far fa-question-circle me-2"></i>{{ translate('Instructions') }}
+                    <i class="fa-regular fa-question-circle me-2"></i>{{ translate('Instructions') }}
                 </div>
                 <div class="card-body">
                     {!! str_replace('[URL]', url('/'), $oauthProvider->instructions) !!}
@@ -40,7 +40,7 @@
         @endif
         <div class="card mb-4">
             <div class="card-header">
-                <i class="fa fa-key me-2"></i> {{ translate('Credentials') }}
+                <i class="fa-solid fa-key me-2"></i> {{ translate('Credentials') }}
             </div>
             <div class="card-body">
                 <div class="row g-3 pb-2">

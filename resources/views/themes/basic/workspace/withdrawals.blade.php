@@ -2,50 +2,36 @@
 @section('title', translate('Withdrawals'))
 @section('breadcrumbs', Breadcrumbs::render('workspace.withdrawals'))
 @section('content')
-    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3 mb-4">
+    <div class="workspace-stats row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3 mb-3">
         <div class="col">
-            <div class="dashboard-counter justify-content-start">
-                <div class="dashboard-counter-icon">
-                    <i class="fa fa-wallet"></i>
-                </div>
-                <div class="dashboard-counter-info">
-                    <h6 class="dashboard-counter-title">{{ translate('Available Balance') }}</h6>
-                    <p class="dashboard-counter-number">{{ getAmount(authUser()->balance) }}</p>
-                </div>
-            </div>
+            @include('themes.basic.workspace.partials.stat-card', [
+                'icon' => 'fa-solid fa-wallet',
+                'label' => translate('Available Balance'),
+                'value' => getAmount(authUser()->balance),
+            ])
         </div>
         <div class="col">
-            <div class="dashboard-counter justify-content-start dashboard-counter-warning">
-                <div class="dashboard-counter-icon">
-                    <i class="fa-solid fa-hourglass-half"></i>
-                </div>
-                <div class="dashboard-counter-info">
-                    <h6 class="dashboard-counter-title">{{ translate('Pending Withdrawn') }}</h6>
-                    <p class="dashboard-counter-number">
-                        {{ getAmount($counters['pending_withdrawals']) }}
-                    </p>
-                </div>
-            </div>
+            @include('themes.basic.workspace.partials.stat-card', [
+                'variant' => 'dashboard-counter-warning',
+                'icon' => 'fa-solid fa-hourglass-half',
+                'label' => translate('Pending withdrawals'),
+                'value' => getAmount($counters['pending_withdrawals']),
+            ])
         </div>
         <div class="col col-md-12 col-xl">
-            <div class="dashboard-counter justify-content-start dashboard-counter-info">
-                <div class="dashboard-counter-icon">
-                    <i class="fa-solid fa-money-bill-transfer"></i>
-                </div>
-                <div class="dashboard-counter-info">
-                    <h6 class="dashboard-counter-title">{{ translate('Total Withdraw') }}</h6>
-                    <p class="dashboard-counter-number">
-                        {{ getAmount($counters['total_withdrawals']) }}
-                    </p>
-                </div>
-            </div>
+            @include('themes.basic.workspace.partials.stat-card', [
+                'variant' => 'dashboard-counter-info',
+                'icon' => 'fa-solid fa-money-bill-transfer',
+                'label' => translate('Total withdrawn'),
+                'value' => getAmount($counters['total_withdrawals']),
+            ])
         </div>
     </div>
     <div class="dashboard-card card-v p-0">
         @if ($withdrawals->count() > 0 || request()->input('search') || request()->input('status'))
-            <div class="table-search p-4">
+            <div class="table-search p-3">
                 <form action="{{ url()->current() }}" method="GET">
-                    <div class="row g-3 aligs-items-center">
+                    <div class="row g-3 align-items-center">
                         <div class="col-12 col-lg-6 col-xxl-7">
                             <input type="text" name="search" placeholder="{{ translate('Search...') }}"
                                 class="form-control form-control-md" value="{{ request('search') }}">
@@ -60,7 +46,7 @@
                             </select>
                         </div>
                         <div class="col">
-                            <button class="btn btn-primary w-100 btn-md"><i class="fa fa-search"></i></button>
+                            <button class="btn btn-primary w-100 btn-md"><i class="fa-solid fa-search"></i></button>
                         </div>
                         <div class="col">
                             <a href="{{ url()->current() }}" class="btn btn-outline-primary w-100 btn-md"><i
@@ -71,15 +57,15 @@
             </div>
             <div class="overflow-hidden">
                 <div class="table-container">
-                    <table class="dashboard-table table text-start table-borderless">
+                    <table class="dashboard-table workspace-data-table table text-start table-borderless">
                         <thead>
                             <tr>
-                                <th>{{ translate('ID') }}</th>
-                                <th class="text-center">{{ translate('Amount') }}</th>
-                                <th class="text-center">{{ translate('Method') }}</th>
-                                <th class="text-center">{{ translate('Account') }}</th>
-                                <th class="text-center">{{ translate('Status') }}</th>
-                                <th class="text-center">{{ translate('Date') }}</th>
+                                <th scope="col">{{ translate('ID') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Amount') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Method') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Account') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Status') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Date') }}</th>
                             </tr>
                         </thead>
                         <tbody class="text-muted">
@@ -93,35 +79,34 @@
                                     <td class="text-center">{{ demo(shortertext($withdrawal->account, 40)) }}</td>
                                     <td class="text-center">
                                         @if ($withdrawal->isPending())
-                                            <div class="badge bg-orange rounded-2 fw-light px-3 py-2">
+                                            <span class="badge workspace-status bg-orange rounded-2 fw-light px-3 py-2">
                                                 {{ $withdrawal->getStatusName() }}
-                                            </div>
+                                            </span>
                                         @elseif($withdrawal->isReturned())
-                                            <div class="badge bg-purple rounded-2 fw-light px-3 py-2">
+                                            <span class="badge workspace-status bg-purple rounded-2 fw-light px-3 py-2">
                                                 {{ $withdrawal->getStatusName() }}
-                                            </div>
+                                            </span>
                                         @elseif($withdrawal->isApproved())
-                                            <div class="badge bg-blue rounded-2 fw-light px-3 py-2">
+                                            <span class="badge workspace-status bg-blue rounded-2 fw-light px-3 py-2">
                                                 {{ $withdrawal->getStatusName() }}
-                                            </div>
+                                            </span>
                                         @elseif($withdrawal->isCompleted())
-                                            <div class="badge bg-green rounded-2 fw-light px-3 py-2">
+                                            <span class="badge workspace-status bg-green rounded-2 fw-light px-3 py-2">
                                                 {{ $withdrawal->getStatusName() }}
-                                            </div>
+                                            </span>
                                         @elseif($withdrawal->isCancelled())
-                                            <div class="badge bg-red rounded-2 fw-light px-3 py-2">
+                                            <span class="badge workspace-status bg-red rounded-2 fw-light px-3 py-2">
                                                 {{ $withdrawal->getStatusName() }}
-                                            </div>
+                                            </span>
                                         @endif
                                     </td>
                                     <td class="text-center">{{ dateFormat($withdrawal->created_at) }}</td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="8" class="text-center">
-                                        <div class="text-muted p-4">{{ translate('No data found') }}</div>
-                                    </td>
-                                </tr>
+                                @include('themes.basic.workspace.partials.table-empty-row', [
+                                    'colspan' => 6,
+                                    'message' => translate('No withdrawal requests match the current filters.'),
+                                ])
                             @endforelse
                         </tbody>
                     </table>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Members;
 
+use App\Actions\ChangeUsername;
 use App\Classes\Country;
 use App\Http\Controllers\Controller;
 use App\Models\Badge;
@@ -12,10 +13,15 @@ use App\Models\User;
 use App\Models\UserBadge;
 use App\Models\UserLoginLog;
 use App\Models\WithdrawalMethod;
+use App\Rules\Username;
+use App\Services\UsernamePolicy;
+use App\Services\UsernameLock;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Validator;
@@ -88,10 +94,14 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge([
+            'username' => app(UsernamePolicy::class)->normalize($request->username),
+        ]);
+
         $validator = Validator::make($request->all(), [
             'firstname' => ['required', 'string', 'block_patterns', 'max:50'],
             'lastname' => ['required', 'string', 'block_patterns', 'max:50'],
-            'username' => ['required', 'string', 'min:6', 'alpha_dash', 'username', 'block_patterns', 'max:50', 'unique:users'],
+            'username' => ['required', 'string', 'block_patterns', new Username],
             'email' => ['required', 'string', 'email', 'indisposable', 'block_patterns', 'max:100', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
         ]);
@@ -113,15 +123,28 @@ class UserController extends Controller
             }
         }
 
-        $user = User::create([
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'is_author' => $author,
-            'level_id' => $level,
-        ]);
+        try {
+            $user = app(UsernameLock::class)->run([$request->username], function () use ($request, $author, $level) {
+                $username = app(UsernamePolicy::class)->assertSelectable($request->username);
+
+                return User::create([
+                    'firstname' => $request->firstname,
+                    'lastname' => $request->lastname,
+                    'username' => $username,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'is_author' => $author,
+                    'level_id' => $level,
+                ]);
+            });
+        } catch (QueryException $e) {
+            if (app(UsernamePolicy::class)->isUsernameConstraintViolation($e)) {
+                toastr()->error(translate('This username is already in use.'));
+                return back()->withInput();
+            }
+
+            throw $e;
+        }
 
         if ($user) {
             if (@settings('actions')->email_verification) {
@@ -139,10 +162,14 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
+        $request->merge([
+            'username' => app(UsernamePolicy::class)->normalize($request->username),
+        ]);
+
         $validator = Validator::make($request->all(), [
             'firstname' => ['required', 'string', 'block_patterns', 'max:50'],
             'lastname' => ['required', 'string', 'block_patterns', 'max:50'],
-            'username' => ['required', 'string', 'min:6', 'max:50', 'username', 'block_patterns', 'unique:users,username,' . $user->id],
+            'username' => ['required', 'string', 'block_patterns', new Username($user)],
             'email' => ['required', 'string', 'email', 'indisposable', 'block_patterns', 'max:100', 'unique:users,email,' . $user->id],
             'address_line_1' => ['nullable', 'max:255'],
             'address_line_2' => ['nullable', 'max:255'],
@@ -171,16 +198,26 @@ class UserController extends Controller
             'country' => $country,
         ];
 
-        $user->firstname = $request->firstname;
-        $user->lastname = $request->lastname;
-        $user->username = $request->username;
-        $user->email = $request->email;
-        $user->address = $address;
-        $user->exclusivity = $request->exclusivity;
-        $user->update();
+        DB::transaction(function () use ($request, $user, $address, $country) {
+            app(ChangeUsername::class)->execute(
+                $user,
+                $request->username,
+                authAdmin(),
+                'admin',
+                true,
+            );
 
-        $user->addCountryBadge($country);
-        $user->addExclusiveAuthorBadge();
+            $user->refresh();
+            $user->firstname = $request->firstname;
+            $user->lastname = $request->lastname;
+            $user->email = $request->email;
+            $user->address = $address;
+            $user->exclusivity = $request->exclusivity;
+            $user->update();
+
+            $user->addCountryBadge($country);
+            $user->addExclusiveAuthorBadge();
+        });
 
         toastr()->success(translate('Updated Successfully'));
         return back();
@@ -382,7 +419,7 @@ class UserController extends Controller
 
             $profilesPath = 'images/profiles/' . strtolower(hash_encode($user->id)) . '/';
 
-            if ($request->has('avatar')) {
+            if ($request->hasFile('avatar')) {
                 $avatar = $request->file('avatar');
                 if (!checkImageSize($avatar, '120x120')) {
                     toastr()->error(translate('Avatar image must be 120x120px'));
@@ -393,7 +430,7 @@ class UserController extends Controller
                 $avatar = $user->avatar;
             }
 
-            if ($request->has('profile_cover')) {
+            if ($request->hasFile('profile_cover')) {
                 $profileCover = $request->file('profile_cover');
                 if (!checkImageSize($profileCover, '1200x500')) {
                     toastr()->error(translate('Profile cover image must be 1200x500px'));

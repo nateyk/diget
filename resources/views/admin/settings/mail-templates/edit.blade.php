@@ -44,7 +44,7 @@
                             <input id="{{ $shortcode }}" type="text" class="form-control form-control-md"
                                 value="@php echo str("{{ ". $shortcode ." }}")->replace(' ', '') @endphp" readonly>
                             <button class="btn btn-secondary btn-copy" type="button"
-                                data-clipboard-target="#{{ $shortcode }}"><i class="far fa-clone"></i></button>
+                                data-clipboard-target="#{{ $shortcode }}"><i class="fa-regular fa-clone"></i></button>
                         </div>
                     @endforeach
                 </div>

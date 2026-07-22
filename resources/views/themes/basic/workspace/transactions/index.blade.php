@@ -4,9 +4,9 @@
 @section('content')
     <div class="dashboard-card card-v p-0">
         @if ($transactions->count() > 0 || request()->input('search') || request()->input('status') || request()->input('type'))
-            <div class="table-search p-4">
+            <div class="table-search p-3">
                 <form action="{{ url()->current() }}" method="GET">
-                    <div class="row g-3 aligs-items-center">
+                    <div class="row g-3 align-items-center">
                         <div class="col-lg-6">
                             <input type="text" name="search" placeholder="{{ translate('Search...') }}"
                                 class="form-control form-control-md" value="{{ request('search') }}">
@@ -30,7 +30,7 @@
                             </select>
                         </div>
                         <div class="col">
-                            <button class="btn btn-primary w-100 btn-md"><i class="fa fa-search"></i></button>
+                            <button class="btn btn-primary w-100 btn-md"><i class="fa-solid fa-search"></i></button>
                         </div>
                         <div class="col">
                             <a href="{{ url()->current() }}" class="btn btn-outline-primary w-100 btn-md"><i
@@ -41,18 +41,18 @@
             </div>
             <div class="overflow-hidden">
                 <div class="table-container">
-                    <table class="dashboard-table table text-start table-borderless">
+                    <table class="dashboard-table workspace-data-table table text-start table-borderless">
                         <thead>
                             <tr>
-                                <th>{{ translate('ID') }}</th>
-                                <th class="text-center">{{ translate('SubTotal') }}</th>
-                                <th class="text-center">{{ translate('Tax') }}</th>
-                                <th class="text-center">{{ translate('Fees') }}</th>
-                                <th class="text-center">{{ translate('Total') }}</th>
-                                <th class="text-center">{{ translate('Type') }}</th>
-                                <th class="text-center">{{ translate('Status') }}</th>
-                                <th class="text-center">{{ translate('Date') }}</th>
-                                <th class="text-center">{{ translate('Action') }}</th>
+                                <th scope="col">{{ translate('ID') }}</th>
+                                <th scope="col" class="text-center">{{ translate('SubTotal') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Tax') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Fees') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Total') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Type') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Status') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Date') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Action') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -74,17 +74,17 @@
                                     </td>
                                     <td class="text-center">
                                         @if ($trx->isPending())
-                                            <div class="badge bg-orange rounded-2 fw-light px-3 py-2">
+                                            <span class="badge workspace-status bg-orange rounded-2 fw-light px-3 py-2">
                                                 {{ $trx->getStatusName() }}
-                                            </div>
+                                            </span>
                                         @elseif($trx->isPaid())
-                                            <div class="badge bg-green rounded-2 fw-light px-3 py-2">
+                                            <span class="badge workspace-status bg-green rounded-2 fw-light px-3 py-2">
                                                 {{ $trx->getStatusName() }}
-                                            </div>
+                                            </span>
                                         @elseif($trx->isCancelled())
-                                            <div class="badge bg-red rounded-2 fw-light px-3 py-2">
+                                            <span class="badge workspace-status bg-red rounded-2 fw-light px-3 py-2">
                                                 {{ $trx->getStatusName() }}
-                                            </div>
+                                            </span>
                                         @endif
                                     </td>
                                     <td class="text-center">{{ dateFormat($trx->created_at) }}</td>
@@ -93,26 +93,27 @@
                                             <div class="col">
                                                 @if ($trx->isPaid())
                                                     <a href="{{ route('workspace.transactions.invoice', $trx->id) }}"
-                                                        target="_blank" class="btn btn-outline-primary btn-padding px-3">
+                                                        target="_blank" class="btn btn-outline-secondary btn-padding px-3"
+                                                        aria-label="{{ translate('View invoice') }}" title="{{ translate('View invoice') }}">
                                                         <i class="fa-regular fa-file-lines"></i>
                                                     </a>
                                                 @endif
                                             </div>
                                             <div class="col">
                                                 <a href="{{ route('workspace.transactions.show', $trx->id) }}"
-                                                    class="btn btn-primary btn-padding">
-                                                    <i class="far fa-eye"></i>
+                                                    class="btn btn-outline-secondary btn-padding"
+                                                    aria-label="{{ translate('View transaction') }}" title="{{ translate('View transaction') }}">
+                                                    <i class="fa-regular fa-eye"></i>
                                                 </a>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="9" class="text-center">
-                                        <div class="text-muted p-4">{{ translate('No data found') }}</div>
-                                    </td>
-                                </tr>
+                                @include('themes.basic.workspace.partials.table-empty-row', [
+                                    'colspan' => 9,
+                                    'message' => translate('No transactions match the current filters.'),
+                                ])
                             @endforelse
                         </tbody>
                     </table>

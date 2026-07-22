@@ -14,18 +14,16 @@ class CurrencyMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  Closure(Request): (Response)  $next
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
         if (config('system.install.complete') && request()->segment(1) != adminPath()
             && request()->segment(1) != reviewerPath()) {
-            if (! $request->hasCookie('currency')) {
+            if (!$request->hasCookie('currency')) {
                 $clientCurrency = app(IPLookup::class)->lookup(getIp())->currency;
 
-                $currency = $clientCurrency !== 'Unknown'
-                    ? Currency::where('code', $clientCurrency)->first()
-                    : null;
+                $currency = Currency::where('code', $clientCurrency)->first();
                 if ($currency) {
                     config(['app.currency' => $currency->code]);
                     Cookie::queue('currency', $currency->code, 60 * 24 * 30);

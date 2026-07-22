@@ -32,7 +32,7 @@
             <a href="{{ $profileSocialUrl($platform, $value) }}" target="_blank" rel="noopener"
                 class="social-btn {{ $socialPlatforms[$platform]['class'] }}"
                 aria-label="{{ $socialPlatforms[$platform]['label'] }}">
-                <i class="bi {{ $socialPlatforms[$platform]['icon'] }}"></i>
+                <i class="{{ $socialPlatforms[$platform]['icon'] }}"></i>
             </a>
         @endforeach
     </div>

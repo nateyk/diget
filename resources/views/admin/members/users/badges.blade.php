@@ -8,7 +8,7 @@
         <div class="col-lg-9">
             <div class="text-end">
                 <button class="btn btn-primary btn-md mb-3" data-bs-toggle="modal" data-bs-target="#addBadgeModal">
-                    <i class="fa fa-plus me-1"></i>
+                    <i class="fa-solid fa-plus me-1"></i>
                     {{ translate('Add Badge') }}
                 </button>
             </div>
@@ -20,7 +20,7 @@
                                 <div class="row g-3 align-items-center">
                                     <div class="col-auto">
                                         <span class="sortable-list-handle text-muted"><i
-                                                class="fas fa-arrows-alt fa-lg"></i></span>
+                                                class="fa-solid fa-arrows-alt fa-lg"></i></span>
                                     </div>
                                     <div class="col">
                                         <div class="item-title">
@@ -38,7 +38,7 @@
                                             @method('DELETE')
                                             @csrf
                                             <button class="action-confirm btn btn-danger btn-sm"><i
-                                                    class="far fa-trash-alt"></i></button>
+                                                    class="fa-regular fa-trash-alt"></i></button>
                                         </form>
                                     </div>
                                 </div>

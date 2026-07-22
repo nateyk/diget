@@ -10,7 +10,7 @@ class ConvertUrlParametersToLowerCase
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $uri = $_SERVER['REQUEST_URI'];
+        $uri = $request->getRequestUri();
 
         $path = strtok($uri, '?');
 

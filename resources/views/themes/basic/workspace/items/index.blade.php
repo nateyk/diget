@@ -4,9 +4,9 @@
 @section('content')
     <div class="dashboard-card card-v p-0">
         @if ($items->count() > 0 || request()->input('search') || request()->input('category'))
-            <div class="table-search p-4">
+            <div class="table-search p-3">
                 <form action="{{ url()->current() }}" method="GET">
-                    <div class="row g-3 aligs-items-center">
+                    <div class="row g-3 align-items-center">
                         <div class="col-12 col-lg-6 col-xxl-7">
                             <input type="text" name="search" placeholder="{{ translate('Search...') }}"
                                 class="form-control form-control-md" value="{{ request('search') }}">
@@ -21,7 +21,7 @@
                             </select>
                         </div>
                         <div class="col">
-                            <button class="btn btn-primary w-100 btn-md"><i class="fa fa-search"></i></button>
+                            <button class="btn btn-primary w-100 btn-md"><i class="fa-solid fa-search"></i></button>
                         </div>
                         <div class="col">
                             <a href="{{ url()->current() }}" class="btn btn-outline-primary w-100 btn-md"><i
@@ -32,16 +32,16 @@
             </div>
             <div class="overflow-hidden">
                 <div class="table-container">
-                    <table class="dashboard-table table text-center table-borderless align-middle">
+                    <table class="dashboard-table workspace-data-table table text-center table-borderless align-middle">
                         <thead>
                             <tr>
-                                <th class="text-start">{{ translate('Details') }}</th>
-                                <th class="text-start">{{ translate('Price') }}</th>
-                                <th>{{ translate('Published Date') }}</th>
+                                <th scope="col" class="text-start">{{ translate('Details') }}</th>
+                                <th scope="col" class="text-start">{{ translate('Price') }}</th>
+                                <th scope="col">{{ translate('Published Date') }}</th>
                                 @if (@$settings->item->adding_require_review)
-                                    <th>{{ translate('Status') }}</th>
+                                    <th scope="col">{{ translate('Status') }}</th>
                                 @endif
-                                <th class="text-center">{{ translate('Action') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Action') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -134,75 +134,88 @@
                                     @if (@$settings->item->adding_require_review)
                                         <td>
                                             @if ($item->isPending())
-                                                <div class="badge bg-orange rounded-2 fw-light px-3 py-2">
+                                                <span class="badge workspace-status bg-orange rounded-2 fw-light px-3 py-2">
                                                     {{ $item->getStatusName() }}
-                                                </div>
+                                                </span>
                                             @elseif($item->isSoftRejected())
-                                                <div class="badge bg-purple rounded-2 fw-light px-3 py-2">
+                                                <span class="badge workspace-status bg-purple rounded-2 fw-light px-3 py-2">
                                                     {{ $item->getStatusName() }}
-                                                </div>
+                                                </span>
                                             @elseif($item->isResubmitted())
-                                                <div class="badge bg-blue rounded-2 fw-light px-3 py-2">
+                                                <span class="badge workspace-status bg-blue rounded-2 fw-light px-3 py-2">
                                                     {{ $item->getStatusName() }}
-                                                </div>
+                                                </span>
                                             @elseif($item->isApproved())
-                                                <div class="badge bg-green rounded-2 fw-light px-3 py-2">
+                                                <span class="badge workspace-status bg-green rounded-2 fw-light px-3 py-2">
                                                     {{ $item->getStatusName() }}
-                                                </div>
+                                                </span>
                                             @endif
                                         </td>
                                     @endif
                                     <td class="text-center">
-                                        <div class="row row-cols-auto justify-content-center align-items-center g-2">
+                                        <div class="dropdown custom-drop d-inline-block text-start">
+                                            <button type="button" class="btn btn-outline-secondary btn-padding"
+                                                data-bs-toggle="dropdown" aria-expanded="false"
+                                                aria-label="{{ translate('Item actions') }}" title="{{ translate('Item actions') }}">
+                                                <i class="fa-solid fa-ellipsis"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
                                             @if (!$item->isPending())
-                                                <div class="col">
+                                                <li>
                                                     <a href="{{ route('workspace.items.edit', $item->id) }}"
-                                                        class="btn btn-primary btn-padding">
-                                                        <i class="fa-regular fa-pen-to-square"></i>
+                                                        class="dropdown-item">
+                                                        <i class="fa-regular fa-pen-to-square me-2"></i>
+                                                        {{ translate('Edit') }}
                                                     </a>
-                                                </div>
+                                                </li>
                                             @endif
                                             @if ($item->isApproved())
-                                                <div class="col">
+                                                <li>
                                                     <a href="{{ route('workspace.items.statistics', $item->id) }}"
-                                                        class="btn btn-warning btn-padding">
-                                                        <i class="fa-solid fa-chart-simple"></i>
+                                                        class="dropdown-item">
+                                                        <i class="fa-solid fa-chart-simple me-2"></i>
+                                                        {{ translate('Statistics') }}
                                                     </a>
-                                                </div>
-                                                <div class="col">
+                                                </li>
+                                                <li>
                                                     @if ($item->isMainFileExternal())
                                                         <a href="{{ $item->main_file }}" target="_blank"
-                                                            class="btn btn-dark btn-padding"><i
-                                                                class="fa fa-download"></i></a>
+                                                            class="dropdown-item">
+                                                            <i class="fa-solid fa-download me-2"></i>
+                                                            {{ translate('Download') }}
+                                                        </a>
                                                     @else
                                                         <form action="{{ route('workspace.items.download', $item->id) }}"
                                                             method="POST">
                                                             @csrf
-                                                            <button class="btn btn-dark btn-padding"><i
-                                                                    class="fa fa-download"></i></button>
+                                                            <button class="dropdown-item" type="submit">
+                                                                <i class="fa-solid fa-download me-2"></i>
+                                                                {{ translate('Download') }}
+                                                            </button>
                                                         </form>
                                                     @endif
-                                                </div>
+                                                </li>
                                             @endif
-                                            <div class="col">
-                                                <form action="{{ route('workspace.items.destroy', $item->id) }}"
-                                                    method="POST">
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <form action="{{ route('workspace.items.destroy', $item->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button class="btn btn-danger btn-padding action-confirm">
-                                                        <i class="far fa-trash-alt"></i>
+                                                    <button class="dropdown-item text-danger action-confirm" type="submit">
+                                                        <i class="fa-regular fa-trash-alt me-2"></i>
+                                                        {{ translate('Delete') }}
                                                     </button>
                                                 </form>
-                                            </div>
+                                            </li>
+                                            </ul>
                                         </div>
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="5" class="text-center">
-                                        <div class="text-muted p-4">{{ translate('No data found') }}</div>
-                                    </td>
-                                </tr>
+                                @include('themes.basic.workspace.partials.table-empty-row', [
+                                    'colspan' => @$settings->item->adding_require_review ? 5 : 4,
+                                    'message' => translate('No products match the current search.'),
+                                ])
                             @endforelse
                         </tbody>
                     </table>
@@ -275,7 +288,7 @@
                                     <span data-category-picker-label>
                                         {{ $categories->first()->name ?? translate('Choose category') }}
                                     </span>
-                                    <i class="fa fa-angle-down ms-auto"></i>
+                                    <i class="fa-solid fa-angle-down ms-auto"></i>
                                 </button>
                                 <div class="drop-down-menu" data-category-picker-menu>
                                     @foreach ($categories as $category)

@@ -15,7 +15,7 @@
                                     placeholder="{{ translate('Search...') }}" value="{{ request('search') ?? '' }}">
                             </div>
                             <div class="col">
-                                <button class="btn btn-primary w-100"><i class="fa fa-search"></i></button>
+                                <button class="btn btn-primary w-100"><i class="fa-solid fa-search"></i></button>
                             </div>
                             <div class="col">
                                 <a href="{{ url()->current() }}"

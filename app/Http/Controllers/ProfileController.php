@@ -6,6 +6,8 @@ use App\Models\Follower;
 use App\Models\Item;
 use App\Models\ItemReview;
 use App\Models\User;
+use App\Services\UsernameResolver;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -13,9 +15,16 @@ use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
+    public function __construct(protected UsernameResolver $usernameResolver)
+    {
+    }
+
     public function index($username)
     {
-        $user = $this->getUserByUsername($username);
+        $user = $this->resolvePublicUser($username, 'profile.index');
+        if ($user instanceof \Illuminate\Http\RedirectResponse) {
+            return $user;
+        }
 
         $items = Item::where('author_id', $user->id)
             ->approved()
@@ -37,7 +46,10 @@ class ProfileController extends Controller
 
     public function portfolio($username)
     {
-        $user = $this->getUserByUsername($username, true);
+        $user = $this->resolvePublicUser($username, 'profile.portfolio', true);
+        if ($user instanceof \Illuminate\Http\RedirectResponse) {
+            return $user;
+        }
 
         $items = Item::where('author_id', $user->id)
             ->approved();
@@ -66,7 +78,10 @@ class ProfileController extends Controller
 
     public function followers($username)
     {
-        $user = $this->getUserByUsername($username);
+        $user = $this->resolvePublicUser($username, 'profile.followers');
+        if ($user instanceof \Illuminate\Http\RedirectResponse) {
+            return $user;
+        }
 
         $followers = Follower::where('following_id', $user->id)
             ->with('follower')
@@ -81,7 +96,10 @@ class ProfileController extends Controller
 
     public function following($username)
     {
-        $user = $this->getUserByUsername($username);
+        $user = $this->resolvePublicUser($username, 'profile.following');
+        if ($user instanceof \Illuminate\Http\RedirectResponse) {
+            return $user;
+        }
 
         $followings = Follower::where('follower_id', $user->id)
             ->with('following')
@@ -96,7 +114,10 @@ class ProfileController extends Controller
 
     public function reviews($username)
     {
-        $user = $this->getUserByUsername($username, true);
+        $user = $this->resolvePublicUser($username, 'profile.reviews', true);
+        if ($user instanceof \Illuminate\Http\RedirectResponse) {
+            return $user;
+        }
 
         $reviews = ItemReview::where('author_id', $user->id)
             ->with('user')
@@ -111,9 +132,8 @@ class ProfileController extends Controller
 
     public function sendMail(Request $request, $username)
     {
-        $user = User::where('username', $username)
-            ->active()
-            ->firstOrFail();
+        $user = $this->usernameResolver->owner($username);
+        abort_unless($user && $user->isDataCompleted(), 404);
 
         abort_if(!authUser(), 401);
 
@@ -164,18 +184,24 @@ class ProfileController extends Controller
         }
     }
 
-    protected function getUserByUsername($username, $authorCheck = false)
+    protected function resolvePublicUser($username, string $routeName, bool $authorCheck = false)
     {
-        $query = User::where('username', $username)
-            ->whereDataCompleted()
-            ->with(['badges' => function ($query) {
-                $query->with('badge');
-            }]);
+        [$user, $historical] = $this->usernameResolver->publicProfile($username, $authorCheck);
+        abort_unless($user, 404);
 
-        if ($authorCheck) {
-            $query->author();
+        if ($historical) {
+            $url = route($routeName, $user->username);
+            if (request()->getQueryString()) {
+                $url .= '?' . request()->getQueryString();
+            }
+
+            return redirect()->away($url, 301);
         }
 
-        return $query->firstOrFail();
+        $user->load(['badges' => function ($query) {
+            $query->with('badge');
+        }]);
+
+        return $user;
     }
 }

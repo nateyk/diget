@@ -244,7 +244,7 @@ class AppServiceProvider extends ServiceProvider
         theme_compose('sections.featured-author', function ($view) {
             $featuredAuthorSection = homeSection('featured_author');
             $cacheMinutes = Carbon::now()->addMinutes($featuredAuthorSection->cache_expiry_time);
-            $featuredAuthor = Cache::remember('home_featured_author_cache', $cacheMinutes, function () use ($featuredAuthorSection) {
+            $featuredAuthor = Cache::remember('home_featured_author_cache_v2', $cacheMinutes, function () use ($featuredAuthorSection) {
                 return User::author()
                     ->featuredAuthor()
                     ->active()

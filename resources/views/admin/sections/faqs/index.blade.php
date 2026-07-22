@@ -12,7 +12,7 @@
                         <div class="row g-3 align-items-center">
                             <div class="col-auto">
                                 <span class="sortable-list-handle text-muted">
-                                    <i class="fas fa-arrows-alt fa-lg"></i>
+                                    <i class="fa-solid fa-arrows-alt fa-lg"></i>
                                 </span>
                             </div>
                             <div class="col">
@@ -35,7 +35,7 @@
                                             @method('DELETE')
                                             @csrf
                                             <button class="action-confirm btn btn-danger btn-md">
-                                                <i class="far fa-trash-alt"></i>
+                                                <i class="fa-regular fa-trash-alt"></i>
                                             </button>
                                         </form>
                                     </div>

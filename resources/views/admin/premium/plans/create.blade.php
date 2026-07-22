@@ -83,7 +83,7 @@
                 <div class="row g-3 custom-features">
                     <div class="col-12">
                         <button id="addCustomFeature" type="button" class="btn btn-dark btn-md">
-                            <i class="fa fa-plus me-1"></i>
+                            <i class="fa-solid fa-plus me-1"></i>
                             {{ translate('Add custom feature') }}
                         </button>
                     </div>

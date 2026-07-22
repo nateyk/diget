@@ -9,12 +9,26 @@
     ]);
     $socialLinks = $user->profile_social_links;
     $publishedItemsCount = $items->total();
+    $showSales = $user->total_sales > 0;
+    $showReviews = $user->total_reviews > 0;
     $storefrontLink = $user->getProfileLink();
+    $personSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'Person',
+        'name' => $user->getName(),
+        'alternateName' => '@' . $user->username,
+        'url' => $storefrontLink,
+        'image' => $user->getAvatar(),
+        'description' => shorterText($profileSeoDescription, 160),
+    ];
 @endphp
 @section('title', $user->getName() . ' (@' . $user->username . ')')
 @section('description', shorterText($profileSeoDescription, 160))
 @section('og_image', $user->getProfileCover())
 @section('canonical', $storefrontLink)
+@push('schema')
+    <script type="application/ld+json">{!! json_encode($personSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+@endpush
 @section('content')
     <div class="creator-storefront">
         <aside class="card-v border item-detail-card item-detail-author-card creator-storefront-card" data-storefront-mobile-panel="profile">
@@ -34,20 +48,23 @@
                             @endif
                         </div>
                         <div class="creator-storefront-heading text-muted small">{{ $profileHeading }}</div>
+                        <div class="creator-storefront-username text-muted small">{{ '@' . $user->username }}</div>
                     </div>
                 </div>
 
                 <div class="creator-storefront-actions">
                     <livewire:follow-button :user="$user" />
-                    <button type="button" class="btn btn-outline-secondary btn-padding"
-                        data-bs-toggle="modal" data-bs-target="#storefrontContactModal"
-                        aria-label="{{ translate('Message') }}">
-                        <i class="bi bi-chat-left-text"></i>
-                    </button>
+                    @if ($user->profile_contact_email)
+                        <button type="button" class="btn btn-outline-secondary btn-padding"
+                            data-bs-toggle="modal" data-bs-target="#storefrontContactModal"
+                            aria-label="{{ translate('Message') }}">
+                            <i class="fa-regular fa-message"></i>
+                        </button>
+                    @endif
                     <button type="button" class="btn btn-outline-secondary btn-padding"
                         data-bs-toggle="modal" data-bs-target="#storefrontShareModal"
                         aria-label="{{ translate('Share') }}">
-                        <i class="bi bi-share"></i>
+                        <i class="fa-solid fa-share-nodes"></i>
                     </button>
                 </div>
 
@@ -60,48 +77,62 @@
                     'class' => 'creator-storefront-socials socials',
                 ])
 
-                <div class="creator-storefront-stats">
-                    <div>
-                        <strong>{{ numberFormat($publishedItemsCount) }}</strong>
-                        <span>{{ translate('Items') }}</span>
+                @if ($publishedItemsCount || $showSales || $showReviews)
+                    <div class="creator-storefront-stats">
+                        @if ($publishedItemsCount)
+                            <div>
+                                <strong>{{ numberFormat($publishedItemsCount) }}</strong>
+                                <span>{{ translate('Products') }}</span>
+                            </div>
+                        @endif
+                        @if ($showSales)
+                            <div>
+                                <strong>{{ numberFormat($user->total_sales) }}</strong>
+                                <span>{{ translate('Sales') }}</span>
+                            </div>
+                        @endif
+                        @if ($showReviews)
+                            <div>
+                                <strong>{{ number_format($user->avg_reviews, 1) }}</strong>
+                                <span>{{ translate($user->total_reviews == 1 ? '1 review' : ':count reviews', [
+                                    'count' => numberFormat($user->total_reviews),
+                                ]) }}</span>
+                            </div>
+                        @endif
                     </div>
-                    <div>
-                        <strong>{{ numberFormat($user->total_sales) }}</strong>
-                        <span>{{ translate('Sales') }}</span>
-                    </div>
-                    <div>
-                        <strong>{{ $user->avg_reviews > 0 ? number_format($user->avg_reviews, 1) : '0.0' }}</strong>
-                        <span>{{ translate($user->total_reviews == 1 ? '1 review' : ':count reviews', [
-                            'count' => numberFormat($user->total_reviews),
-                        ]) }}</span>
-                    </div>
-                </div>
+                @endif
             </div>
         </aside>
 
         <main class="creator-storefront-main">
             <div class="creator-storefront-main-header">
-                <div class="creator-storefront-tabs">
-                    <a href="#storefrontPortfolio" class="active"
-                        data-storefront-tab="portfolio">
-                        {{ translate('Portfolio') }}
+                <div class="creator-storefront-tabs" role="tablist" aria-label="{{ translate('Storefront content') }}">
+                    <button type="button" class="active" role="tab" aria-selected="true"
+                        aria-controls="storefrontPortfolio" data-storefront-tab="portfolio">
+                        {{ translate('Products') }}
                         <span>{{ numberFormat($publishedItemsCount) }}</span>
-                    </a>
-                    <a href="#storefrontAbout" data-storefront-tab="about">{{ translate('About') }}</a>
+                    </button>
+                    <button type="button" role="tab" aria-selected="false" aria-controls="storefrontAbout"
+                        data-storefront-tab="about">{{ translate('About') }}</button>
                 </div>
             </div>
 
-            <div id="storefrontPortfolio" class="creator-storefront-panel" data-storefront-panel="portfolio">
+            <div id="storefrontPortfolio" class="creator-storefront-panel" data-storefront-panel="portfolio" role="tabpanel">
                 <div class="creator-storefront-items">
                     @forelse ($items as $item)
                         @include('themes.basic.partials.item', [
                             'item' => $item,
                             'item_classes' => 'border creator-storefront-item',
+                            'show_creator' => false,
                         ])
                     @empty
-                        <div class="creator-storefront-empty">
-                            <i class="fa-regular fa-file-lines"></i>
-                            <p>{{ translate('No published items yet') }}</p>
+                        <div class="creator-storefront-empty public-empty-state card-v border">
+                            <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
+                            <h2 class="h5 mb-2">{{ translate('No products published yet') }}</h2>
+                            <p class="text-muted mb-3">{{ translate('Learn more about this creator and check back for future releases.') }}</p>
+                            <a href="#storefrontAbout" class="btn btn-outline-primary btn-md" data-storefront-tab="about">
+                                {{ translate('About this creator') }}
+                            </a>
                         </div>
                     @endforelse
                 </div>
@@ -109,7 +140,7 @@
                 {{ $items->links() }}
             </div>
 
-            <div id="storefrontAbout" class="creator-storefront-panel" data-storefront-panel="about" hidden>
+            <div id="storefrontAbout" class="creator-storefront-panel" data-storefront-panel="about" role="tabpanel" hidden>
                 <div class="creator-storefront-about">
                     <h3>{{ translate('About') }}</h3>
                     @if ($user->profile_heading)
@@ -133,9 +164,9 @@
                 <span>{{ translate('Profile') }}</span>
             </button>
             <button type="button" data-storefront-mobile-tab="portfolio"
-                aria-label="{{ translate('Mobile Items') }}">
+                aria-label="{{ translate('Mobile Products') }}">
                 <i class="fa-solid fa-cube"></i>
-                <span>{{ translate('Items') }}</span>
+                <span>{{ translate('Products') }}</span>
             </button>
             <button type="button" data-storefront-mobile-tab="about"
                 aria-label="{{ translate('Mobile About') }}">
@@ -225,7 +256,7 @@
     <script>
         "use strict";
 
-        const storefrontTabs = document.querySelectorAll('.creator-storefront-tabs [data-storefront-tab]');
+        const storefrontTabs = document.querySelectorAll('[data-storefront-tab]');
         const storefrontPanels = document.querySelectorAll('[data-storefront-panel]');
         const storefrontMobileTabs = document.querySelectorAll('[data-storefront-mobile-tab]');
         const storefrontMobilePanels = document.querySelectorAll('[data-storefront-mobile-panel]');
@@ -234,7 +265,9 @@
 
         const showStorefrontPanel = (panelName, updateMobile = true) => {
             storefrontTabs.forEach((tab) => {
-                tab.classList.toggle('active', tab.dataset.storefrontTab === panelName);
+                const isActive = tab.dataset.storefrontTab === panelName;
+                tab.classList.toggle('active', isActive);
+                tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
             });
 
             storefrontPanels.forEach((panel) => {

@@ -13,7 +13,7 @@
                     <input id="apiKey" type="text" class="form-control form-control-md " value="{{ $user->api_key }}"
                         readonly>
                     <button class="btn btn-outline-primary btn-copy" data-clipboard-target="#apiKey">
-                        <i class="far fa-clone"></i>
+                        <i class="fa-regular fa-clone"></i>
                     </button>
                 </div>
             </div>

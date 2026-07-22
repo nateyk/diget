@@ -22,7 +22,7 @@
             </div>
         </div>
         <a href="{{ url('/') }}" class="btn btn-dark rounded-0 px-4 py-2"><i
-                class="fa fa-home me-1"></i>{{ translate('Back to home') }}</a>
+                class="fa-solid fa-home me-1"></i>{{ translate('Back to home') }}</a>
     </div>
     <script src="{{ asset('vendor/libs/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('vendor/libs/bootstrap/bootstrap.bundle.min.js') }}"></script>

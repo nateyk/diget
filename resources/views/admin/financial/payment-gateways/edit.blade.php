@@ -16,7 +16,7 @@
                                 <img id="filePreview" src="{{ asset($paymentGateway->logo) }}" width="150px">
                             </div>
                             <button id="selectFileBtn" type="button" class="btn btn-secondary mb-2"><i
-                                    class="fas fa-camera me-2"></i>{{ translate('Choose Logo') }}</button>
+                                    class="fa-solid fa-camera me-2"></i>{{ translate('Choose Logo') }}</button>
                             <input id="selectedFileInput" type="file" name="logo" accept=".png, .jpg, .jpeg, .webp"
                                 hidden>
                             <small class="text-muted d-block">{{ translate('Allowed (PNG, JPG, JPEG, WEBP)') }}</small>
@@ -51,7 +51,7 @@
                                     <div class="input-group">
                                         <input type="number" name="fees" class="form-control" placeholder="0"
                                             value="{{ $paymentGateway->fees }}">
-                                        <span class="input-group-text"><i class="fas fa-percent"></i></span>
+                                        <span class="input-group-text"><i class="fa-solid fa-percent"></i></span>
                                     </div>
                                 </div>
                             @endif
@@ -110,7 +110,7 @@
                                                         readonly>
                                                     <button type="button" class="btn btn-secondary btn-copy"
                                                         data-clipboard-target="#input-link-{{ $key }}"><i
-                                                            class="far fa-clone"></i></button>
+                                                            class="fa-regular fa-clone"></i></button>
                                                 </div>
                                             @else
                                                 <div class="input-group">
@@ -118,7 +118,7 @@
                                                         value="{{ $parameter->content }}" class="form-control" readonly>
                                                     <button type="button" class="btn btn-secondary btn-copy"
                                                         data-clipboard-target="#input-text-{{ $key }}"><i
-                                                            class="far fa-clone"></i></button>
+                                                            class="fa-regular fa-clone"></i></button>
                                                 </div>
                                             @endif
                                         </div>

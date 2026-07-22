@@ -26,9 +26,13 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">{{ translate('Username') }}</label>
-                    <input type="text" name="username" class="form-control form-control-md"
-                        placeholder="{{ translate('Username') }}" value="{{ authUser()->username }}" required />
+                    <label for="username" class="form-label">{{ translate('Username') }}</label>
+                    <input id="username" type="text" name="username" class="form-control form-control-md"
+                        placeholder="{{ translate('Username') }}" value="{{ old('username', authUser()->username) }}"
+                        minlength="6" maxlength="50" aria-describedby="usernameHelp" required />
+                    <div id="usernameHelp" class="form-text">
+                        {{ translate('Your storefront will use /@username. After a future change, you must wait 30 days before changing it again.') }}
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">{{ translate('Email address') }}</label>

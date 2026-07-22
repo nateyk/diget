@@ -91,6 +91,51 @@
             <button class="btn btn-primary btn-md">{{ translate('Save Changes') }}</button>
         </form>
     </div>
+    <div class="dashboard-card card-v mb-3">
+        <div class="form-section">
+            <h5 class="mb-0">{{ translate('Public username') }}</h5>
+        </div>
+        <form action="{{ route('workspace.settings.username.update') }}" method="POST">
+            @csrf
+            <div class="row g-3">
+                <div class="col-12 col-lg-7">
+                    <label for="username" class="form-label">{{ translate('Username') }}</label>
+                    <div class="input-group">
+                        <span class="input-group-text">@</span>
+                        <input id="username" type="text" name="username"
+                            class="form-control form-control-md @error('username') is-invalid @enderror"
+                            value="{{ old('username', $user->username) }}" minlength="6" maxlength="50"
+                            aria-describedby="usernameHelp usernameWarning" @disabled(!$canChangeUsername) required>
+                    </div>
+                    @error('username')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                    <div id="usernameHelp" class="form-text">
+                        {{ translate('Your public storefront is :url', ['url' => $user->getProfileLink()]) }}
+                    </div>
+                </div>
+                <div class="col-12 col-lg-5">
+                    <label for="current_password" class="form-label">{{ translate('Current password') }}</label>
+                    <input id="current_password" type="password" name="current_password"
+                        class="form-control form-control-md @error('current_password') is-invalid @enderror"
+                        autocomplete="current-password" @disabled(!$canChangeUsername) required>
+                    @error('current_password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+            <p id="usernameWarning" class="small text-muted mt-3 mb-3">
+                @if ($canChangeUsername)
+                    {{ translate('Changing your username changes your public link. Your old link will redirect here, and you can change again after 30 days.') }}
+                @else
+                    {{ translate('You can change your username again on :date.', ['date' => $nextUsernameChangeAt->toDayDateTimeString()]) }}
+                @endif
+            </p>
+            <button class="btn btn-primary btn-md" @disabled(!$canChangeUsername)>
+                {{ translate('Change username') }}
+            </button>
+        </form>
+    </div>
     @push('styles_libs')
         <link rel="stylesheet" href="{{ asset('vendor/libs/bootstrap/select/bootstrap-select.min.css') }}">
     @endpush

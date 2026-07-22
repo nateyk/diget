@@ -5,7 +5,7 @@
 @section('content')
     <div class="mb-3">
         <a class="btn btn-outline-secondary" href="{{ $article->getLink() }}" target="_blank"><i
-                class="fa fa-eye me-2"></i>{{ translate('View') }}</a>
+                class="fa-solid fa-eye me-2"></i>{{ translate('View') }}</a>
     </div>
     <form id="vironeer-submited-form" action="{{ route('admin.blog.articles.update', $article->id) }}" method="POST"
         enctype="multipart/form-data">
@@ -41,7 +41,7 @@
                                     height="160px">
                             </div>
                             <button id="selectFileBtn" type="button" class="btn btn-secondary mb-2"><i
-                                    class="fas fa-camera me-2"></i>{{ translate('Choose Image') }}</button>
+                                    class="fa-solid fa-camera me-2"></i>{{ translate('Choose Image') }}</button>
                             <input id="selectedFileInput" type="file" name="image" accept=".png, .jpg, .jpeg, .webp"
                                 hidden>
                             <small class="text-muted d-block">{{ translate('Allowed (PNG, JPG, JPEG, WEBP)') }}</small>

@@ -27,7 +27,7 @@
                                 <div class="blog-post-body">
                                     <div class="post-meta mb-2">
                                         <div class="post-meta-item">
-                                            <i class="far fa-calendar"></i>
+                                            <i class="fa-regular fa-calendar"></i>
                                             <span>{{ dateFormat($blogArticle->created_at) }}</span>
                                         </div>
                                         <div class="post-meta-item">
@@ -47,7 +47,7 @@
                                     <div class="mt-auto">
                                         <a href="{{ $blogArticle->getLink() }}">
                                             {{ translate('Read More') }}<i
-                                                class="fa fa-arrow-right fa-sm fa-rtl ms-1"></i>
+                                                class="fa-solid fa-arrow-right fa-sm fa-rtl ms-1"></i>
                                         </a>
                                     </div>
                                 </div>
@@ -58,7 +58,7 @@
                 <div class="text-center mt-5">
                     <a href="{{ route('blog.index') }}" class="btn btn-primary btn-md">
                         {{ translate('View All') }}
-                        <i class="fa fa-arrow-right fa-rtl ms-2"></i>
+                        <i class="fa-solid fa-arrow-right fa-rtl ms-2"></i>
                     </a>
                 </div>
             </div>

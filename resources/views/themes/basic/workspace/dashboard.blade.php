@@ -3,97 +3,84 @@
 @section('breadcrumbs', Breadcrumbs::render('workspace.dashboard'))
 @section('content')
     <div class="workspace-dashboard">
-        <div class="mb-3">
+        <div class="workspace-stats mb-3">
             <div class="row g-3">
                 <div class="col-12 col-lg-6 col-xl-{{ @$settings->referral->status ? 3 : 4 }}">
-                    <div class="dashboard-counter justify-content-start dashboard-counter-info">
-                        <div class="dashboard-counter-icon">
-                            <i class="fa-solid fa-cart-arrow-down"></i>
-                        </div>
-                        <div class="dashboard-counter-info">
-                            <h6 class="dashboard-counter-title">{{ translate('Total Sales') }}</h6>
-                            <p class="dashboard-counter-number">{{ number_format($counters['total_sales']) }}</p>
-                        </div>
-                    </div>
+                    @include('themes.basic.workspace.partials.stat-card', [
+                        'variant' => 'dashboard-counter-info',
+                        'icon' => 'fa-solid fa-cart-arrow-down',
+                        'label' => translate('Total Sales'),
+                        'value' => number_format($counters['total_sales']),
+                    ])
                 </div>
                 <div class="col-12 col-lg-6 col-xl-{{ @$settings->referral->status ? 3 : 4 }}">
-                    <div class="dashboard-counter justify-content-start">
-                        <div class="dashboard-counter-icon">
-                            <i class="fa fa-dollar"></i>
-                        </div>
-                        <div class="dashboard-counter-info">
-                            <h6 class="dashboard-counter-title">{{ translate('Sales Earnings') }}</h6>
-                            <p class="dashboard-counter-number">{{ getAmount($counters['sales_earnings']) }}</p>
-                        </div>
-                    </div>
+                    @include('themes.basic.workspace.partials.stat-card', [
+                        'icon' => 'fa-solid fa-dollar',
+                        'label' => translate('Sales Earnings'),
+                        'value' => getAmount($counters['sales_earnings']),
+                    ])
                 </div>
                 @if (@$settings->referral->status)
                     <div class="col-12 col-lg-6 col-xl-3">
-                        <div class="dashboard-counter justify-content-start dashboard-counter-danger">
-                            <div class="dashboard-counter-icon">
-                                <i class="fa-solid fa-money-bill-trend-up"></i>
-                            </div>
-                            <div class="dashboard-counter-info">
-                                <h6 class="dashboard-counter-title">{{ translate('Referral Earnings') }}</h6>
-                                <p class="dashboard-counter-number">{{ getAmount($counters['referrals_earnings']) }}</p>
-                            </div>
-                        </div>
+                        @include('themes.basic.workspace.partials.stat-card', [
+                            'variant' => 'dashboard-counter-danger',
+                            'icon' => 'fa-solid fa-money-bill-trend-up',
+                            'label' => translate('Referral Earnings'),
+                            'value' => getAmount($counters['referrals_earnings']),
+                        ])
                     </div>
                 @endif
                 <div
                     class="col-12 {{ @$settings->referral->status ? 'col-lg-6' : '' }} col-xl-{{ @$settings->referral->status ? 3 : 4 }}">
-                    <div class="dashboard-counter justify-content-start dashboard-counter-secondary">
-                        <div class="dashboard-counter-icon">
-                            <i class="fa-regular fa-eye"></i>
-                        </div>
-                        <div class="dashboard-counter-info">
-                            <h6 class="dashboard-counter-title">{{ translate('Total Views') }}</h6>
-                            <p class="dashboard-counter-number">{{ number_format($counters['total_views']) }}</p>
-                        </div>
-                    </div>
+                    @include('themes.basic.workspace.partials.stat-card', [
+                        'variant' => 'dashboard-counter-secondary',
+                        'icon' => 'fa-regular fa-eye',
+                        'label' => translate('Total Views'),
+                        'value' => number_format($counters['total_views']),
+                    ])
                 </div>
             </div>
         </div>
         <div class="row g-3">
             <div class="col-12 col-xxl-7">
-                <div class="dashboard-chart-card dashboard-card card-v h-100">
-                    <h5 class="mb-4">{{ translate('Sales Statistics') }}</h5>
+                <div class="dashboard-chart-card dashboard-card card-v workspace-panel h-100">
+                    <h2 class="workspace-panel-title">{{ translate('Sales Statistics') }}</h2>
                     <div class="dashboard-chart">
                         <canvas id="sales-chart"></canvas>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-xxl-5">
-                <div class="dashboard-card card-v h-100">
-                    <h5 class="mb-4">{{ translate('Top selling items') }}</h5>
+                <div class="dashboard-card card-v workspace-panel h-100">
+                    <h2 class="workspace-panel-title">{{ translate('Top selling items') }}</h2>
                     @each('themes.basic.workspace.partials.dashboard-top-selling-item', $topSellingItems, 'topSellingItem', 'themes.basic.workspace.partials.card-empty')
                 </div>
             </div>
             <div class="col-12 col-xxl-5">
-                <div class="dashboard-card card-v h-100">
-                    <h5 class="mb-4">{{ translate('Top purchasing countries') }}</h5>
+                <div class="dashboard-card card-v workspace-panel h-100">
+                    <h2 class="workspace-panel-title">{{ translate('Top purchasing countries') }}</h2>
                     @each('themes.basic.workspace.partials.dashboard-top-purchasing-country', $topPurchasingCountries, 'topPurchasingCountry', 'themes.basic.workspace.partials.card-empty')
                 </div>
             </div>
             <div class="col-12 col-xxl-7">
-                <div class="dashboard-chart-card dashboard-card card-v h-100">
-                    <h5 class="mb-4">{{ translate('Purchasing Countries') }}</h5>
+                <div class="dashboard-chart-card dashboard-card card-v workspace-panel h-100">
+                    <h2 class="workspace-panel-title">{{ translate('Purchasing Countries') }}</h2>
                     <div class="dashboard-chart">
-                        <div class="chart" id="countries-chart" class="w-100"></div>
+                        <div class="chart w-100" id="countries-chart"></div>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-xxl-7">
-                <div class="dashboard-chart-card dashboard-card card-v h-100">
-                    <h5 class="mb-4">{{ translate('Views Statistics') }}</h5>
+                <div class="dashboard-chart-card dashboard-card card-v workspace-panel h-100">
+                    <h2 class="workspace-panel-title">{{ translate('Views Statistics') }}</h2>
                     <div class="dashboard-chart">
                         <canvas id="views-chart"></canvas>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-xxl-5">
-                <div class="dashboard-chart-card dashboard-card card-v h-100">
-                    <h5 class="mb-4">{{ translate('Top Referrals') }}</h5>
+                <div class="dashboard-chart-card dashboard-card card-v workspace-panel h-100">
+                    <h2 class="workspace-panel-title">{{ translate('Top Referrals') }}</h2>
                     @each('themes.basic.workspace.partials.dashboard-referral', $referrals, 'referral', 'themes.basic.workspace.partials.card-empty')
                 </div>
             </div>

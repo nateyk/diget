@@ -34,6 +34,10 @@ class SitemapGenerate extends Command
                     return null;
                 }
 
+                if ($url->segment(1) === 'user') {
+                    return null;
+                }
+
                 $sitemap->add($url);
 
                 if (count($sitemap->getTags()) >= $limit) {

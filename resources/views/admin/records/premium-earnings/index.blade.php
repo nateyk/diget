@@ -22,7 +22,7 @@
                             onblur="(this.type='text')" value="{{ request('date_to') }}">
                     </div>
                     <div class="col">
-                        <button class="btn btn-primary w-100"><i class="fa fa-search"></i></button>
+                        <button class="btn btn-primary w-100"><i class="fa-solid fa-search"></i></button>
                     </div>
                     <div class="col">
                         <a href="{{ url()->current() }}" class="btn btn-secondary w-100">{{ translate('Reset') }}</a>
@@ -57,7 +57,7 @@
                                         <td class="text-center">
                                             <a href="{{ route('admin.members.users.edit', $premiumEarning->author->id) }}"
                                                 class="text-dark">
-                                                <i class="fa fa-user me-1"></i>
+                                                <i class="fa-solid fa-user me-1"></i>
                                                 {{ $premiumEarning->author->username }}
                                             </a>
                                         </td>
@@ -82,7 +82,7 @@
                                             <div class="text-end">
                                                 <button type="button" class="btn btn-sm rounded-3"
                                                     data-bs-toggle="dropdown" aria-expanded="true">
-                                                    <i class="fa fa-ellipsis-v fa-sm text-muted"></i>
+                                                    <i class="fa-solid fa-ellipsis-v fa-sm text-muted"></i>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-sm-end"
                                                     data-popper-placement="bottom-end">
@@ -102,7 +102,7 @@
                                                             method="POST">
                                                             @csrf @method('DELETE')
                                                             <button class="action-confirm dropdown-item text-danger">
-                                                                <i class="far fa-trash-alt me-1"></i>
+                                                                <i class="fa-regular fa-trash-alt me-1"></i>
                                                                 {{ translate('Delete') }}
                                                             </button>
                                                         </form>

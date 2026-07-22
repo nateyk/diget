@@ -200,7 +200,7 @@
                                 data-dropdown-position="top">
                                 <button type="button" class="drop-down-btn form-control form-control-md">
                                     <span data-kyc-document-label>{{ translate('National ID') }}</span>
-                                    <i class="fa fa-angle-down ms-auto"></i>
+                                    <i class="fa-solid fa-angle-down ms-auto"></i>
                                 </button>
                                 <div class="drop-down-menu">
                                     <button type="button" class="drop-down-item" data-kyc-document-option="national_id"

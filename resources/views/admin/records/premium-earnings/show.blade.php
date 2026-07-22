@@ -23,7 +23,7 @@
                     </div>
                     <div class="col-auto">
                         <a href="{{ route('admin.members.users.edit', $premiumEarning->author->id) }}" class="text-dark">
-                            <i class="fa fa-user me-1"></i>
+                            <i class="fa-solid fa-user me-1"></i>
                             {{ $premiumEarning->author->username }}
                         </a>
                     </div>

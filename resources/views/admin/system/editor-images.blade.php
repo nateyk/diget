@@ -11,7 +11,7 @@
                             value="{{ request('search') ?? '' }}">
                     </div>
                     <div class="col">
-                        <button class="btn btn-primary w-100"><i class="fa fa-search"></i></button>
+                        <button class="btn btn-primary w-100"><i class="fa-solid fa-search"></i></button>
                     </div>
                     <div class="col">
                         <a href="{{ url()->current() }}" class="btn btn-secondary w-100">{{ translate('Reset') }}</a>
@@ -57,7 +57,7 @@
                                                 method="POST">
                                                 @csrf @method('DELETE')
                                                 <button class="action-confirm btn btn-danger"><i
-                                                        class="far fa-trash-alt"></i></button>
+                                                        class="fa-regular fa-trash-alt"></i></button>
                                             </form>
                                         </td>
                                     </tr>

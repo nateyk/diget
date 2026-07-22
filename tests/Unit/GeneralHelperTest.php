@@ -6,6 +6,23 @@ use PHPUnit\Framework\TestCase;
 
 class GeneralHelperTest extends TestCase
 {
+    public function test_check_image_size_requires_an_exact_width_and_height_match(): void
+    {
+        $path = tempnam(sys_get_temp_dir(), 'diget-image-');
+        $image = imagecreatetruecolor(120, 120);
+
+        try {
+            imagepng($image, $path);
+
+            $this->assertTrue(checkImageSize($path, '120x120'));
+            $this->assertFalse(checkImageSize($path, '121x120'));
+            $this->assertFalse(checkImageSize($path, '120x121'));
+        } finally {
+            imagedestroy($image);
+            @unlink($path);
+        }
+    }
+
     public function test_get_ip_falls_back_when_remote_addr_is_missing(): void
     {
         $originalRemoteAddress = $_SERVER['REMOTE_ADDR'] ?? null;

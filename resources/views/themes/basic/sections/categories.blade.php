@@ -15,7 +15,7 @@
                     <div class="col d-none d-lg-block">
                         <a href="{{ route('categories.index') }}">
                             {{ translate('View All') }}
-                            <i class="fa fa-chevron-right fa-sm fa-rtl ms-2"></i>
+                            <i class="fa-solid fa-chevron-right fa-sm fa-rtl ms-2"></i>
                         </a>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                 <div class="categories-swiper mt-3">
                     <div class="swiper-actions">
                         <div id="categoriesSwiperPrev" class="swiper-button-prev">
-                            <i class="fa fa-chevron-left fa-rtl"></i>
+                            <i class="fa-solid fa-chevron-left fa-rtl"></i>
                         </div>
                     </div>
                     <div class="swiper categoriesSwiper">
@@ -43,14 +43,14 @@
                     </div>
                     <div class="swiper-actions">
                         <div id="categoriesSwiperNext" class="swiper-button-next">
-                            <i class="fa fa-chevron-right fa-rtl"></i>
+                            <i class="fa-solid fa-chevron-right fa-rtl"></i>
                         </div>
                     </div>
                 </div>
                 <div class="text-center mt-5 d-block d-lg-none">
                     <a href="{{ route('categories.index') }}">
                         {{ translate('View All') }}
-                        <i class="fa fa-chevron-right fa-sm fa-rtl ms-2"></i>
+                        <i class="fa-solid fa-chevron-right fa-sm fa-rtl ms-2"></i>
                     </a>
                 </div>
             </div>

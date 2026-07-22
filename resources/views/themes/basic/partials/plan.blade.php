@@ -53,7 +53,7 @@
     <div class="plan-features">
         <div class="plan-feat">
             <div class="plan-feat-icon">
-                <i class="fa fa-check"></i>
+                <i class="fa-solid fa-check"></i>
             </div>
             @if ($plan->hasUnlimitedDownloads())
                 <span>{{ translate('Unlimited downloads') }}</span>
@@ -65,7 +65,7 @@
             @foreach ($plan->custom_features as $customFeature)
                 <div class="plan-feat">
                     <div class="plan-feat-icon">
-                        <i class="fa fa-check"></i>
+                        <i class="fa-solid fa-check"></i>
                     </div>
                     <span>{{ $customFeature }}</span>
                 </div>

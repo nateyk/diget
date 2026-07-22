@@ -2,6 +2,8 @@
 /public/hot
 /public/storage
 /public/files/*
+/public/images/ui-demo/
+/storage/app/ui-demo/
 /storage/*.key
 /storage/framework/cache/data/*
 /storage/framework/sessions/*
@@ -11,6 +13,10 @@
 .env
 .env.backup
 .phpunit.result.cache
+/.phpunit.cache/
+/database/backups/
+/storage/framework/PsySH/
+/public/images/profiles/*/
 docker-compose.override.yml
 Homestead.json
 Homestead.yaml

@@ -16,15 +16,11 @@
                         required />
                 </div>
                 <div class="mb-3">
-                    <div class="row row-cols-auto flex-nowrap justify-content-between align-items-center">
-                        <div class="col">
-                            <label class="form-label mb-0">{{ translate('Password') }}</label>
-                        </div>
-                        <div class="col">
-                            <a href="{{ route('password.request') }}" class="mb-2 d-block">
-                                {{ translate('Forgot Your Password?') }}
-                            </a>
-                        </div>
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                        <label class="form-label mb-0">{{ translate('Password') }}</label>
+                        <a href="{{ route('password.request') }}" class="small">
+                            {{ translate('Forgot Your Password?') }}
+                        </a>
                     </div>
                     <input type="password" name="password" class="form-control form-control-md"
                         placeholder="{{ translate('Password') }}" required />

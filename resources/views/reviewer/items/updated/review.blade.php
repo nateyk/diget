@@ -79,12 +79,12 @@
                                                 <div class="item-audio-actions md">
                                                     <button class="play-button btn btn-primary btn-md px-2">
                                                         <div class="play-button-icon">
-                                                            <i class="fas fa-play"></i>
+                                                            <i class="fa-solid fa-play"></i>
                                                         </div>
                                                     </button>
                                                     <button class="pause-button btn btn-primary btn-md px-2 d-none">
                                                         <div class="play-button-icon">
-                                                            <i class="fas fa-pause"></i>
+                                                            <i class="fa-solid fa-pause"></i>
                                                         </div>
                                                     </button>
                                                 </div>

@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
+use App\Services\UsernameResolver;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +21,7 @@ class ReferralMiddleware
         if ($request->has('ref')) {
             if (@settings('referral')->status) {
                 if (!Auth::user()) {
-                    $referrer = User::where('username', $request->ref)->first();
+                    $referrer = app(UsernameResolver::class)->owner($request->ref);
                     if ($referrer) {
                         Cookie::queue('_ref', $referrer->username);
                     }

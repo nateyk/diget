@@ -2,7 +2,7 @@
 @section('title', translate('My Balance'))
 @section('breadcrumbs', Breadcrumbs::render('workspace.balance.index'))
 @section('content')
-    <div class="row mb-4">
+    <div class="row workspace-stats mb-3">
         <div class="col-12">
             <div class="dashboard-counter justify-content-start">
                 <div class="dashboard-counter-icon">
@@ -27,10 +27,10 @@
             </div>
         </div>
     </div>
-    <h3 class="mb-4">{{ translate('Statements') }}</h3>
+    <h2 class="workspace-panel-title mb-3">{{ translate('Statements') }}</h2>
     <div class="dashboard-card card-v p-0">
-        @if (($statements->count() > 0) | request()->input('date_from') || request()->input('date_to'))
-            <div class="table-search p-4">
+        @if ($statements->count() > 0 || request()->input('date_from') || request()->input('date_to'))
+            <div class="table-search p-3">
                 <form action="{{ url()->current() }}" method="GET">
                     <div class="row g-3 align-items-center">
                         <div class="col-12 col-lg-5 col-xxl-5">
@@ -42,7 +42,7 @@
                                 value="{{ request('date_to') }}">
                         </div>
                         <div class="col">
-                            <button class="btn btn-primary w-100 btn-md"><i class="fa fa-search"></i></button>
+                            <button class="btn btn-primary w-100 btn-md"><i class="fa-solid fa-search"></i></button>
                         </div>
                         <div class="col">
                             <a href="{{ url()->current() }}" class="btn btn-outline-primary w-100 btn-md"><i
@@ -53,18 +53,18 @@
             </div>
             <div class="overflow-hidden">
                 <div class="table-container">
-                    <table class="dashboard-table table text-start table-borderless">
+                    <table class="dashboard-table workspace-data-table table text-start table-borderless">
                         <thead>
                             <tr>
-                                <th>{{ translate('ID') }}</th>
-                                <th>{{ translate('Details') }}</th>
+                                <th scope="col">{{ translate('ID') }}</th>
+                                <th scope="col">{{ translate('Details') }}</th>
                                 @if (authUser()->isAuthor())
-                                    <th class="text-center">{{ translate('Amount') }}</th>
-                                    <th class="text-center">{{ translate('Buyer fee') }}</th>
-                                    <th class="text-center">{{ translate('Author fee') }}</th>
+                                    <th scope="col" class="text-center">{{ translate('Amount') }}</th>
+                                    <th scope="col" class="text-center">{{ translate('Buyer fee') }}</th>
+                                    <th scope="col" class="text-center">{{ translate('Author fee') }}</th>
                                 @endif
-                                <th class="text-center">{{ translate('Total') }}</th>
-                                <th class="text-center">{{ translate('Date') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Total') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Date') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -91,11 +91,10 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="7" class="text-center">
-                                        <div class="text-muted p-4">{{ translate('No data found') }}</div>
-                                    </td>
-                                </tr>
+                                @include('themes.basic.workspace.partials.table-empty-row', [
+                                    'colspan' => authUser()->isAuthor() ? 7 : 4,
+                                    'message' => translate('No statements match the selected dates.'),
+                                ])
                             @endforelse
                         </tbody>
                     </table>

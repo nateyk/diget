@@ -75,8 +75,9 @@
                                 <label class="form-label">{{ translate('Facebook') }}</label>
                                 <div class="row g-2 align-items-center">
                                     <div class="col-auto">
-                                        <button type="button" class="social-btn btn-facebook">
-                                            <i class="bi bi-facebook"></i>
+                                        <button type="button" class="social-btn btn-facebook"
+                                            aria-label="{{ translate('Facebook') }}">
+                                            <i class="fa-brands fa-facebook-f"></i>
                                         </button>
                                     </div>
                                     <div class="col">
@@ -90,8 +91,8 @@
                                 <label class="form-label">{{ translate('X.com') }}</label>
                                 <div class="row g-2 align-items-center">
                                     <div class="col-auto">
-                                        <button type="button" class="social-btn btn-x">
-                                            <i class="bi bi-twitter-x"></i>
+                                        <button type="button" class="social-btn btn-x" aria-label="{{ translate('X') }}">
+                                            <i class="fa-brands fa-x-twitter"></i>
                                         </button>
                                     </div>
                                     <div class="col">
@@ -105,8 +106,9 @@
                                 <label class="form-label">{{ translate('Youtube') }}</label>
                                 <div class="row g-2 align-items-center">
                                     <div class="col-auto">
-                                        <button type="button" class="social-btn btn-youtube">
-                                            <i class="bi bi-youtube"></i>
+                                        <button type="button" class="social-btn btn-youtube"
+                                            aria-label="{{ translate('YouTube') }}">
+                                            <i class="fa-brands fa-youtube"></i>
                                         </button>
                                     </div>
                                     <div class="col">
@@ -121,8 +123,9 @@
                                 <label class="form-label">{{ translate('Linkedin') }}</label>
                                 <div class="row g-2 align-items-center">
                                     <div class="col-auto">
-                                        <button type="button" class="social-btn btn-linkedin">
-                                            <i class="bi bi-linkedin"></i>
+                                        <button type="button" class="social-btn btn-linkedin"
+                                            aria-label="{{ translate('LinkedIn') }}">
+                                            <i class="fa-brands fa-linkedin-in"></i>
                                         </button>
                                     </div>
                                     <div class="col">
@@ -137,8 +140,9 @@
                                 <label class="form-label">{{ translate('Instagram') }}</label>
                                 <div class="row g-2 align-items-center">
                                     <div class="col-auto">
-                                        <button type="button" class="social-btn btn-instagram">
-                                            <i class="bi bi-instagram"></i>
+                                        <button type="button" class="social-btn btn-instagram"
+                                            aria-label="{{ translate('Instagram') }}">
+                                            <i class="fa-brands fa-instagram"></i>
                                         </button>
                                     </div>
                                     <div class="col">
@@ -153,8 +157,9 @@
                                 <label class="form-label">{{ translate('Pinterest') }}</label>
                                 <div class="row g-2 align-items-center">
                                     <div class="col-auto">
-                                        <button type="button" class="social-btn btn-pinterest">
-                                            <i class="bi bi-pinterest"></i>
+                                        <button type="button" class="social-btn btn-pinterest"
+                                            aria-label="{{ translate('Pinterest') }}">
+                                            <i class="fa-brands fa-pinterest-p"></i>
                                         </button>
                                     </div>
                                     <div class="col">

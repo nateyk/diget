@@ -180,7 +180,7 @@
                                                     method="POST">
                                                     @csrf
                                                     <button class="btn btn-danger btn-padding action-confirm">
-                                                        <i class="far fa-trash-alt"></i>
+                                                        <i class="fa-regular fa-trash-alt"></i>
                                                     </button>
                                                 </form>
                                             </td>

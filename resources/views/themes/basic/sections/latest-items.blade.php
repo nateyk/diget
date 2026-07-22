@@ -1,16 +1,15 @@
-<x-ad alias="home_page_center" @class('container container-custom my-4') />
 @if ($latestItemsSection)
     <div class="section">
         <div class="container container-custom">
             <div class="section-header">
                 <div class="col-lg-7 mx-auto">
                     <div class="section-title mb-0">
-                        <h2 class="section-title-text">{{ $latestItemsSection->name }}</h2>
+                        <h2 class="section-title-text">{{ translate('Latest products') }}</h2>
                         <div class="section-title-divider"></div>
                     </div>
-                    @if ($latestItemsSection->description)
-                        <p class="section-text mt-3">{{ $latestItemsSection->description }}</p>
-                    @endif
+                    <p class="section-text mt-3">
+                        {{ translate('Discover new digital products published by creators on Diget.') }}
+                    </p>
                 </div>
             </div>
             <div class="section-body">
@@ -19,7 +18,7 @@
                         <div class="col" role="presentation">
                             <button class="custom-tabs-item active" id="pills-all-tab" data-bs-toggle="pill"
                                 data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-all"
-                                aria-selected="true">{{ translate('All Categories') }}</button>
+                                aria-selected="true">{{ translate('All products') }}</button>
                         </div>
                         @foreach ($latestItemsCategories as $category)
                             <div class="col" role="presentation">
@@ -44,15 +43,15 @@
                             </div>
                             <div class="text-center mt-5">
                                 <a href="{{ route('items.index') }}" class="btn btn-outline-primary btn-md">
-                                    {{ translate('View More') }}
-                                    <i class="fa fa-arrow-right fa-rtl ms-2"></i>
+                                    {{ translate('Explore all products') }}
+                                    <i class="fa-solid fa-arrow-right fa-rtl ms-2"></i>
                                 </a>
                             </div>
                         @else
                             <div class="card-v rounded-3 p-5">
                                 <div class="text-center py-5">
                                     <p class="mb-0 text-muted">
-                                        {{ translate('No Items Found') }}
+                                        {{ translate('No products published yet') }}
                                     </p>
                                 </div>
                             </div>
@@ -72,15 +71,15 @@
                                 </div>
                                 <div class="text-center mt-5">
                                     <a href="{{ $category->getLink() }}" class="btn btn-outline-primary btn-md">
-                                        {{ translate('View More') }}
-                                        <i class="fa fa-arrow-right fa-rtl ms-2"></i>
+                                        {{ translate('Explore category') }}
+                                        <i class="fa-solid fa-arrow-right fa-rtl ms-2"></i>
                                     </a>
                                 </div>
                             @else
                                 <div class="card-v rounded-3 p-5">
                                     <div class="text-center py-5">
                                         <p class="mb-0 text-muted">
-                                            {{ translate('No Items Found') }}
+                                            {{ translate('No products published yet') }}
                                         </p>
                                     </div>
                                 </div>

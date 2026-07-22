@@ -14,14 +14,18 @@ use App\Models\ItemReview;
 use App\Models\ItemReviewReply;
 use App\Models\Settings;
 use App\Models\User;
+use App\Services\UsernameLock;
+use App\Services\UsernamePolicy;
 use Exception;
 use Faker\Factory as Faker;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class FakerController extends Controller
 {
@@ -116,19 +120,43 @@ class FakerController extends Controller
         $faker = Faker::create();
 
         for ($i = 0; $i < $request->users_number; $i++) {
-            $user = User::create([
-                'firstname' => $faker->firstName,
-                'lastname' => $faker->lastName,
-                'username' => $faker->userName,
-                'email' => $faker->unique()->safeEmail,
-                'password' => Hash::make(Str::random(12)),
-            ]);
+            $user = $this->createFakeUser($faker);
 
             $user->addCountryBadge();
         }
-        $user->addCountryBadge();
 
         return true;
+    }
+
+    private function createFakeUser($faker): User
+    {
+        $policy = app(UsernamePolicy::class);
+
+        for ($attempt = 0; $attempt < 25; $attempt++) {
+            $username = $policy->normalize($faker->unique()->userName);
+
+            try {
+                return app(UsernameLock::class)->run([$username], function () use ($faker, $policy, $username) {
+                    return User::create([
+                        'firstname' => $faker->firstName,
+                        'lastname' => $faker->lastName,
+                        'username' => $policy->assertSelectable($username),
+                        'email' => $faker->unique()->safeEmail,
+                        'password' => Hash::make(Str::random(12)),
+                    ]);
+                });
+            } catch (ValidationException $e) {
+                continue;
+            } catch (QueryException $e) {
+                if ($policy->isUsernameConstraintViolation($e)) {
+                    continue;
+                }
+
+                throw $e;
+            }
+        }
+
+        throw new Exception(translate('Unable to generate an available username.'));
     }
 
     private function handleFakeFollowersGenerating(Request $request)

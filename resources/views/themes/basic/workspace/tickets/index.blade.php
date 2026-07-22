@@ -2,13 +2,14 @@
 @section('title', translate('Tickets'))
 @section('breadcrumbs', Breadcrumbs::render('workspace.tickets.index'))
 @section('create', route('workspace.tickets.create'))
+@section('create_label', translate('New ticket'))
 @section('container', 'dashboard-container-lg')
 @section('content')
     @if ($tickets->count() > 0 || request()->input('search') || request()->input('status'))
         <div class="dashboard-card card-v p-0">
-            <div class="table-search p-4">
+            <div class="table-search p-3">
                 <form action="{{ url()->current() }}" method="GET">
-                    <div class="row g-3 aligs-items-center">
+                    <div class="row g-3 align-items-center">
                         <div class="col-12 col-lg-6 col-xxl-7">
                             <input type="text" name="search" placeholder="{{ translate('Search...') }}"
                                 class="form-control form-control-md" value="{{ request('search') }}">
@@ -23,7 +24,7 @@
                             </select>
                         </div>
                         <div class="col">
-                            <button class="btn btn-primary w-100 btn-md"><i class="fa fa-search"></i></button>
+                            <button class="btn btn-primary w-100 btn-md"><i class="fa-solid fa-search"></i></button>
                         </div>
                         <div class="col">
                             <a href="{{ url()->current() }}" class="btn btn-outline-primary w-100 btn-md"><i
@@ -34,15 +35,15 @@
             </div>
             <div class="overflow-hidden">
                 <div class="table-container">
-                    <table class="dashboard-table table text-start table-borderless">
+                    <table class="dashboard-table workspace-data-table table text-start table-borderless">
                         <thead>
                             <tr>
-                                <th>{{ translate('Ticket ID') }}</th>
-                                <th class="text-start">{{ translate('Subject') }}</th>
-                                <th class="text-center">{{ translate('Category') }}</th>
-                                <th class="text-center">{{ translate('Status') }}</th>
-                                <th>{{ translate('Created Date') }}</th>
-                                <th class="text-center">{{ translate('Action') }}</th>
+                                <th scope="col">{{ translate('Ticket ID') }}</th>
+                                <th scope="col" class="text-start">{{ translate('Subject') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Category') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Status') }}</th>
+                                <th scope="col">{{ translate('Created Date') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Action') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -64,11 +65,11 @@
                                     </td>
                                     <td class="text-center">
                                         @if ($ticket->isOpened())
-                                            <span class="badge bg-green rounded-2 fw-light px-3 py-2">
+                                            <span class="badge workspace-status bg-green rounded-2 fw-light px-3 py-2">
                                                 {{ $ticket->getStatusName() }}
                                             </span>
                                         @else
-                                            <span class="badge bg-red rounded-2 fw-light px-3 py-2">
+                                            <span class="badge workspace-status bg-red rounded-2 fw-light px-3 py-2">
                                                 {{ $ticket->getStatusName() }}
                                             </span>
                                         @endif
@@ -76,17 +77,17 @@
                                     <td>{{ dateFormat($ticket->created_at) }}</td>
                                     <td class="text-center">
                                         <a href="{{ route('workspace.tickets.show', $ticket->id) }}"
-                                            class="btn btn-outline-primary btn-padding">
+                                            class="btn btn-outline-secondary btn-padding"
+                                            aria-label="{{ translate('View ticket') }}" title="{{ translate('View ticket') }}">
                                             <i class="fa-regular fa-eye"></i>
                                         </a>
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="6" class="text-center">
-                                        <div class="text-muted p-4">{{ translate('No data found') }}</div>
-                                    </td>
-                                </tr>
+                                @include('themes.basic.workspace.partials.table-empty-row', [
+                                    'colspan' => 6,
+                                    'message' => translate('No support tickets match the current filters.'),
+                                ])
                             @endforelse
                         </tbody>
                     </table>

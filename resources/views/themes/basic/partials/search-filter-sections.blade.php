@@ -1,19 +1,5 @@
 @php
     $idSuffix = $idSuffix ?? '';
-    $optionFilters = [
-        ['name' => 'free', 'value' => 'true', 'label' => translate('Free')],
-        ['name' => 'on_sale', 'value' => 'true', 'label' => translate('On Sale')],
-        ['name' => 'best_selling', 'value' => 'true', 'label' => translate('Best Selling')],
-        ['name' => 'trending', 'value' => 'true', 'label' => translate('Trending')],
-        ['name' => 'featured', 'value' => 'true', 'label' => translate('Featured')],
-    ];
-
-    if (licenseType(2) && @$settings->premium->status) {
-        array_splice($optionFilters, 1, 0, [
-            ['name' => 'premium', 'value' => 'true', 'label' => translate('Premium')],
-        ]);
-    }
-
     $dateFilters = [
         ['value' => '', 'label' => translate('Any time')],
         ['value' => 'this_month', 'label' => translate('This month')],
@@ -27,29 +13,12 @@
     {{ translate('Filters') }}
 </div>
 
-<details class="discover-filter-section">
-    <summary>
-        <span>{{ translate('Options') }}</span>
-        <i class="fa fa-chevron-right"></i>
-    </summary>
-    <div class="discover-filter-body">
-        @foreach ($optionFilters as $key => $filter)
-            @php($inputId = 'filter' . ucfirst($filter['name']) . $idSuffix . $key)
-            <label class="discover-filter-option" for="{{ $inputId }}">
-                <span>{{ $filter['label'] }}</span>
-                <input class="form-check-input search-param" type="checkbox" name="{{ $filter['name'] }}"
-                    value="{{ $filter['value'] }}" id="{{ $inputId }}">
-            </label>
-        @endforeach
-    </div>
-</details>
-
 @if (isset($category) && $category->categoryOptions->count() > 0)
     @foreach ($category->categoryOptions as $categoryOptionIndex => $categoryOption)
         <details class="discover-filter-section">
             <summary>
                 <span>{{ $categoryOption->name }}</span>
-                <i class="fa fa-chevron-right"></i>
+                <i class="fa-solid fa-chevron-right"></i>
             </summary>
             <div class="discover-filter-body">
                 @foreach ($categoryOption->options as $optionIndex => $value)
@@ -71,7 +40,7 @@
 <details class="discover-filter-section">
     <summary>
         <span>{{ translate('Price') }}</span>
-        <i class="fa fa-chevron-right"></i>
+        <i class="fa-solid fa-chevron-right"></i>
     </summary>
     <div class="discover-filter-body">
         <div class="discover-filter-price">
@@ -81,7 +50,7 @@
                 placeholder="{{ translate('max') }}" value="{{ request()->input('max_price') }}" />
             <button id="{{ $priceButtonId }}" class="btn btn-primary btn-md btn-padding search-by-price"
                 aria-label="{{ translate('Apply price') }}">
-                <i class="fa fa-arrow-right fa-rtl"></i>
+                <i class="fa-solid fa-arrow-right fa-rtl"></i>
             </button>
         </div>
     </div>
@@ -91,7 +60,7 @@
     <details class="discover-filter-section">
         <summary>
             <span>{{ translate('Rating') }}</span>
-            <i class="fa fa-chevron-right"></i>
+            <i class="fa-solid fa-chevron-right"></i>
         </summary>
         <div class="discover-filter-body">
             <label class="discover-filter-option" for="ratingAll{{ $idSuffix }}">
@@ -119,7 +88,7 @@
 <details class="discover-filter-section">
     <summary>
         <span>{{ translate('Date Added') }}</span>
-        <i class="fa fa-chevron-right"></i>
+        <i class="fa-solid fa-chevron-right"></i>
     </summary>
     <div class="discover-filter-body">
         @foreach ($dateFilters as $key => $filter)

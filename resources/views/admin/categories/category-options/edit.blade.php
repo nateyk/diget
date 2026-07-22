@@ -51,7 +51,7 @@
                                             value="{{ $value }}" required>
                                         @if ($loop->first)
                                             <button id="addCategoryOption" class="btn btn-primary px-3" type="button">
-                                                <i class="fa fa-plus"></i>
+                                                <i class="fa-solid fa-plus"></i>
                                             </button>
                                         @else
                                             <button class="btn btn-danger px-3 category-option-remove"

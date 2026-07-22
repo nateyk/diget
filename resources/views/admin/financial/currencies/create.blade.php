@@ -17,7 +17,7 @@
                                 <img id="filePreview" src="#" width="50px">
                             </div>
                             <button id="selectFileBtn" type="button" class="btn btn-secondary mb-2"><i
-                                    class="fas fa-camera me-2"></i>{{ translate('Choose Icon') }}</button>
+                                    class="fa-solid fa-camera me-2"></i>{{ translate('Choose Icon') }}</button>
                             <input id="selectedFileInput" type="file" name="icon" accept=".png, .jpg, .jpeg, .webp"
                                 required hidden>
                             <small class="text-muted d-block">{{ translate('Allowed (PNG, JPG, JPEG, WEBP)') }}</small>

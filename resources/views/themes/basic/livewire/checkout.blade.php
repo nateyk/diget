@@ -90,7 +90,7 @@
             <div class="card-v border p-4 d-block d-xl-none mt-3">
                 <div class="row g-3 align-items-center">
                     <div class="col-auto">
-                        <i class="fas fa-shield-alt text-success fa-3x"></i>
+                        <i class="fa-solid fa-shield-alt text-success fa-3x"></i>
                     </div>
                     <div class="col">
                         <span class="h6 text-uppercase mb-2 d-block">
@@ -210,7 +210,7 @@
             <div class="card-v card-bg border p-4 d-none d-xl-block mt-4">
                 <div class="row g-3 align-items-center">
                     <div class="col-auto">
-                        <i class="fas fa-shield-alt text-success fa-3x"></i>
+                        <i class="fa-solid fa-shield-alt text-success fa-3x"></i>
                     </div>
                     <div class="col">
                         <span class="h6 text-uppercase mb-2 d-block">{{ translate('SSL Secure Payment') }}</span>

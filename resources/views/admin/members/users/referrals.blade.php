@@ -15,7 +15,7 @@
                                 value="{{ $user->getReferralLink() }}" readonly="">
                             <button type="button" class="btn btn-primary btn-md btn-copy" id="input-group-button-right"
                                 data-clipboard-target="#refLink">
-                                <i class="far fa-clone me-2"></i>
+                                <i class="fa-regular fa-clone me-2"></i>
                                 {{ translate('Copy') }}
                             </button>
                         </div>
@@ -32,7 +32,7 @@
                                     value="{{ request()->input('search') ?? '' }}">
                             </div>
                             <div class="col">
-                                <button class="btn btn-primary w-100"><i class="fa fa-search"></i></button>
+                                <button class="btn btn-primary w-100"><i class="fa-solid fa-search"></i></button>
                             </div>
                             <div class="col">
                                 <a href="{{ url()->current() }}"
@@ -60,7 +60,7 @@
                                         <td>
                                             <a href="{{ route('admin.members.users.edit', $referral->user->id) }}"
                                                 class="text-dark">
-                                                <i class="fa fa-user me-2"></i>
+                                                <i class="fa-solid fa-user me-2"></i>
                                                 {{ $referral->user->getName() }}
                                             </a>
                                         </td>

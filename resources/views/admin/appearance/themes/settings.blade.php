@@ -162,7 +162,7 @@
                                                     accept="{{ $themeSetting->accept }}" class="form-control" hidden>
                                                 <button data-id="{{ $loop->index }}" type="button"
                                                     class="attach-image-button btn btn-secondary btn-lg w-100 mb-2"><i
-                                                        class="fas fa-camera me-2"></i>{{ translate('Choose ' . $themeSetting->label) }}</button>
+                                                        class="fa-solid fa-camera me-2"></i>{{ translate('Choose ' . $themeSetting->label) }}</button>
                                                 @if ($themeSetting->description)
                                                     <small
                                                         class="text-muted">{{ translate($themeSetting->description) }}</small>
@@ -182,7 +182,7 @@
                                                     accept="{{ $themeSetting->accept }}" class="form-control" hidden>
                                                 <button data-id="{{ $loop->index }}" type="button"
                                                     class="attach-image-button btn btn-secondary btn-lg w-100 mb-2"><i
-                                                        class="fas fa-camera me-2"></i>{{ translate('Choose ' . $themeSetting->label) }}</button>
+                                                        class="fa-solid fa-camera me-2"></i>{{ translate('Choose ' . $themeSetting->label) }}</button>
                                                 @if ($themeSetting->description)
                                                     <small
                                                         class="text-muted">{{ translate($themeSetting->description) }}</small>
@@ -198,7 +198,7 @@
                                                 </div>
                                                 <button type="button" class="attach-image-button btn btn-secondary mb-2"
                                                     data-id="{{ $loop->index }}"><i
-                                                        class="fas fa-camera me-2"></i>{{ translate('Choose ' . $themeSetting->label) }}</button>
+                                                        class="fa-solid fa-camera me-2"></i>{{ translate('Choose ' . $themeSetting->label) }}</button>
                                                 <input id="attach-image-targeted-input-{{ $loop->index }}"
                                                     type="file" name="{{ $themeSetting->key }}"
                                                     accept="{{ $themeSetting->accept }}" hidden>

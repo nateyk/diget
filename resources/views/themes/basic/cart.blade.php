@@ -24,7 +24,7 @@
                             <div class="row g-3 justify-content-between">
                                 <div class="col-12 col-lg-auto">
                                     <a href="{{ route('home') }}" class="btn btn-outline-primary w-100">
-                                        <i class="fa fa-arrow-left fa-rtl d-none d-lg-inline me-2"></i>
+                                        <i class="fa-solid fa-arrow-left fa-rtl d-none d-lg-inline me-2"></i>
                                         <span>{{ translate('Continue browsing') }}</span>
                                     </a>
                                 </div>
@@ -67,7 +67,7 @@
                                                         @csrf
                                                         <button
                                                             class="btn-transparent d-inline-block text-muted mb-2 action-confirm">
-                                                            <i class="fa fa-times"></i>
+                                                            <i class="fa-solid fa-times"></i>
                                                         </button>
                                                     </form>
                                                 </div>

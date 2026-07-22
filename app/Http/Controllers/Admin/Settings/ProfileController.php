@@ -19,6 +19,7 @@ class ProfileController extends Controller
         $validator = Validator::make($request->all(), [
             'profile.default_avatar' => ['nullable', 'image', 'mimes:jpeg,jpg,png'],
             'profile.default_cover' => ['nullable', 'image', 'mimes:jpeg,jpg,png'],
+            'username.blacklisted_usernames' => ['nullable', 'string', 'max:5000'],
         ]);
 
         if ($validator->fails()) {
@@ -46,6 +47,15 @@ class ProfileController extends Controller
 
         $update = Settings::updateSettings('profile', $requestData['profile']);
         if (!$update) {
+            toastr()->error(translate('Updated Error'));
+            return back();
+        }
+
+        $usernameSettings = Settings::updateSettings('username', [
+            'blacklisted_usernames' => $requestData['username']['blacklisted_usernames'] ?? '',
+        ]);
+
+        if (!$usernameSettings) {
             toastr()->error(translate('Updated Error'));
             return back();
         }

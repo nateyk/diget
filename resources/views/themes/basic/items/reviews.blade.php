@@ -36,23 +36,23 @@
                         <h5 class="mb-3">{{ translate('Write a review') }}</h5>
                         <div class="row row-cols-auto flex-nowrap g-2 ratings ratings-lg ratings-selective mb-3">
                             <div class="col rating">
-                                <i class="fa fa-star fa-lg"></i>
+                                <i class="fa-solid fa-star fa-lg"></i>
                                 <input type="radio" name="review_stars" value="1">
                             </div>
                             <div class="col rating">
-                                <i class="fa fa-star fa-lg"></i>
+                                <i class="fa-solid fa-star fa-lg"></i>
                                 <input type="radio" name="review_stars" value="2">
                             </div>
                             <div class="col rating">
-                                <i class="fa fa-star fa-lg"></i>
+                                <i class="fa-solid fa-star fa-lg"></i>
                                 <input type="radio" name="review_stars" value="3">
                             </div>
                             <div class="col rating">
-                                <i class="fa fa-star fa-lg"></i>
+                                <i class="fa-solid fa-star fa-lg"></i>
                                 <input type="radio" name="review_stars" value="4">
                             </div>
                             <div class="col rating">
-                                <i class="fa fa-star fa-lg"></i>
+                                <i class="fa-solid fa-star fa-lg"></i>
                                 <input type="radio" name="review_stars" value="5">
                             </div>
                         </div>
@@ -82,7 +82,7 @@
                 </div>
             @else
                 <div class="card-v card-bg text-center">
-                    <i class="far fa-star fa-lg"></i>
+                    <i class="fa-regular fa-star fa-lg"></i>
                     <p class="mb-0 mt-3">{{ translate('This item has no reviews') }}</p>
                 </div>
             @endif

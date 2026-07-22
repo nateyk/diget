@@ -19,7 +19,7 @@
                         <td>{{ $mailTemplate->id }}</td>
                         <td>
                             <a class="text-dark" href="{{ route('admin.settings.mail-templates.edit', $mailTemplate->id) }}">
-                                <i class="fa fa-envelope me-2"></i>
+                                <i class="fa-solid fa-envelope me-2"></i>
                                 {{ translate($mailTemplate->name) }}
                             </a>
                         </td>
@@ -40,7 +40,7 @@
                             <div class="text-end">
                                 <button type="button" class="btn btn-sm rounded-3" data-bs-toggle="dropdown"
                                     aria-expanded="true">
-                                    <i class="fa fa-ellipsis-v fa-sm text-muted"></i>
+                                    <i class="fa-solid fa-ellipsis-v fa-sm text-muted"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-sm-end" data-popper-placement="bottom-end">
                                     <li>

@@ -22,11 +22,15 @@ class HomeLandingHeroTest extends TestCase
         $this->assertStringContainsString('Premium creator storefronts', $homeView);
         $this->assertStringContainsString('Launch your storefront, sell digital products, and grow a polished creator brand from one workspace.', $homeView);
         $this->assertStringContainsString('Start selling', $homeView);
+        $this->assertStringContainsString('@if (@$settings->actions->registration)', $homeView);
+        $this->assertStringContainsString("route('register')", $homeView);
         $this->assertStringContainsString('Browse products', $homeView);
         $this->assertStringNotContainsString('home-landing-search', $homeView);
+        $this->assertStringNotContainsString('data-aos', $homeView);
         $this->assertStringNotContainsString('Search storefront products', $homeView);
         $this->assertStringNotContainsString("partials.search-form", $homeView);
-        $this->assertStringContainsString("@continue(\$homeSection->alias === 'categories')", $homeView);
+        $this->assertStringContainsString("\$storefrontSections = ['featured_author', 'testimonials', 'faqs', 'blog_articles']", $homeView);
+        $this->assertStringContainsString('@continue(!in_array($homeSection->alias, $storefrontSections, true))', $homeView);
 
         $this->assertStringNotContainsString('class="header header-image"', $homeView);
         $this->assertStringNotContainsString('style=\'background-image', $homeView);

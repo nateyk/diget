@@ -222,21 +222,10 @@ class ItemController extends Controller
             ->inRandomOrder()
             ->limit(6)->get();
 
-        $similarItems = Item::query();
-
-        $similarItems->where('category_id', $item->category->id);
-
-        $similarItems = $similarItems->whereNot('id', $item->id)
-            ->whereNot('author_id', $item->author->id)
-            ->approved()
-            ->inRandomOrder()
-            ->limit(6)->get();
-
         return [
             'item' => $item,
             'userBadges' => $userBadges,
             'authorItems' => $authorItems,
-            'similarItems' => $similarItems,
         ];
     }
 

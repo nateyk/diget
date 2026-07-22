@@ -19,7 +19,7 @@
                         <td>{{ $ad->id }}</td>
                         <td>
                             <a href="{{ route('admin.ads.edit', $ad->id) }}" class="text-dark">
-                                <i class="fas fa-ad me-2"></i>{{ translate($ad->position) }}
+                                <i class="fa-solid fa-ad me-2"></i>{{ translate($ad->position) }}
                             </a>
                         </td>
                         <td>{{ $ad->size ?? '--' }}</td>
@@ -35,12 +35,12 @@
                             <div class="text-end">
                                 <button type="button" class="btn btn-sm rounded-3" data-bs-toggle="dropdown"
                                     aria-expanded="true">
-                                    <i class="fa fa-ellipsis-v fa-sm text-muted"></i>
+                                    <i class="fa-solid fa-ellipsis-v fa-sm text-muted"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-sm-end" data-popper-placement="bottom-end">
                                     <li>
                                         <a class="dropdown-item" href="{{ route('admin.ads.edit', $ad->id) }}"><i
-                                                class="fa fa-edit me-2"></i>{{ translate('Edit') }}</a>
+                                                class="fa-solid fa-edit me-2"></i>{{ translate('Edit') }}</a>
                                     </li>
                                 </ul>
                             </div>

@@ -3,7 +3,7 @@
         <ul class="sidebar-list-group list-group list-group-flush">
             <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {{ request()->routeIs('admin.members.reviewers.edit') ? 'active' : '' }}"
                 href="{{ route('admin.members.reviewers.edit', $reviewer->id) }}">
-                <span><i class="fa fa-edit me-2"></i>{{ translate('Account details') }}</span>
+                <span><i class="fa-solid fa-edit me-2"></i>{{ translate('Account details') }}</span>
                 <i class="fa-solid fa-chevron-right fa-rtl"></i>
             </a>
             <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {{ request()->routeIs('admin.members.reviewers.actions.index') ? 'active' : '' }}"
@@ -13,7 +13,7 @@
             </a>
             <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {{ request()->routeIs('admin.members.reviewers.password.index') ? 'active' : '' }}"
                 href="{{ route('admin.members.reviewers.password.index', $reviewer->id) }}">
-                <span><i class="fa fa-lock me-2"></i>{{ translate('Password') }}</span>
+                <span><i class="fa-solid fa-lock me-2"></i>{{ translate('Password') }}</span>
                 <i class="fa-solid fa-chevron-right fa-rtl"></i>
             </a>
         </ul>

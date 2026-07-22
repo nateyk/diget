@@ -6,7 +6,7 @@
         <div class="alert alert-danger p-4 mb-4">
             <div class="row row-cols-auto g-4">
                 <div class="col">
-                    <i class="fas fa-exclamation-triangle fa-3x"></i>
+                    <i class="fa-solid fa-exclamation-triangle fa-3x"></i>
                 </div>
                 <div class="col">
                     <h4>{{ translate('Cron Job Not Working') }}</h4>
@@ -294,7 +294,7 @@
                         </p>
                         <div class="vironeer-box-header-action ms-auto">
                             <button type="button" class="btn btn-sm rounded-3" data-bs-toggle="dropdown">
-                                <i class="fa fa-ellipsis-v"></i>
+                                <i class="fa-solid fa-ellipsis-v"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-sm-end">
                                 <li><a class="dropdown-item"
@@ -318,7 +318,7 @@
                         <p class="vironeer-box-header-title large mb-0">{{ translate('Recently registered') }}</p>
                         <div class="vironeer-box-header-action ms-auto">
                             <button type="button" class="btn btn-sm rounded-3" data-bs-toggle="dropdown">
-                                <i class="fa fa-ellipsis-v"></i>
+                                <i class="fa-solid fa-ellipsis-v"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-sm-end">
                                 <li><a class="dropdown-item"
@@ -348,7 +348,7 @@
                                             </div>
                                             <div class="vironeer-random-list-action d-none d-lg-block">
                                                 <a href="{{ route('admin.members.users.edit', $user->id) }}"
-                                                    class="btn btn-primary btn-sm"><i class="fas fa-eye"></i></a>
+                                                    class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i></a>
                                             </div>
                                         </div>
                                     </div>

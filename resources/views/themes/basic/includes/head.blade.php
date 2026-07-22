@@ -1,5 +1,9 @@
 @php
-$title = seoTitle($__env);
+$brandName = ucfirst(config('app.name', 'Diget'));
+$pageTitle = $__env->yieldContent('title') ?: '';
+$pageSection = $__env->yieldContent('section') ?: '';
+$pageTitle = $pageSection ? trim($pageSection . ' - ' . $pageTitle) : $pageTitle;
+$title = $pageTitle ? $pageTitle . ' | ' . $brandName : $brandName;
 $description = $__env->yieldContent('description') ? $__env->yieldContent('description') : @$settings->seo->description ?? '';
 $keywords = $__env->yieldContent('keywords') ? $__env->yieldContent('keywords') : @$settings->seo->keywords ?? '';
 $ogImage = $__env->yieldContent('og_image') ? $__env->yieldContent('og_image'): asset($themeSettings->general->social_image);
@@ -16,7 +20,7 @@ $canonical = $__env->yieldContent('canonical') ? $__env->yieldContent('canonical
 @endif
 <meta name="description" content="{{ $description }}">
 <meta name="keywords" content="{{ $keywords }}">
-<meta property="og:site_name" content="{{ @$settings->general->site_name }}">
+<meta property="og:site_name" content="{{ $brandName }}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="{{ $title }}">
 <meta property="og:description" content="{{ $description }}">
@@ -27,6 +31,7 @@ $canonical = $__env->yieldContent('canonical') ? $__env->yieldContent('canonical
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ $title }}">
 <meta name="twitter:description" content="{{ $description }}">
+<meta name="twitter:url" content="{{ $canonical }}">
 <meta name="twitter:image:src" content="{{ $ogImage }}">
 <title>{{ $title }}</title>
 <link rel="canonical" href="{{ $canonical }}">

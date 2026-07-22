@@ -4,11 +4,11 @@
 @section('content')
     <div class="dashboard-card card-v p-0">
         @if ($purchases->count() > 0 || request()->input('search'))
-            <div class="table-search p-4">
+            <div class="table-search p-3">
                 <form action="{{ url()->current() }}" method="GET">
                     <div class="form-search">
                         <button class="icon">
-                            <i class="fa fa-search"></i>
+                            <i class="fa-solid fa-search"></i>
                         </button>
                         <input type="text" name="search" placeholder="{{ translate('Search...') }}"
                             class="form-control form-control-md" value="{{ request('search') }}">
@@ -17,16 +17,16 @@
             </div>
             <div class="overflow-hidden">
                 <div class="table-container">
-                    <table class="dashboard-table table text-start table-borderless">
+                    <table class="dashboard-table workspace-data-table table text-start table-borderless">
                         <thead>
                             <tr>
-                                <th>{{ translate('ID') }}</th>
-                                <th>{{ translate('Details') }}</th>
+                                <th scope="col">{{ translate('ID') }}</th>
+                                <th scope="col">{{ translate('Details') }}</th>
                                 @if (@$settings->item->support_status)
-                                    <th class="text-center">{{ translate('Support Expiry Date') }}</th>
+                                    <th scope="col" class="text-center">{{ translate('Support Expiry Date') }}</th>
                                 @endif
-                                <th class="text-center">{{ translate('Purchase Date') }}</th>
-                                <th class="text-center">{{ translate('Action') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Purchase Date') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Action') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -102,7 +102,7 @@
                                     </td>
                                     <td class="text-center">
                                         @if ($item->isDeleted())
-                                            <span class="badge bg-danger rounded-2 fw-light px-3 py-2">
+                                            <span class="badge workspace-status bg-danger rounded-2 fw-light px-3 py-2">
                                                 {{ translate('Deleted') }}
                                             </span>
                                         @else
@@ -158,11 +158,10 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="6" class="text-center">
-                                        <div class="text-muted p-4">{{ translate('No data found') }}</div>
-                                    </td>
-                                </tr>
+                                @include('themes.basic.workspace.partials.table-empty-row', [
+                                    'colspan' => @$settings->item->support_status ? 5 : 4,
+                                    'message' => translate('No purchases match the current search.'),
+                                ])
                             @endforelse
                         </tbody>
                     </table>
@@ -381,7 +380,7 @@
                         <input id="purchaseCode" type="text" class="form-control form-control-md " value=""
                             readonly>
                         <button class="btn btn-primary btn-copy" data-clipboard-target="#purchaseCode"><i
-                                class="far fa-clone"></i></button>
+                                class="fa-regular fa-clone"></i></button>
                     </div>
                 </div>
             </div>

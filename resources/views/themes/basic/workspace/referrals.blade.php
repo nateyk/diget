@@ -14,7 +14,7 @@
                     value="{{ authUser()->getReferralLink() }}" readonly>
                 <button type="button" class="btn btn-primary btn-md btn-copy" id="input-group-button-right"
                     data-clipboard-target="#refLink">
-                    <i class="far fa-clone"></i>
+                    <i class="fa-regular fa-clone"></i>
                     <span class="d-none d-lg-inline ms-2">
                         {{ translate('Copy') }}
                     </span>
@@ -27,11 +27,11 @@
     </div>
     <div class="dashboard-card card-v p-0">
         @if ($referrals->count() > 0 || request()->input('search'))
-            <div class="table-search p-4">
+            <div class="table-search p-3">
                 <form action="{{ url()->current() }}" method="GET">
                     <div class="form-search">
                         <button class="icon">
-                            <i class="fa fa-search"></i>
+                            <i class="fa-solid fa-search"></i>
                         </button>
                         <input type="text" name="search" placeholder="{{ translate('Search...') }}"
                             class="form-control form-control-md" value="{{ request('search') }}">
@@ -40,12 +40,12 @@
             </div>
             <div class="overflow-hidden">
                 <div class="table-container">
-                    <table class="dashboard-table table text-start table-borderless">
+                    <table class="dashboard-table workspace-data-table table text-start table-borderless">
                         <thead>
                             <tr>
-                                <th>{{ translate('Username') }}</th>
-                                <th>{{ translate('Date') }}</th>
-                                <th class="text-center">{{ translate('Earnings') }}</th>
+                                <th scope="col">{{ translate('Username') }}</th>
+                                <th scope="col">{{ translate('Date') }}</th>
+                                <th scope="col" class="text-center">{{ translate('Earnings') }}</th>
                             </tr>
                         </thead>
                         <tbody class="text-muted">
@@ -56,11 +56,10 @@
                                     <td class="text-center">{{ getAmount($referral->earnings) }}</td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="3" class="text-center">
-                                        <div class="text-muted p-4">{{ translate('No data found') }}</div>
-                                    </td>
-                                </tr>
+                                @include('themes.basic.workspace.partials.table-empty-row', [
+                                    'colspan' => 3,
+                                    'message' => translate('No referrals match the selected period.'),
+                                ])
                             @endforelse
                         </tbody>
                     </table>

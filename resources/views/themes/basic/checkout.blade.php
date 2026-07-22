@@ -12,7 +12,7 @@
             <div class="col-lg-6 m-auto">
                 <div class="py-3 text-center">
                     <div class="mb-4">
-                        <i class="fa fa-check-circle text-primary fa-5x"></i>
+                        <i class="fa-solid fa-check-circle text-primary fa-5x"></i>
                     </div>
                     @if ($trx->isTypePurchase())
                         <h2 class="mb-3">{{ translate('Payment completed') }}</h2>
