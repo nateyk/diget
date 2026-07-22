@@ -6,8 +6,14 @@ use App\Http\Controllers\Payments\ChapaController;
 use App\Models\PaymentGateway;
 use App\Models\Transaction;
 use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
+use ReflectionProperty;
+use Tests\TestCase;
 
 class ChapaGatewayTest extends TestCase
 {
@@ -63,6 +69,45 @@ class ChapaGatewayTest extends TestCase
         $controller = $this->controller($this->gateway());
 
         $this->assertTrue($controller->matches($this->transaction(), $this->verifiedData()));
+    }
+
+    public function test_chapa_http_client_keeps_timeout_and_tls_defaults(): void
+    {
+        $controller = new ChapaController(null, $this->gateway());
+        $property = new ReflectionProperty($controller, 'client');
+        $client = $property->getValue($controller);
+
+        $this->assertSame(15, $client->getConfig('timeout'));
+        $this->assertSame(5, $client->getConfig('connect_timeout'));
+        $this->assertNotFalse($client->getConfig('verify'));
+        $this->assertNotSame('', $client->getConfig('verify'));
+    }
+
+    public function test_chapa_request_sends_expected_headers_and_json_without_network_access(): void
+    {
+        $history = [];
+        $handler = HandlerStack::create(new MockHandler([
+            new Response(200, ['Content-Type' => 'application/json'], json_encode([
+                'status' => 'success',
+                'data' => ['checkout_url' => 'https://checkout.example.test/session'],
+            ], JSON_THROW_ON_ERROR)),
+        ]));
+        $handler->push(Middleware::history($history));
+
+        $controller = new ChapaController(new Client(['handler' => $handler]), $this->gateway());
+        $method = new ReflectionMethod($controller, 'request');
+        $payload = ['tx_ref' => 'chapa_1000_reference', 'amount' => '100.00'];
+
+        $result = $method->invoke($controller, 'POST', '/transaction/initialize', ['json' => $payload]);
+
+        $this->assertSame('success', $result['status']);
+        $this->assertCount(1, $history);
+        $request = $history[0]['request'];
+        $this->assertSame('POST', $request->getMethod());
+        $this->assertSame('https://api.chapa.co/v1/transaction/initialize', (string) $request->getUri());
+        $this->assertSame('Bearer CHASECK_TEST-example', $request->getHeaderLine('Authorization'));
+        $this->assertSame('application/json', $request->getHeaderLine('Accept'));
+        $this->assertSame($payload, json_decode((string) $request->getBody(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     #[DataProvider('invalidVerificationProvider')]
