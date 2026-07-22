@@ -596,6 +596,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Transaction::class);
     }
 
+    public function usernameHistories()
+    {
+        return $this->hasMany(UsernameHistory::class);
+    }
+
     public function refunds()
     {
         return $this->hasMany(Refund::class);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Workspace;
 
+use App\Actions\ChangeUsername;
 use App\Classes\Country;
 use App\Events\KycVerificationPending;
 use App\Http\Controllers\Controller;
@@ -9,6 +10,8 @@ use App\Models\Badge;
 use App\Models\KycVerification;
 use App\Models\UserBadge;
 use App\Models\WithdrawalMethod;
+use App\Rules\Username;
+use App\Services\UsernamePolicy;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -19,7 +22,45 @@ class SettingsController extends Controller
 {
     public function index()
     {
-        return theme_view('workspace.settings.index', ['user' => authUser()]);
+        $user = authUser();
+        $policy = app(UsernamePolicy::class);
+
+        return theme_view('workspace.settings.index', [
+            'user' => $user,
+            'canChangeUsername' => $policy->canChange($user),
+            'nextUsernameChangeAt' => $policy->nextChangeAt($user),
+        ]);
+    }
+
+    public function usernameUpdate(Request $request, ChangeUsername $changeUsername)
+    {
+        $user = authUser();
+        $request->merge([
+            'username' => app(UsernamePolicy::class)->normalize($request->username),
+        ]);
+
+        $validator = Validator::make($request->all(), [
+            'username' => ['required', 'string', 'block_patterns', new Username($user)],
+            'current_password' => ['required', 'string'],
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors([
+                'current_password' => translate('The current password is incorrect.'),
+            ])->withInput();
+        }
+
+        $history = $changeUsername->execute($user, $request->username, $user, 'account');
+
+        toastr()->success($history
+            ? translate('Your username has been changed successfully.')
+            : translate('Your username is already up to date.'));
+
+        return redirect()->route('workspace.settings.index');
     }
 
     public function detailsUpdate(Request $request)

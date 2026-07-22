@@ -31,6 +31,7 @@ $canonical = $__env->yieldContent('canonical') ? $__env->yieldContent('canonical
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ $title }}">
 <meta name="twitter:description" content="{{ $description }}">
+<meta name="twitter:url" content="{{ $canonical }}">
 <meta name="twitter:image:src" content="{{ $ogImage }}">
 <title>{{ $title }}</title>
 <link rel="canonical" href="{{ $canonical }}">

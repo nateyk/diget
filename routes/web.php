@@ -159,6 +159,8 @@ Route::middleware(['maintenance'])->group(function () {
                 Route::name('settings.')->prefix('settings')->group(function () {
                     Route::get('/', 'SettingsController@index')->name('index');
                     Route::post('/', 'SettingsController@detailsUpdate')->name('update');
+                    Route::post('username', 'SettingsController@usernameUpdate')
+                        ->middleware('throttle:5,1')->name('username.update');
                     Route::get('profile', 'SettingsController@profile')->name('profile');
                     Route::post('profile', 'SettingsController@profileUpdate')->name('profile.update');
                     Route::middleware('author')->group(function () {

@@ -43,5 +43,17 @@
                 </div>
             </div>
         </div>
+        <div class="card">
+            <div class="card-header">{{ translate('Username Policy') }}</div>
+            <div class="card-body p-4">
+                <label for="blacklisted_usernames" class="form-label">{{ translate('Blacklisted Usernames') }}</label>
+                <textarea id="blacklisted_usernames" name="username[blacklisted_usernames]" class="form-control"
+                    rows="4" maxlength="5000"
+                    placeholder="admin, support, help, api, diget">{{ old('username.blacklisted_usernames', @$settings->username->blacklisted_usernames) }}</textarea>
+                <div class="form-text mt-2">
+                    {{ translate('Comma-separated usernames that cannot be registered or selected. Checks are case-insensitive and a leading @ is optional.') }}
+                </div>
+            </div>
+        </div>
     </form>
 @endsection

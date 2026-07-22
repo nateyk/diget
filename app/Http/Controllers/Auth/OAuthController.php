@@ -8,9 +8,13 @@ use App\Http\Controllers\Controller;
 use App\Methods\ReCaptchaValidation;
 use App\Models\OAuthProvider;
 use App\Models\User;
+use App\Rules\Username;
+use App\Services\UsernamePolicy;
+use App\Services\UsernameLock;
 use App\Providers\RouteServiceProvider;
 use Auth;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
@@ -126,11 +130,14 @@ class OAuthController extends Controller
     public function complete(Request $request)
     {
         $user = authUser();
+        $request->merge([
+            'username' => app(UsernamePolicy::class)->normalize($request->username),
+        ]);
 
         $rules = [
             'firstname' => ['required', 'string', 'block_patterns', 'max:50'],
             'lastname' => ['required', 'string', 'block_patterns', 'max:50'],
-            'username' => ['required', 'string', 'min:6', 'max:50', 'username', 'alpha_dash', 'block_patterns', 'unique:users,username,' . $user->id],
+            'username' => ['required', 'string', 'block_patterns', new Username($user)],
             'email' => ['required', 'string', 'email', 'indisposable', 'block_patterns', 'max:100', 'unique:users,email,' . $user->id],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ] + app(ReCaptchaValidation::class)->validate();
@@ -150,13 +157,26 @@ class OAuthController extends Controller
 
         $verify = (@settings('actions')->email_verification && $user->email != $request->email) ? 1 : 0;
 
-        $update = $user->update([
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        try {
+            $update = app(UsernameLock::class)->run([$request->username], function () use ($request, $user) {
+                $username = app(UsernamePolicy::class)->assertSelectable($request->username, $user);
+
+                return $user->update([
+                    'firstname' => $request->firstname,
+                    'lastname' => $request->lastname,
+                    'username' => $username,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                ]);
+            });
+        } catch (QueryException $e) {
+            if (app(UsernamePolicy::class)->isUsernameConstraintViolation($e)) {
+                toastr()->error(translate('This username is already in use.'));
+                return back()->withInput();
+            }
+
+            throw $e;
+        }
 
         if ($update) {
             if ($verify) {

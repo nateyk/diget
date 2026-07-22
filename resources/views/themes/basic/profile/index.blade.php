@@ -12,11 +12,23 @@
     $showSales = $user->total_sales > 0;
     $showReviews = $user->total_reviews > 0;
     $storefrontLink = $user->getProfileLink();
+    $personSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'Person',
+        'name' => $user->getName(),
+        'alternateName' => '@' . $user->username,
+        'url' => $storefrontLink,
+        'image' => $user->getAvatar(),
+        'description' => shorterText($profileSeoDescription, 160),
+    ];
 @endphp
 @section('title', $user->getName() . ' (@' . $user->username . ')')
 @section('description', shorterText($profileSeoDescription, 160))
 @section('og_image', $user->getProfileCover())
 @section('canonical', $storefrontLink)
+@push('schema')
+    <script type="application/ld+json">{!! json_encode($personSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+@endpush
 @section('content')
     <div class="creator-storefront">
         <aside class="card-v border item-detail-card item-detail-author-card creator-storefront-card" data-storefront-mobile-panel="profile">

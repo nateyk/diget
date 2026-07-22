@@ -5,7 +5,7 @@ namespace App\Listeners;
 use App\Events\Registered;
 use App\Models\Badge;
 use App\Models\Referral;
-use App\Models\User;
+use App\Services\UsernameResolver;
 use Illuminate\Support\Facades\Cookie;
 
 class ProcessReferralRegistration
@@ -16,7 +16,7 @@ class ProcessReferralRegistration
 
         if (@settings('referral')->status) {
             if (request()->hasCookie('_ref')) {
-                $author = User::where('username', request()->cookie('_ref'))->first();
+                $author = app(UsernameResolver::class)->owner(request()->cookie('_ref'));
                 if ($author) {
                     $referral = new Referral();
                     $referral->author_id = $author->id;

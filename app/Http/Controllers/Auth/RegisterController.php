@@ -7,11 +7,16 @@ use App\Http\Controllers\Controller;
 use App\Methods\ReCaptchaValidation;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use App\Rules\Username;
+use App\Services\UsernamePolicy;
+use App\Services\UsernameLock;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class RegisterController extends Controller
 {
@@ -66,7 +71,7 @@ class RegisterController extends Controller
         $rules = [
             'firstname' => ['required', 'string', 'block_patterns', 'max:50'],
             'lastname' => ['required', 'string', 'block_patterns', 'max:50'],
-            'username' => ['required', 'string', 'min:6', 'max:50', 'username', 'alpha_dash', 'block_patterns', 'unique:users'],
+            'username' => ['required', 'string', 'block_patterns', new Username],
             'email' => ['required', 'string', 'email', 'indisposable', 'block_patterns', 'max:100', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ] + app(ReCaptchaValidation::class)->validate();
@@ -86,8 +91,20 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $data = $request->all();
+        $data['username'] = app(UsernamePolicy::class)->normalize($data['username'] ?? null);
         $this->validator($data)->validate();
-        $user = $this->create($data);
+
+        try {
+            $user = $this->create($data);
+        } catch (QueryException $e) {
+            if (app(UsernamePolicy::class)->isUsernameConstraintViolation($e)) {
+                throw ValidationException::withMessages([
+                    'username' => translate('This username is already in use.'),
+                ]);
+            }
+
+            throw $e;
+        }
         event(new Registered($user));
         $this->guard()->login($user);
         return $this->registered($request, $user)
@@ -102,13 +119,18 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $user = User::create([
-            'firstname' => $data['firstname'],
-            'lastname' => $data['lastname'],
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        $policy = app(UsernamePolicy::class);
+        $user = app(UsernameLock::class)->run([$data['username']], function () use ($data, $policy) {
+            $username = $policy->assertSelectable($data['username']);
+
+            return User::create([
+                'firstname' => $data['firstname'],
+                'lastname' => $data['lastname'],
+                'username' => $username,
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+            ]);
+        });
 
         $user->addCountryBadge();
         $user->registerLoginLog();
