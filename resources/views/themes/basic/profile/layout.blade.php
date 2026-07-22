@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ getLocale() }}">
+<html lang="{{ getLocale() }}" class="{{ request()->routeIs('profile.index') ? 'profile-storefront-document' : '' }}">
 
 <head>
     @include('themes.basic.includes.head')

@@ -4174,6 +4174,16 @@
     }
 }
 /* Creator storefront */
+.profile-storefront-document {
+    scrollbar-gutter: stable;
+}
+
+@supports not (scrollbar-gutter: stable) {
+    .profile-storefront-document {
+        overflow-y: scroll;
+    }
+}
+
 .profile-storefront-page {
     width: 100%;
     max-width: 100vw;
@@ -4211,23 +4221,28 @@
 .creator-storefront-main-header {
     display: block;
     margin-bottom: 16px;
+    min-height: 36px;
 }
 
 .creator-storefront-tabs {
     display: flex;
+    align-items: flex-start;
     width: 100%;
     gap: 20px;
     padding: 0;
     border-bottom: 1px solid var(--border_color);
     background-color: transparent;
+    min-height: 36px;
 }
 
 .creator-storefront-tabs a,
 .creator-storefront-tabs button {
     display: inline-flex;
     align-items: center;
+    flex: 0 0 auto;
     gap: 7px;
     min-width: 0;
+    height: 36px;
     padding: 0 0 10px;
     border: 0;
     border-bottom: 2px solid transparent;
@@ -4550,20 +4565,6 @@
     color: var(--secondary_color);
 }
 
-.profile-storefront-page .creator-storefront-share-socials {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.profile-storefront-page .creator-storefront-share-socials .social-btn {
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
-    border-radius: 7px;
-}
-
-.profile-storefront-page #storefrontShareModal .input-group,
 .dashboard #dashboardStorefrontShareModal .input-group {
     display: grid;
     grid-template-columns: 1fr;
@@ -4571,7 +4572,6 @@
     min-width: 0;
 }
 
-.profile-storefront-page #storefrontShareModal .modal-dialog,
 .dashboard #dashboardStorefrontShareModal .modal-dialog {
     width: calc(100% - 24px);
     max-width: 420px;
@@ -4579,14 +4579,12 @@
     margin-left: auto;
 }
 
-.profile-storefront-page #storefrontShareModal .form-control,
 .dashboard #dashboardStorefrontShareModal .form-control {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.profile-storefront-page #storefrontShareModal .input-group > *,
 .dashboard #dashboardStorefrontShareModal .input-group > * {
     width: 100%;
     border-radius: var(--ui-control-radius) !important;

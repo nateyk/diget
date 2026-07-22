@@ -61,11 +61,6 @@
                             <i class="fa-regular fa-message"></i>
                         </button>
                     @endif
-                    <button type="button" class="btn btn-outline-secondary btn-padding"
-                        data-bs-toggle="modal" data-bs-target="#storefrontShareModal"
-                        aria-label="{{ translate('Share') }}">
-                        <i class="fa-solid fa-share-nodes"></i>
-                    </button>
                 </div>
 
                 @if ($cardDescription)
@@ -110,7 +105,6 @@
                     <button type="button" class="active" role="tab" aria-selected="true"
                         aria-controls="storefrontPortfolio" data-storefront-tab="portfolio">
                         {{ translate('Products') }}
-                        <span>{{ numberFormat($publishedItemsCount) }}</span>
                     </button>
                     <button type="button" role="tab" aria-selected="false" aria-controls="storefrontAbout"
                         data-storefront-tab="about">{{ translate('About') }}</button>
@@ -217,39 +211,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="storefrontShareModal" tabindex="-1"
-        aria-labelledby="storefrontShareModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content p-4">
-                <div class="modal-header p-0 border-0 mb-3">
-                    <h5 class="modal-title" id="storefrontShareModalLabel">
-                        {{ translate('Share storefront') }}
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                        aria-label="{{ translate('Close') }}"></button>
-                </div>
-                <div class="modal-body p-0">
-                    <p class="text-muted small mb-3">
-                        {{ translate('Share this creator storefront with your audience.') }}
-                    </p>
-                    @include('themes.basic.partials.share-buttons', [
-                        'link' => $storefrontLink,
-                        'socials_classes' => 'creator-storefront-share-socials mb-3',
-                    ])
-                    <label for="storefrontShareLink" class="form-label">{{ translate('Storefront link') }}</label>
-                    <div class="input-group">
-                        <input id="storefrontShareLink" type="text" class="form-control form-control-md"
-                            value="{{ $storefrontLink }}" readonly>
-                        <button type="button" class="btn btn-outline-primary btn-md"
-                            data-storefront-copy="#storefrontShareLink">
-                            <i class="fa-regular fa-copy me-1"></i>
-                            {{ translate('Copy') }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @push('scripts')
@@ -274,7 +235,7 @@
                 panel.hidden = panel.dataset.storefrontPanel !== panelName;
             });
 
-            if (updateMobile && panelName !== 'profile') {
+            if (updateMobile && panelName !== 'profile' && storefrontMobileQuery.matches) {
                 showStorefrontMobilePanel(panelName, false);
             }
         };
@@ -330,9 +291,6 @@
             if (window.location.hash === '#storefrontContact') {
                 showStorefrontMobilePanel('profile', false);
                 openStorefrontModal('storefrontContactModal');
-            } else if (window.location.hash === '#storefrontShare') {
-                showStorefrontMobilePanel('profile', false);
-                openStorefrontModal('storefrontShareModal');
             } else if (window.location.hash === '#storefrontPortfolio') {
                 showStorefrontPanel('portfolio');
             } else if (window.location.hash === '#storefrontAbout') {
