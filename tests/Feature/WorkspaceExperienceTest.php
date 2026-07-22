@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Actions\ChangeUsername;
 use Database\Seeders\UiDemoSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -70,5 +71,26 @@ class WorkspaceExperienceTest extends TestCase
             ->assertOk()
             ->assertSee('aria-label="Item actions"', false)
             ->assertSee('dropdown-menu-end', false);
+    }
+
+    public function test_username_settings_show_public_url_warning_and_cooldown_state(): void
+    {
+        $creator = User::query()->where('username', 'nahomdeveloper')->firstOrFail();
+
+        $this->actingAs($creator)
+            ->get(route('workspace.settings.index'))
+            ->assertOk()
+            ->assertSee('<span class="input-group-text">@</span>', false)
+            ->assertSee('aria-describedby="usernameHelp usernameWarning"', false)
+            ->assertSee($creator->getProfileLink(), false)
+            ->assertSee('you can change again after 30 days', false);
+
+        app(ChangeUsername::class)->execute($creator, 'nahom-renamed', $creator);
+
+        $this->actingAs($creator->fresh())
+            ->get(route('workspace.settings.index'))
+            ->assertOk()
+            ->assertSee('You can change your username again on')
+            ->assertSee('disabled', false);
     }
 }

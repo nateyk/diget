@@ -100,7 +100,7 @@ class PublicStorefrontCompactCssTest extends TestCase
         }
 
         $dashboardSnippets = [
-            'Workspace dashboard compact pass',
+            'Shared workspace components',
             '.dashboard-sidebar',
             '.dashboard-sidebar .dashboard-sidebar-header',
             '.dashboard-sidebar-link .dashboard-sidebar-link-title',
@@ -126,7 +126,6 @@ class PublicStorefrontCompactCssTest extends TestCase
         }
 
         $dashboardDenseSnippets = [
-            'Workspace dashboard dense refinement',
             '.settings-links',
             '.settings-links-inner',
             '.settings-link',

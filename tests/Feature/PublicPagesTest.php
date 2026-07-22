@@ -2,14 +2,18 @@
 
 namespace Tests\Feature;
 
+use App\Actions\ChangeUsername;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class PublicPagesTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -30,9 +34,28 @@ class PublicPagesTest extends TestCase
     {
         $product = Item::query()->where('slug', 'ui-product')->firstOrFail();
 
-        $this->get('/@ui-creator')->assertOk();
+        $this->get('/@ui-creator')
+            ->assertOk()
+            ->assertSee('<link rel="canonical" href="' . route('profile.index', 'ui-creator') . '">', false)
+            ->assertSee('<meta property="og:url" content="' . route('profile.index', 'ui-creator') . '">', false)
+            ->assertSee('<meta name="twitter:url" content="' . route('profile.index', 'ui-creator') . '">', false)
+            ->assertSee('application/ld+json', false)
+            ->assertSee('"alternateName":"@ui-creator"', false);
         $this->get('/@ui-creator/portfolio')->assertOk();
         $this->get('/items/' . $product->slug . '/' . $product->id)->assertOk();
+
+        $creator = User::query()->where('username', 'ui-creator')->firstOrFail();
+        app(ChangeUsername::class)->execute($creator, 'ui-creator-new', $creator);
+
+        $this->get('/@ui-creator')->assertRedirect(route('profile.index', 'ui-creator-new'), 301);
+        $this->get('/@ui-creator-new')
+            ->assertOk()
+            ->assertSee('<link rel="canonical" href="' . route('profile.index', 'ui-creator-new') . '">', false)
+            ->assertSee('<meta property="og:url" content="' . route('profile.index', 'ui-creator-new') . '">', false)
+            ->assertSee('"url":"' . route('profile.index', 'ui-creator-new') . '"', false);
+        $this->get('/items/' . $product->slug . '/' . $product->id)
+            ->assertOk()
+            ->assertSee(route('profile.index', 'ui-creator-new'), false);
     }
 
     public function test_workspace_dashboard_remains_protected_for_guests(): void
