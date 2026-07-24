@@ -142,7 +142,7 @@ Breadcrumbs::for('workspace.items', function (BreadcrumbTrail $trail) {
 
 Breadcrumbs::for('workspace.items.create', function (BreadcrumbTrail $trail) {
     $trail->parent('workspace.items');
-    $trail->push(translate('New Item'), route('workspace.items.create'));
+    $trail->push(translate('New Product'), route('workspace.items.create'));
 });
 
 Breadcrumbs::for('workspace.items.edit', function (BreadcrumbTrail $trail, $item) {

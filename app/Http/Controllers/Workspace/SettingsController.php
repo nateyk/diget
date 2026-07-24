@@ -75,7 +75,6 @@ class SettingsController extends Controller
             'state' => ['required', 'string', 'max:150', 'block_patterns'],
             'zip' => ['required', 'string', 'max:100', 'block_patterns'],
             'country' => ['required', 'string', 'in:' . implode(',', array_keys(Country::all()))],
-            'exclusivity' => ['nullable', 'string', 'in:exclusive,non_exclusive'],
         ]);
 
         if ($validator->fails()) {
@@ -104,7 +103,6 @@ class SettingsController extends Controller
         $user->lastname = $request->lastname;
         $user->email = $request->email;
         $user->address = $address;
-        $user->exclusivity = $request->exclusivity;
         $user->update();
 
         if ($verify) {
@@ -113,8 +111,6 @@ class SettingsController extends Controller
         }
 
         $user->addCountryBadge($country);
-        $user->addExclusiveAuthorBadge();
-
         toastr()->success(translate('Account details has been updated successfully'));
         return back();
     }

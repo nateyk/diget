@@ -309,12 +309,6 @@
             </div>
         </div>
     </div>
-    @push('styles_libs')
-        <link rel="stylesheet" href="{{ asset('vendor/libs/bootstrap/select/bootstrap-select.min.css') }}">
-    @endpush
-    @push('scripts_libs')
-        <script src="{{ asset('vendor/libs/bootstrap/select/bootstrap-select.min.js') }}"></script>
-    @endpush
     @push('scripts')
         <script>
             (() => {
@@ -334,8 +328,19 @@
 
                     input.value = option.dataset.categoryOption;
                     label.textContent = option.dataset.label;
+                    menu.querySelectorAll('[data-category-option]').forEach((item) => {
+                        const selected = item === option;
+                        item.classList.toggle('active', selected);
+                        item.setAttribute('aria-selected', selected ? 'true' : 'false');
+                    });
                     option.closest('[data-dropdown]')?.classList.remove('active', 'animated');
                 });
+
+                const initialOption = menu.querySelector(`[data-category-option="${input.value}"]`);
+                if (initialOption) {
+                    initialOption.classList.add('active');
+                    initialOption.setAttribute('aria-selected', 'true');
+                }
             })();
         </script>
     @endpush

@@ -398,7 +398,7 @@
                     <form action="#" method="POST">
                         @csrf
                         <div class="mb-3">
-                            <select name="support" class="form-select form-select-md">
+                            <select name="support" class="selectpicker selectpicker-md">
                                 @foreach ($supportPeriods as $supportPeriod)
                                     <option value="{{ $supportPeriod->id }}">{{ $supportPeriod->title }}</option>
                                 @endforeach
@@ -422,7 +422,7 @@
                     <form action="#" method="POST">
                         @csrf
                         <div class="mb-3">
-                            <select name="support" class="form-select form-select-md">
+                            <select name="support" class="selectpicker selectpicker-md">
                                 @foreach ($supportPeriods as $supportPeriod)
                                     <option value="{{ $supportPeriod->id }}">{{ $supportPeriod->title }}</option>
                                 @endforeach

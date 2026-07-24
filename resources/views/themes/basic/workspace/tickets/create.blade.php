@@ -16,7 +16,7 @@
                 </div>
                 <div class="col-lg-12">
                     <label class="form-label">{{ translate('Category') }}</label>
-                    <select name="category" class="form-select form-select-md" required>
+                    <select name="category" class="selectpicker selectpicker-md" required>
                         <option value="" disabled selected>{{ translate('Choose') }}</option>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}" @selected(old('category') == $category->id)>

@@ -2,8 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Actions\ChangeUsername;
+use App\Models\Category;
+use App\Models\User;
 use Database\Seeders\UiDemoSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -32,6 +33,10 @@ class WorkspaceExperienceTest extends TestCase
             ->assertSee('workspace-sidebar', false)
             ->assertSee('aria-label="Workspace navigation"', false)
             ->assertDontSee('dashboard-sidebar-links-title', false)
+            ->assertDontSee('data-simplebar', false)
+            ->assertSee('class="dashboard-balance"', false)
+            ->assertSee('aria-current="page"', false)
+            ->assertSee('form="logout-form"', false)
             ->assertSee('aria-controls="workspaceSidebar"', false)
             ->assertSee('Total Sales');
     }
@@ -44,6 +49,9 @@ class WorkspaceExperienceTest extends TestCase
             ->get(route('workspace.purchases.index'))
             ->assertOk()
             ->assertSee('Purchases')
+            ->assertSee('Become an Author')
+            ->assertSee('href="'.route('workspace.become-an-author').'"', false)
+            ->assertSee('type="submit" class="drop-down-item text-danger" form="logout-form"', false)
             ->assertSee('workspace-data-table', false)
             ->assertSee('<th scope="col">', false);
 
@@ -71,6 +79,57 @@ class WorkspaceExperienceTest extends TestCase
             ->assertOk()
             ->assertSee('aria-label="Item actions"', false)
             ->assertSee('dropdown-menu-end', false);
+    }
+
+    public function test_creator_product_form_uses_the_simplified_creation_flow(): void
+    {
+        $creator = User::query()->where('username', 'nahomdeveloper')->firstOrFail();
+        $category = Category::query()->firstOrFail();
+
+        $this->actingAs($creator)
+            ->get(route('workspace.items.create', ['category' => $category->slug]))
+            ->assertOk()
+            ->assertSee('workspace-item-create-form', false)
+            ->assertSee('Product Details')
+            ->assertSee('Product Files')
+            ->assertSee('Pricing And Publishing')
+            ->assertSee('Create Product')
+            ->assertSee('name="category" value="'.$category->slug.'"', false)
+            ->assertSee('regular_license_price', false)
+            ->assertSee('name="main_file"', false)
+            ->assertDontSee('Category And Attributes')
+            ->assertDontSee('<select class="form-select form-select-md" disabled>', false);
+    }
+
+    public function test_account_details_use_two_columns_and_ignore_legacy_exclusivity_input(): void
+    {
+        $creator = User::query()->where('username', 'nahomdeveloper')->firstOrFail();
+        $originalExclusivity = $creator->exclusivity;
+
+        $this->actingAs($creator)
+            ->get(route('workspace.settings.index'))
+            ->assertOk()
+            ->assertSee('workspace-account-form', false)
+            ->assertSee('col-12 col-lg-6', false)
+            ->assertDontSee('Exclusivity of Your Items')
+            ->assertDontSee('name="exclusivity"', false);
+
+        $this->actingAs($creator)
+            ->post(route('workspace.settings.update'), [
+                'firstname' => $creator->firstname,
+                'lastname' => $creator->lastname,
+                'email' => $creator->email,
+                'address_line_1' => 'Bole Road',
+                'address_line_2' => '',
+                'city' => 'Addis Ababa',
+                'state' => 'Addis Ababa',
+                'zip' => '1000',
+                'country' => 'ET',
+                'exclusivity' => User::AUTHOR_EXCLUSIVE,
+            ])
+            ->assertRedirect();
+
+        $this->assertSame($originalExclusivity, $creator->fresh()->exclusivity);
     }
 
     public function test_username_settings_show_public_url_warning_and_cooldown_state(): void

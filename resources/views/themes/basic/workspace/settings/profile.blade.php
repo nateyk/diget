@@ -223,7 +223,9 @@
                     picker.querySelectorAll('[data-profile-social-option]').forEach((option) => {
                         const optionValue = option.dataset.profileSocialOption;
                         option.classList.toggle('disabled', optionValue !== '' && selected.includes(optionValue));
+                        option.classList.toggle('active', optionValue === select.value);
                         option.disabled = optionValue !== '' && selected.includes(optionValue);
+                        option.setAttribute('aria-selected', optionValue === select.value ? 'true' : 'false');
                     });
                 }
                 if (pickerLabel) {

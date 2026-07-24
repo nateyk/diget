@@ -217,10 +217,11 @@ class PublicStorefrontCompactCssTest extends TestCase
 
         $workspaceMobileSidebarSnippets = [
             'Workspace sidebar',
-            '.workspace-dashboard .workspace-sidebar .dashboard-sidebar-body',
-            '.workspace-dashboard.toggle .workspace-sidebar .dashboard-sidebar-body',
-            'width: 240px',
-            'left: -240px',
+            '.workspace-dashboard .workspace-sidebar .dashboard-sidebar-container',
+            '.workspace-dashboard.toggle .workspace-sidebar .dashboard-sidebar-container',
+            'width: min(82vw, 248px)',
+            'transform: translate3d(-100%, 0, 0)',
+            'transform: translate3d(0, 0, 0)',
             '.dashboard-sidebar-link .dashboard-sidebar-link-title',
             '.dashboard-balance',
         ];

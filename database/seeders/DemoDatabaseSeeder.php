@@ -311,7 +311,7 @@ class DemoDatabaseSeeder extends Seeder
 
         foreach ($records as [$username, $firstname, $lastname, $isAuthor, $status, $verifiedKyc]) {
             $this->users[$username] = User::updateOrCreate(
-                ['email' => $username . '@diget.test'],
+                ['username' => $username],
                 [
                     'firstname' => $firstname,
                     'lastname' => $lastname,

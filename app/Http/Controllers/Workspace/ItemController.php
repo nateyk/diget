@@ -86,8 +86,6 @@ class ItemController extends Controller
 
     public function create()
     {
-        $categories = Category::all();
-
         $category = Category::where('slug', request('category'))
             ->with(['subCategories', 'categoryOptions'])
             ->firstOrFail();
@@ -96,7 +94,6 @@ class ItemController extends Controller
             ->where('category_id', $category->id)->notExpired()->get();
 
         return theme_view('workspace.items.create', [
-            'categories' => $categories,
             'category' => $category,
             'uploadedFiles' => $uploadedFiles,
         ]);

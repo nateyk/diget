@@ -75,6 +75,7 @@ class UiDemoSeeder extends Seeder
                 'registration' => true,
                 'email_verification' => false,
                 'force_ssl' => false,
+                'become_an_author' => true,
             ],
             'currency' => [
                 'code' => 'USD',

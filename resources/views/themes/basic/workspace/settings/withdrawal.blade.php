@@ -13,7 +13,7 @@
                     @csrf
                     <div class="mb-3">
                         <label class="form-label">{{ translate('Withdrawal Method') }}</label>
-                        <select name="withdrawal_method" class="form-select form-select-md">
+                        <select name="withdrawal_method" class="selectpicker selectpicker-md">
                             <option value="">--</option>
                             @foreach ($withdrawalMethods as $withdrawalMethod)
                                 <option value="{{ $withdrawalMethod->id }}" @selected($withdrawalMethod->id == $user->withdrawal_method_id)>

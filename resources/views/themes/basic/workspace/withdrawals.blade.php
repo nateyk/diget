@@ -309,10 +309,4 @@
             </div>
         </div>
     </div>
-    @push('styles_libs')
-        <link rel="stylesheet" href="{{ asset('vendor/libs/bootstrap/select/bootstrap-select.min.css') }}">
-    @endpush
-    @push('scripts_libs')
-        <script src="{{ asset('vendor/libs/bootstrap/select/bootstrap-select.min.js') }}"></script>
-    @endpush
 @endsection

@@ -16,11 +16,10 @@
                 <span>{{ translate('Share') }}</span>
             </button>
         @endif
-        @if (@$settings->actions->become_an_author && !authUser()->isAuthor())
-            <a href="{{ route('workspace.become-an-author') }}" class="link-btn d-none d-lg-inline ms-3">
-                <button class="btn btn-outline-primary">
-                    {{ translate('Become an Author') }}
-                </button>
+        @if (@settings('actions')->become_an_author && !authUser()->isAuthor())
+            <a href="{{ route('workspace.become-an-author') }}" class="btn btn-outline-primary btn-md ms-3">
+                <i class="fa-solid fa-pen-nib me-1"></i>
+                {{ translate('Become an Author') }}
             </a>
         @endif
         @include('themes.basic.partials.user-menu', ['menu_class' => 'ms-3'])

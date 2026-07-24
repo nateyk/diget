@@ -324,6 +324,11 @@
                     event.preventDefault();
                     select.value = option.dataset.kycDocumentOption;
                     label.textContent = option.dataset.label;
+                    menu.querySelectorAll('[data-kyc-document-option]').forEach((item) => {
+                        const selected = item === option;
+                        item.classList.toggle('active', selected);
+                        item.setAttribute('aria-selected', selected ? 'true' : 'false');
+                    });
                     if (window.jQuery) {
                         window.jQuery(select).trigger('change');
                     } else {
@@ -331,6 +336,12 @@
                     }
                     picker.classList.remove('active', 'animated');
                 });
+
+                const initialOption = menu.querySelector(`[data-kyc-document-option="${select.value}"]`);
+                if (initialOption) {
+                    initialOption.classList.add('active');
+                    initialOption.setAttribute('aria-selected', 'true');
+                }
             })();
         </script>
     @endif

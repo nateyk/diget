@@ -40,7 +40,7 @@
                                 <div class="row g-4 mb-3">
                                     <div class="col-lg-12">
                                         <label class="form-label">{{ translate('Category') }}</label>
-                                        <select class="form-select form-select-md" disabled>
+                                        <select class="selectpicker selectpicker-md" disabled>
                                             @foreach ($categories as $mainCategory)
                                                 <option value="{{ $mainCategory->slug }}" @selected($category->id == $mainCategory->id)>
                                                     {{ $mainCategory->name }}</option>
@@ -178,12 +178,10 @@
     @endpush
     @push('styles_libs')
         <link rel="stylesheet" href="{{ asset('vendor/libs/tags-input/bootstrap-tagsinput.css') }}">
-        <link rel="stylesheet" href="{{ asset('vendor/libs/bootstrap/select/bootstrap-select.min.css') }}">
     @endpush
     @include('themes.basic.workspace.partials.ckeditor')
     @push('scripts_libs')
         <script src="{{ asset('vendor/libs/tags-input/bootstrap-tagsinput.min.js') }}"></script>
-        <script src="{{ asset('vendor/libs/bootstrap/select/bootstrap-select.min.js') }}"></script>
         <script src="{{ asset('vendor/libs/jquery/jquery.priceformat.min.js') }}"></script>
     @endpush
     @push('scripts')

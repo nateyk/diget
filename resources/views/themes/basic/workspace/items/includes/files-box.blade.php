@@ -1,8 +1,8 @@
-<div id="upload-files-box" class="dashboard-card card-v p-0 mb-4">
-    <div class="card-v-header border-bottom py-3 px-4">
-        <h5 class="mb-0">{{ translate('Files') }}</h5>
+<div id="upload-files-box" class="dashboard-card card-v p-0 {{ $filesBoxMargin ?? 'mb-4' }}">
+    <div class="card-v-header border-bottom {{ $filesBoxHeaderPadding ?? 'py-3 px-4' }}">
+        <h5 class="mb-0">{{ $filesBoxTitle ?? translate('Files') }}</h5>
     </div>
-    <div class="card-v-body p-4">
+    <div class="card-v-body {{ $filesBoxBodyPadding ?? 'p-4' }}">
         <div class="uploaded-files">
             @foreach ($uploadedFiles as $uploadedFile)
                 <div class="uploaded-file uploaded-file-{{ hash_encode($uploadedFile->id) }}">
@@ -92,7 +92,7 @@
             </div>
         </div>
         <div class="row g-3 mb-3">
-            <div class="col-12">
+            <div class="col-12 {{ !empty($compactFileFields) ? 'col-lg-6' : '' }}">
                 <label class="form-label">{{ translate('Thumbnail') }}</label>
                 <select name="thumbnail" class="selectpicker-md selectpicker item-files-select" title="--">
                     @foreach ($uploadedFiles as $uploadedFile)
@@ -106,7 +106,7 @@
                 </div>
             </div>
             @if (!$category->isFileTypeFileWithAudioPreview())
-                <div class="col-12">
+                <div class="col-12 {{ !empty($compactFileFields) ? 'col-lg-6' : '' }}">
                     <label class="form-label">{{ translate('Preview Image') }}</label>
                     <select name="preview_image" class="selectpicker-md selectpicker item-files-select" title="--">
                         @foreach ($uploadedFiles as $uploadedFile)
@@ -121,7 +121,7 @@
                 </div>
             @endif
             @if ($category->isFileTypeFileWithVideoPreview())
-                <div class="col-12">
+                <div class="col-12 {{ !empty($compactFileFields) ? 'col-lg-6' : '' }}">
                     <label class="form-label">{{ translate('Video Preview') }}</label>
                     <select name="preview_video" class="selectpicker-md selectpicker item-files-select" title="--">
                         @foreach ($uploadedFiles as $uploadedFile)
@@ -135,7 +135,7 @@
                     </div>
                 </div>
             @elseif($category->isFileTypeFileWithAudioPreview())
-                <div class="col-12">
+                <div class="col-12 {{ !empty($compactFileFields) ? 'col-lg-6' : '' }}">
                     <label class="form-label">{{ translate('Audio Preview') }}</label>
                     <select name="preview_audio" class="selectpicker-md selectpicker item-files-select" title="--">
                         @foreach ($uploadedFiles as $uploadedFile)
@@ -151,7 +151,7 @@
             @endif
             @if ($settings->item->external_file_link_option)
                 <div class="col-12">
-                    <label class="form-label">{{ translate('Main File') }}</label>
+                    <label class="form-label">{{ translate('Download File') }}</label>
                     <div class="input-group main-file-group">
                         <select id="mainFileSource" name="main_file_source"
                             class="selectpicker-md selectpicker first-input" data-style="btn-md">
@@ -179,7 +179,7 @@
                             }, $fileTypesArray);
                             $types = implode(', ', $fileTypesArray);
                         @endphp
-                        {{ translate('Item files that will buyers download (:types).', ['types' => strtoupper($types)]) }}
+                        {{ translate('Files buyers will download (:types).', ['types' => strtoupper($types)]) }}
                     </div>
                     <div class="form-text d-none main-file-source-2">
                         {{ translate('Enter the external URL where the buyer will be redirected to download the file.') }}
@@ -187,7 +187,7 @@
                 </div>
             @else
                 <div class="col-12">
-                    <label class="form-label">{{ translate('Main File') }}</label>
+                    <label class="form-label">{{ translate('Download File') }}</label>
                     <select name="main_file" class="selectpicker-md selectpicker second-input item-files-select"
                         title="--">
                         @foreach ($uploadedFiles as $uploadedFile)
@@ -204,7 +204,7 @@
                             }, $fileTypesArray);
                             $types = implode(', ', $fileTypesArray);
                         @endphp
-                        {{ translate('Item files that will buyers download (:types).', ['types' => strtoupper($types)]) }}
+                        {{ translate('Files buyers will download (:types).', ['types' => strtoupper($types)]) }}
                     </div>
                 </div>
             @endif
@@ -220,7 +220,7 @@
                         @endforeach
                     </select>
                     <div class="form-text">
-                        {{ translate('Item screenshots images (.JPG or .PNG) and maximum :maximum screenshots', ['maximum' => @$settings->item->maximum_screenshots]) }}
+                        {{ translate('Product screenshots (.JPG or .PNG), maximum :maximum.', ['maximum' => @$settings->item->maximum_screenshots]) }}
                     </div>
                 </div>
             @endif

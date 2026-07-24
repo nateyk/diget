@@ -1,145 +1,166 @@
 @extends('themes.basic.workspace.layouts.app')
 @section('section', translate('My Items'))
-@section('title', translate('New Item'))
+@section('title', translate('New Product'))
 @section('back', route('workspace.items.index'))
-@section('container', 'dashboard-container-sm')
+@section('container', 'dashboard-container-lg')
 @section('breadcrumbs', Breadcrumbs::render('workspace.items.create'))
 @section('content')
-    <form action="{{ route('workspace.items.store') }}" method="POST">
+    <form action="{{ route('workspace.items.store') }}" method="POST" class="workspace-item-create-form">
         @csrf
-        <div class="dashboard-card card-v p-0 mb-4">
-            <div class="card-v-header border-bottom py-3 px-4">
-                <h5 class="mb-0">{{ translate('Name And Description') }}</h5>
-            </div>
-            <div class="card-v-body p-4">
-                <div class="row g-3 mb-3">
-                    <div class="col-12">
-                        <label class="form-label">{{ translate('Name') }}</label>
-                        <input type="text" name="name" class="form-control form-control-md" maxlength="100"
-                            value="{{ old('name') }}" required>
+        <input type="hidden" name="category" value="{{ $category->slug }}">
+
+        <div class="row g-3 align-items-start">
+            <div class="col-12 col-xl-8">
+                <div class="dashboard-card card-v p-0 mb-3">
+                    <div class="card-v-header border-bottom py-3 px-3 px-lg-4">
+                        <div class="row row-cols-auto align-items-center justify-content-between g-2">
+                            <div class="col">
+                                <h5 class="mb-0">{{ translate('Product Details') }}</h5>
+                            </div>
+                            <div class="col">
+                                <span class="small text-muted">
+                                    <i class="fa-solid fa-folder-open me-1"></i>
+                                    {{ $category->name }}
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-12">
-                        <label class="form-label">{{ translate('Description') }}</label>
-                        <div class="rich-text-editor">
-                            <textarea name="description" class="form-control ckeditor" rows="10"
-                                placeholder="{{ translate('Describe your item in detail') }}">{{ old('description') }}</textarea>
+                    <div class="card-v-body p-3 p-lg-4">
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">{{ translate('Product Name') }}</label>
+                            <input id="productName" type="text" name="name" class="form-control form-control-md"
+                                maxlength="100" value="{{ old('name') }}"
+                                placeholder="{{ translate('Give your product a clear, specific name') }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="item-tags" class="form-label">{{ translate('Tags') }}</label>
+                            <input id="item-tags" type="text" name="tags" value="{{ old('tags') }}" required>
+                            <div class="form-text">
+                                {{ translate('Add up to :maximum_tags search terms. Press Enter after each tag.', ['maximum_tags' => @$settings->item->maximum_tags]) }}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="productDescription" class="form-label">{{ translate('Product Description') }}</label>
+                            <div class="rich-text-editor">
+                                <textarea id="productDescription" name="description" class="form-control ckeditor" rows="10"
+                                    placeholder="{{ translate('Explain what the buyer receives and how the product can be used') }}"
+                                    required>{{ old('description') }}</textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                @include('themes.basic.workspace.items.includes.files-box', [
+                    'filesBoxTitle' => translate('Product Files'),
+                    'filesBoxMargin' => 'mb-3',
+                    'filesBoxHeaderPadding' => 'py-3 px-3 px-lg-4',
+                    'filesBoxBodyPadding' => 'p-3 p-lg-4',
+                    'compactFileFields' => true,
+                ])
             </div>
-        </div>
-        <div class="dashboard-card card-v p-0 mb-4">
-            <div class="card-v-header border-bottom py-3 px-4">
-                <h5 class="mb-0">{{ translate('Category And Attributes') }}</h5>
-            </div>
-            <div class="card-v-body p-4">
-                <div class="row g-4 mb-3">
-                    <div class="col-lg-12">
-                        <label class="form-label">{{ translate('Category') }}</label>
-                        <input type="hidden" name="category" value="{{ $category->slug }}">
-                        <select class="form-select form-select-md" disabled>
-                            @foreach ($categories as $mainCategory)
-                                <option value="{{ $mainCategory->slug }}" @selected($category->id == $mainCategory->id)>
-                                    {{ $mainCategory->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label">{{ translate('Tags') }}</label>
-                        <input id="item-tags" type="text" name="tags" value="{{ old('tags') }}" required>
-                        <div class="form-text">
-                            {{ translate('Type your tag and click enter, maximum :maximum_tags tags.', ['maximum_tags' => @$settings->item->maximum_tags]) }}
+
+            <div class="col-12 col-xl-4">
+                <div class="workspace-item-create-aside">
+                    <div class="dashboard-card card-v p-0">
+                        <div class="card-v-header border-bottom py-3 px-3 px-lg-4">
+                            <h5 class="mb-0">{{ translate('Pricing And Publishing') }}</h5>
+                        </div>
+                        <div class="card-v-body p-3 p-lg-4">
+                            <div class="mb-3">
+                                @include('themes.basic.workspace.partials.input-price', [
+                                    'label' => translate('Product Price'),
+                                    'id' => 'regular-license-price',
+                                    'name' => 'regular_license_price',
+                                    'min' => @$settings->item->minimum_price,
+                                    'max' => @$settings->item->maximum_price,
+                                    'required' => true,
+                                ])
+                            </div>
+
+                            <div class="row g-2 mb-3">
+                                <div class="col-12 col-sm-6">
+                                    @include('themes.basic.workspace.partials.input-price', [
+                                        'label' => translate('Buyer Fee'),
+                                        'value' => $category->regular_buyer_fee,
+                                        'disabled' => true,
+                                        'input_classes' => 'bg-light',
+                                    ])
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    @include('themes.basic.workspace.partials.input-price', [
+                                        'label' => translate('Total Price'),
+                                        'id' => 'regular-license-purchase-price',
+                                        'value' => 0,
+                                        'disabled' => true,
+                                        'input_classes' => 'bg-light',
+                                    ])
+                                </div>
+                            </div>
+
+                            @if (@$settings->item->free_item_option)
+                                <div class="border-top pt-3 mb-3">
+                                    <div class="d-flex flex-wrap align-items-start justify-content-between gap-3 mb-2">
+                                        <div>
+                                            <h6 class="mb-1">{{ translate('Free Download') }}</h6>
+                                            <p class="small text-muted mb-0">
+                                                {{ translate('Allow visitors to download this product without payment.') }}
+                                            </p>
+                                        </div>
+                                        <div class="btn-group btn-group-sm flex-shrink-0" role="group"
+                                            aria-label="{{ translate('Free download availability') }}">
+                                            <input type="radio" class="btn-check free-item-option" name="free_item"
+                                                value="0" id="freeItemNo" @checked(old('free_item', '0') == '0')>
+                                            <label class="btn btn-outline-secondary" for="freeItemNo">{{ translate('No') }}</label>
+                                            <input type="radio" class="btn-check free-item-option" name="free_item"
+                                                value="1" id="freeItemYes" @checked(old('free_item') == '1')>
+                                            <label class="btn btn-outline-secondary" for="freeItemYes">{{ translate('Yes') }}</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="purchasing-option {{ old('free_item') == '1' ? '' : 'd-none' }}">
+                                        <label class="form-label">{{ translate('Paid Purchase Option') }}</label>
+                                        <div class="btn-group btn-group-sm w-100" role="group"
+                                            aria-label="{{ translate('Paid purchase availability') }}">
+                                            <input type="radio" class="btn-check" name="purchasing_status" value="1"
+                                                id="purchaseEnabled" @checked(old('purchasing_status', '1') == '1')>
+                                            <label class="btn btn-outline-secondary"
+                                                for="purchaseEnabled">{{ translate('Enabled') }}</label>
+                                            <input type="radio" class="btn-check" name="purchasing_status" value="0"
+                                                id="purchaseDisabled" @checked(old('purchasing_status') == '0')>
+                                            <label class="btn btn-outline-secondary"
+                                                for="purchaseDisabled">{{ translate('Disabled') }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            <div class="border-top pt-3 mb-3">
+                                <label for="reviewerMessage" class="form-label">
+                                    {{ translate('Submission Note') }}
+                                    <span class="text-muted fw-normal">({{ translate('Optional') }})</span>
+                                </label>
+                                <textarea id="reviewerMessage" name="message" class="form-control" rows="4"
+                                    placeholder="{{ translate('Add any details needed to review this product') }}">{{ old('message') }}</textarea>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-md">
+                                    <i class="fa-solid fa-check me-1"></i>
+                                    {{ translate('Create Product') }}
+                                </button>
+                                <a href="{{ route('workspace.items.index') }}" class="btn btn-outline-secondary btn-md">
+                                    {{ translate('Cancel') }}
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        @include('themes.basic.workspace.items.includes.files-box')
-        <div class="dashboard-card card-v p-0 mb-4">
-            <div class="card-v-header border-bottom py-3 px-4">
-                <h5 class="mb-0">{{ translate('Item Price') }}</h5>
-            </div>
-            <div class="card-v-body p-4">
-                <div class="row g-4 mb-3">
-                    <div class="col-md-12 col-lg-4 col-xxl-5">
-                        @include('themes.basic.workspace.partials.input-price', [
-                            'label' => translate('Item Price'),
-                            'id' => 'regular-license-price',
-                            'name' => 'regular_license_price',
-                            'min' => @$settings->item->minimum_price,
-                            'max' => @$settings->item->maximum_price,
-                            'required' => true,
-                        ])
-                    </div>
-                    <div class="col-md-12 col-lg-4 col-xxl-3">
-                        @include('themes.basic.workspace.partials.input-price', [
-                            'label' => translate('Buyer fee'),
-                            'value' => $category->regular_buyer_fee,
-                            'disabled' => true,
-                        ])
-                    </div>
-                    <div class="col-md-12 col-lg-4 col-xxl-4">
-                        @include('themes.basic.workspace.partials.input-price', [
-                            'label' => translate('Purchase price'),
-                            'id' => 'regular-license-purchase-price',
-                            'value' => 0,
-                            'disabled' => true,
-                        ])
-                    </div>
-                </div>
-            </div>
-        </div>
-        @if (@$settings->item->free_item_option)
-            <div class="dashboard-card card-v p-0 mb-3">
-                <div class="card-v-header border-bottom py-3 px-4">
-                    <h5 class="mb-0">{{ translate('Free Item') }}</h5>
-                </div>
-                <div class="card-v-body p-4">
-                    <p>
-                        {{ translate('You can allow downloading your item for free, please note that everyone can download the item directly from the item page without purchasing, please make sure your item has no purchase code verification.') }}
-                    </p>
-                    <div>
-                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                            <input type="radio" class="btn-check free-item-option" name="free_item" value="0"
-                                id="op1" @checked(old('free_item') ? old('free_item') == '0' : true)>
-                            <label class="btn btn-outline-secondary" for="op1">{{ translate('No') }}</label>
-                            <input type="radio" class="btn-check free-item-option" name="free_item" value="1"
-                                id="op2" @checked(old('free_item') == '1')>
-                            <label class="btn btn-outline-secondary" for="op2">{{ translate('Yes') }}</label>
-                        </div>
-                    </div>
-                    <div class="mt-3 d-none purchasing-option">
-                        <p>
-                            {{ translate('You can also allow the purchase option along with the free download in case anyone wants to purchase a license.') }}
-                        </p>
-                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                            <input type="radio" class="btn-check" name="purchasing_status" value="1"
-                                id="opg1" @checked(old('purchasing_status') ? old('purchasing_status') == '0' : true)>
-                            <label class="btn btn-outline-secondary"
-                                for="opg1">{{ translate('Enable Purchasing') }}</label>
-                            <input type="radio" class="btn-check" name="purchasing_status" value="0"
-                                id="opg2" @checked(old('purchasing_status') == '1')>
-                            <label class="btn btn-outline-secondary"
-                                for="opg2">{{ translate('Disable Purchasing') }}</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
-        <div class="dashboard-card card-v p-0 mb-3">
-            <div class="card-v-header border-bottom py-3 px-4">
-                <h5 class="mb-0">{{ translate('Message to the Reviewer') }}</h5>
-            </div>
-            <div class="card-v-body p-4">
-                <textarea name="message" class="form-control" rows="6" placeholder="{{ translate('Your message') }}">{{ old('message') }}</textarea>
-            </div>
-        </div>
-        <div class="dashboard-card card-v p-0">
-            <div class="card-v-body p-4">
-                <button class="btn btn-primary btn-md">{{ translate('Submit') }}</button>
             </div>
         </div>
     </form>
+
     @push('top_scripts')
         <script>
             "use strict";
@@ -155,11 +176,9 @@
     @endpush
     @push('styles_libs')
         <link rel="stylesheet" href="{{ asset('vendor/libs/tags-input/bootstrap-tagsinput.css') }}">
-        <link rel="stylesheet" href="{{ asset('vendor/libs/bootstrap/select/bootstrap-select.min.css') }}">
     @endpush
     @push('scripts_libs')
         <script src="{{ asset('vendor/libs/tags-input/bootstrap-tagsinput.min.js') }}"></script>
-        <script src="{{ asset('vendor/libs/bootstrap/select/bootstrap-select.min.js') }}"></script>
         <script src="{{ asset('vendor/libs/jquery/jquery.priceformat.min.js') }}"></script>
     @endpush
     @push('scripts')

@@ -89,7 +89,7 @@
                                                                     </div>
                                                                     <div class="col-auto">
                                                                         <select name="license_type"
-                                                                            class="form-select pe-5">
+                                                                            class="selectpicker selectpicker-md">
                                                                             <option value="1"
                                                                                 @selected($cartItem->isLicenseTypeRegular())>
                                                                                 {{ translate('Regular') }}
@@ -111,7 +111,7 @@
                                                                             </label>
                                                                         </div>
                                                                         <div class="col-auto">
-                                                                            <select name="support" class="form-select pe-5">
+                                                                            <select name="support" class="selectpicker selectpicker-md">
                                                                                 @foreach ($supportPeriods as $supportPeriod)
                                                                                     <option
                                                                                         value="{{ $supportPeriod->id }}"
